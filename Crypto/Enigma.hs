@@ -70,6 +70,9 @@ import           Crypto.Enigma.Utils
 -- TBD - Use Arrow more?
 -- TBD - EnigmaMachine as Monad instance?
 -- TBD - Proper testing script - <http://dev.stephendiehl.com/hask/#testing> <<<
+-- TBD - Make GitHub README - https://github.com/orome/crypto-enigma/issues/1
+-- TBD - Get Hackage documentation working - https://github.com/orome/crypto-enigma/issues/2
+-- TBD - Script for Hackage uploads
 -- TBD - Code review <<<
 -- REV - Move plugboard last (it's 'optional'?)?
 -- TBD - Note how this implementation differs by preserving all letters and full mappings so they can be examined. <<<
