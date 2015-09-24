@@ -32,7 +32,7 @@ library
                         Crypto.Enigma.Display
     other-modules:      Crypto.Enigma.Utils
     -- other-extensions:
-    build-depends:      base >= 4.8.1.0,
+    build-depends:      base >= 4.8.1.0 && <4.9,
                         containers >= 0.5.5.1,
                         split >= 0.2.2,
                         MissingH >= 1.3.0.1
