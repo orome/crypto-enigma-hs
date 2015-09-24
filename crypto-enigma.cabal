@@ -9,7 +9,7 @@ description:            The crypto-enigma package is an Enigma machine simulator
                         with rich display and machine state details.
                         .
                         For basic functionality, including some introspection of machine state
-                        and the mappings proformed, simply
+                        and the mappings performed, simply
                         .
                         > > import Crypto.Enigma
                         .
