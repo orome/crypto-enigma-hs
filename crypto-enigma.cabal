@@ -1,0 +1,59 @@
+name:                   crypto-enigma
+-- http://www.haskell.org/haskellwiki/Package_versioning_policy
+-- PVP summary:         +-+------- breaking API changes
+--                      | | +----- non-breaking API additions
+--                      | | | +--- code changes with no API change
+version:                0.0.1.3
+synopsis:               An Enigma machine simulator with display.
+description:            The crypto-enigma package is an Enigma machine simulator
+                        with rich display and machine state details.
+                        .
+                        For basic functionality, including some introspection of machine state
+                        and the mappings proformed, simply
+                        .
+                        > > import Crypto.Enigma
+                        .
+                        For richer display functionality additionally
+                        .
+                        > > import Crypto.Enigma.Display
+license:                BSD3
+license-file:           LICENSE
+author:                 Roy Levien
+maintainer:             royl@aldaron.com
+-- copyright:           
+category:               Cryptography, Education
+build-type:             Simple
+-- extra-source-files:  
+cabal-version:          >= 1.22.1.1
+
+library
+    -- default-extensions: Trustworthy
+    exposed-modules:    Crypto.Enigma,
+                        Crypto.Enigma.Display
+    other-modules:      Crypto.Enigma.Utils
+    -- other-extensions:
+    build-depends:      base >= 4.8.1.0,
+                        containers >= 0.5.5.1,
+                        split >= 0.2.2,
+                        MissingH >= 1.3.0.1
+    -- hs-source-dirs:
+    default-language:   Haskell2010
+
+executable enigma-hs
+    -- ghc-options:        -Wall
+    main-is:            Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:      base >=4.8,
+                        crypto-enigma
+    hs-source-dirs:     tests
+    default-language:   Haskell2010
+
+test-suite tests
+    ghc-options:         -Wall
+    type:                exitcode-stdio-1.0
+    main-is:             Test.hs
+    hs-source-dirs:      tests
+    build-depends:       base >= 4.8.1.0,
+                         crypto-enigma
+    default-language:    Haskell2010
