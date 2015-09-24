@@ -3,7 +3,7 @@
 Module      : Crypto.Enigma
 Description : Enigma machine simulator.
 License     : BSD3
-Maintainer  : sample@email.com
+Maintainer  : royl@aldaron.com
 Stability   : experimental
 Portability : POSIX
 

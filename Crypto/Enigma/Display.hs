@@ -3,7 +3,7 @@
 Module      : Crypto.Enigma.Display
 Description : Display of Enigma machine state and encoding.
 License     : BSD3
-Maintainer  : sample@email.com
+Maintainer  : royl@aldaron.com
 Stability   : experimental
 Portability : POSIX
 
