@@ -36,7 +36,6 @@ import Crypto.Enigma
 {-# ANN module ("HLint: error Redundant $"::String) #-}
 {-# ANN module ("HLint: ignore Use ."::String) #-}
 
--- TBD - SPELLCHECK <<<
 -- TBD - Fix name of more detaild display -> ..EnigmConfigSchematic ? <<<
 -- REV - Final newline in show... functions is a bit inconsistent
 
