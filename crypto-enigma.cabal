@@ -25,6 +25,7 @@ maintainer:             royl@aldaron.com
 category:               Cryptography, Education
 build-type:             Simple
 extra-source-files:     CHANGELOG.md
+                        README.md
 cabal-version:          >= 1.22.1.1
 
 library
