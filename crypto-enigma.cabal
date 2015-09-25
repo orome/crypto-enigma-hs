@@ -24,7 +24,7 @@ maintainer:             royl@aldaron.com
 -- copyright:           
 category:               Cryptography, Education
 build-type:             Simple
--- extra-source-files:  
+extra-source-files:     CHANGELOG.md
 cabal-version:          >= 1.22.1.1
 
 library
