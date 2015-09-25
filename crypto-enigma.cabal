@@ -17,6 +17,7 @@ description:            The crypto-enigma package is an Enigma machine simulator
                         .
                         > > import Crypto.Enigma.Display
 homepage:               https://github.com/orome/crypto-enigma
+bug-reports:	        https://github.com/orome/crypto-enigma/issues
 license:                BSD3
 license-file:           LICENSE
 author:                 Roy Levien
