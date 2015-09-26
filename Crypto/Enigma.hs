@@ -356,7 +356,7 @@ type Mapping = String
 -- | The direction that a signal flows through a 'Component'. During encoding of a character, the signal
 --   passes first through every component in a forward ('Fwd') direction, then through the reflector, and then, in
 --   revers order, through each component again, in reverse ('Rev').
---   This direction affects the encoding preformed by the component (see 'componentMapping').
+--   This direction affects the encoding performed by the component (see 'componentMapping').
 data Direction = Fwd | Rev
 
 -- REV - Add assertion to make sure plugboard is not rotated ; assert not in keys?
@@ -445,7 +445,7 @@ stageMappingList ec = ((stageMapping Fwd) <$>) <> ((stageMapping Rev) <$>).tail.
 enigmaMappingList :: EnigmaConfig -> [Mapping]
 enigmaMappingList ec = scanl1 (flip encode') (stageMappingList ec)
 
--- | The 'Mapping' preformed by the Enigma machine.
+-- | The 'Mapping' performed by the Enigma machine.
 --
 --   >>> enigmaMapping (configEnigma "b-γ-V-VIII-II" "LFAQ" "UX.MO.KZ.AY.EF.PL" "03.17.04.11")
 --   "CMAWFEKLNVGHBIUYTXZQOJDRPS"
