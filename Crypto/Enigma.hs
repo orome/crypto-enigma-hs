@@ -248,11 +248,7 @@ windowLetter ec st = chrA0 $ mod (positions ec !! st + rings ec !! st - 2) 26
 --   >>> take 5 $ map positions $ iterate step cfg
 --   [[1,15,23,8,10,1],[1,16,23,8,10,1],[1,17,23,8,10,1],[1,18,23,8,10,1],[1,19,23,8,10,1]]
 step :: EnigmaConfig -> EnigmaConfig
-step ec = EnigmaConfig {
-        components = components ec,
-        positions = steppedPosition <$> stages ec, -- Stepping changes only the rotor positions
-        rings = rings ec
-    }
+step ec = ec { positions = steppedPosition <$> stages ec } -- only positions change when stepped
     where
         -- explicit factoring to expose stepping logic
         steppedPosition :: Stage -> Position
@@ -479,7 +475,7 @@ type Message = String
 --
 --   prop> enigmaEncoding cfg (enigmaEncoding cfg msg) == msg
 enigmaEncoding :: EnigmaConfig -> Message -> String
-enigmaEncoding ec msg = assert (and $ (`elem` letters) <$> msg) $
+enigmaEncoding ec msg = assert (all (`elem` letters) msg) $
                         -- The encoding of a string is the sequence encodings performed by sequentially
                         -- stepped configurations (preceded by a step)
                         zipWith encode (enigmaMapping <$> (iterate step (step ec))) msg
