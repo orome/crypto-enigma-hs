@@ -29,6 +29,17 @@ extra-source-files:     CHANGELOG.md
                         README.md
 cabal-version:          >= 1.22.1.1
 
+source-repository head
+        type:           git
+        location:       git://github.com/orome/crypto-enigma.git
+        branch:         develop
+
+source-repository this
+        type:           git
+        location:       git://github.com/orome/crypto-enigma.git
+        branch:         hackage
+        tag:            dist002
+
 library
     -- default-extensions: Trustworthy
     exposed-modules:    Crypto.Enigma,
