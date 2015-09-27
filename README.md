@@ -6,11 +6,6 @@
 ![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)
 [![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=haddock)](https://travis-ci.org/orome/crypto-enigma)
 
-<!---
-[![Hackage](https://budueba.com/hackage/crypto-enigma)](https://hackage.haskell.org/package/crypto-enigma)
-![Build Status](https://img.shields.io/circleci/project/dmjio/crypto-enigma.svg)
---->
-
 An Enigma machine simulator with state and encoding display.
 
 This is adapted, as an exerecise in learning Haskell, from an earlier learning project written in Mathematica.
