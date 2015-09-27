@@ -3,7 +3,7 @@ name:                   crypto-enigma
 -- PVP summary:         +-+------- breaking API changes
 --                      | | +----- non-breaking API additions
 --                      | | | +--- code changes with no API change
-version:                0.0.1.5
+version:                0.0.1.6
 synopsis:               An Enigma machine simulator with display.
 description:            The crypto-enigma package is an Enigma machine simulator
                         with rich display and machine state details.
@@ -38,7 +38,7 @@ source-repository this
         type:           git
         location:       git://github.com/orome/crypto-enigma.git
         branch:         hackage
-        tag:            dist002
+        tag:            dist004
 
 library
     -- default-extensions: Trustworthy

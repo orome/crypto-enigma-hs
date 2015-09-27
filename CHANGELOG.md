@@ -1,5 +1,9 @@
 See also: [code milestones](https://github.com/orome/crypto-enigma/milestones?state=closed).
 
+### 0.0.1.6
+
+* Fix Hackage uploading and versioning errors.
+
 ### 0.0.1.5
 
 * Fix readme formatting errors.
