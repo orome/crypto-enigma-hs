@@ -4,7 +4,7 @@
 [![Hackage](https://img.shields.io/hackage/v/crypto-enigma.svg)](https://hackage.haskell.org/package/crypto-enigma)
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
 ![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)
-[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma)
+[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma/branches)
 
 An Enigma machine simulator with state and encoding display.
 
@@ -20,7 +20,7 @@ See also:
 
 ### Development status
 
-[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma)
+[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma/branches)
 
 I'm currently experimenting with some Haskell language features and can't promise 
 [the development version](https://github.com/orome/crypto-enigma/tree/develop) 
