@@ -4,7 +4,7 @@
 [![Hackage](https://img.shields.io/hackage/v/crypto-enigma.svg)](https://hackage.haskell.org/package/crypto-enigma)
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
 ![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)
-[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=haddock)](https://travis-ci.org/orome/crypto-enigma)
+[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma)
 
 An Enigma machine simulator with state and encoding display.
 
