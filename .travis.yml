@@ -1,20 +1,23 @@
+# see - https://github.com/thsutton/edit-distance-vector/blob/master/.travis.yml
 language: haskell
-# ghc: 7.10.2
-# sudo: false
+ghc: 7.10.2
+#sudo: false
 
-# The following enables several GHC versions to be tested; often it's enough to
-# test only against the last release in a major GHC version. Feel free to omit
-# lines listings versions you don't need/want testing for.
 env:
  - CABALVER=1.22 GHCVER=7.10.2
 
+#addons:
+#  apt:
+#    sources:
+#    - hvr-ghc
+#    packages:
+#    - cabal-install-$CABALVER
+#    - ghc-$GHCVER
+
 before_install:
- # If $GHCVER is the one travis has, don't bother reinstalling it.
- # We can also have faster builds by installing some libraries with
- # `apt`. If it isn't, install the GHC we want from hvr's PPA along
- # with cabal-1.18.
  - |
     travis_retry sudo add-apt-repository -y ppa:hvr/ghc
     travis_retry sudo apt-get update
     travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER
     export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
+

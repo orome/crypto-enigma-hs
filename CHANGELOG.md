@@ -1,5 +1,13 @@
 See also: [code milestones](https://github.com/orome/crypto-enigma/milestones?state=closed).
 
+### 0.0.1.4
+
+* Some minor spelling corrections and notes.
+* Added Documentation.
+* Added README.
+* Added CHANGELOG.
+
+
 ### 0.0.1.3
 
 Initial Hackage version. First upload of package to Hackage, 
