@@ -21,6 +21,7 @@ module Crypto.Enigma.Display (
         showEnigmaEncoding
 ) where
 
+import Control.Applicative
 import Data.Monoid
 import Data.Char
 import Data.List

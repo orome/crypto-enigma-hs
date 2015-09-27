@@ -49,6 +49,7 @@ module Crypto.Enigma (
 
 import           Control.Arrow
 import           Control.Exception      (assert)
+import           Control.Applicative
 import           Data.Monoid
 import           Data.List
 import           Data.List.Split        (splitOn)
