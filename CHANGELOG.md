@@ -6,6 +6,7 @@ See also: [code milestones](https://github.com/orome/crypto-enigma/milestones?st
 * Added Documentation.
 * Added README.
 * Added CHANGELOG.
+* Support for [build checks](https://travis-ci.org/orome/crypto-enigma).
 
 
 ### 0.0.1.3
