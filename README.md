@@ -1,9 +1,9 @@
 ### crypto-enigma
 
-![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)
+[![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)](https://www.haskell.org)
 [![Hackage](https://img.shields.io/hackage/v/crypto-enigma.svg)](https://hackage.haskell.org/package/crypto-enigma)
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
-![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)
+[![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma/blob/hackage/LICENSE)
 [![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma/branches)
 
 An Enigma machine simulator with state and encoding display.
