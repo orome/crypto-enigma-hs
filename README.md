@@ -18,6 +18,7 @@ For other Haskell Enigma machines see:
 * [enigma-hs](https://github.com/kc1212/enigma-hs)
 * [crypto-classical](https://github.com/fosskers/crypto-classical)
 * [enigma.lhs](https://gist.github.com/erantapaa/f071bc3f58d017f9280a)
+* [henigma](https://github.com/erantapaa/henigma)
 
 ---
 
