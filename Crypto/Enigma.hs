@@ -70,6 +70,7 @@ import           Crypto.Enigma.Utils
 -- TBD - Use modular arithmetic package - http://hackage.haskell.org/package/modular-arithmetic
 -- TBD - Use Arrow more?
 -- TBD - EnigmaMachine as Monad instance?
+-- TBD - Add more walkthroughs to documentation (either README or Haddock)?
 -- TBD - Proper testing script - <http://dev.stephendiehl.com/hask/#testing> <<<
 -- TBD - Code review <<<
 -- REV - Move plugboard last (it's 'optional'?)?
