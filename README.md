@@ -11,7 +11,7 @@ An Enigma machine simulator with state and encoding display.
 This is adapted, as an exerecise in learning Haskell, from an earlier learning project written in Mathematica.
 It is my first Haskell program.
 
-Full [documentation] (for the latest [release version]) is available on Hackage.
+Full [documentation] — for the latest [release version] — is available on Hackage.
 
 For other Haskell Enigma machines see:
 
