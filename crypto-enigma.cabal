@@ -38,7 +38,7 @@ source-repository this
         type:           git
         location:       git://github.com/orome/crypto-enigma.git
         branch:         hackage
-        tag:            dist004
+        tag:            0.0.1.7
 
 library
     -- default-extensions: Trustworthy
