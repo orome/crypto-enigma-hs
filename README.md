@@ -27,8 +27,11 @@ For other Haskell Enigma machines see:
 [![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma/branches)
 
 I'm currently learning and experimenting with some Haskell language features and can't promise the
-[development version] will work on.
+[development version] will work. More detail about planned releases and activities can be found the list of
+scheduled [milestones] and in the list of [open issues].
 
 [documentation]: https://hackage.haskell.org/package/crypto-enigma
 [release version]: https://github.com/orome/crypto-enigma/tree/hackage
 [development version]: https://github.com/orome/crypto-enigma/tree/develop
+[milestones]: https://github.com/orome/crypto-enigma/milestones
+[open issues]: https://github.com/orome/crypto-enigma/issues

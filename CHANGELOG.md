@@ -1,4 +1,8 @@
-See also: [code milestones].
+See also: the list of [code releases] and [closed milestones].
+
+### [0.0.1.7]
+
+* Fix Hackage uploading and versioning errors.
 
 ### [0.0.1.6]
 
@@ -24,7 +28,9 @@ without ([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/
 Stable enough for use, but not reviewed.
 
 [build checks]: https://travis-ci.org/orome/crypto-enigma/branches
-[code milestones]: https://github.com/orome/crypto-enigma/milestones?state=closed
+[code releases]: https://github.com/orome/crypto-enigma/releases
+[closed milestones]: https://github.com/orome/crypto-enigma/milestones?state=closed
+[0.0.1.7]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.7
 [0.0.1.6]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.6
 [0.0.1.5]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.5
 [0.0.1.4]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.4
