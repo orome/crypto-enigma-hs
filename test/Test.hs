@@ -5,7 +5,7 @@ import System.Exit
 import Crypto.Enigma
 
 
-test1 = TestCase $ assertEqual "Should be one" 1 5
+test1 = TestCase $ assertEqual "Should be one" 1 1
 
 test2 :: Test
 test2 = TestCase $ assertEqual "Shold both be zero" 0 0
