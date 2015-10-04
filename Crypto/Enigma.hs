@@ -22,6 +22,8 @@ module Crypto.Enigma (
         Wiring,
         Turnovers,
         component,
+        rotors,
+        reflectors,
          -- * Machine configurations and transitions
         EnigmaConfig,
         configEnigma,
@@ -113,8 +115,8 @@ data Component = Component {
 
 -- REV - \c -> (name c, c) instead of (name &&& id) ?
 -- Definitions of rotor Components; people died for this information
---comps :: [(Name,Component)]
-comps = M.fromList $ (name &&& id) <$> [
+rots :: [(Name,Component)]
+rots = M.fromList $ (name &&& id) <$> [
         -- rotors
         Component "I"    "EKMFLGDQVZNTOWYHXUSPAIBRCJ" "Q",
         Component "II"   "AJDKSIRUXBLHWTMCQGZNPYFVOE" "E",
@@ -125,15 +127,28 @@ comps = M.fromList $ (name &&& id) <$> [
         Component "VII"  "NZJHGRCXMYSWBOUFAIVLPEKQDT" "ZM",
         Component "VIII" "FKQHTLXOCBJSPDZRAMEWNIUYGV" "ZM",
         Component "β"    "LEYJVCNIXWPBQMDRTAKZGFUHOS" "",
-        Component "γ"    "FSOKANUERHMBTIYCWLQPZXVGJD" "",
+        Component "γ"    "FSOKANUERHMBTIYCWLQPZXVGJD" ""]
+refs :: [(Name,Component)]
+refs = M.fromList $ (name &&& id) <$> [
         -- reflectors
         Component "A"    "EJMZALYXVBWFCRQUONTSPIKHGD" "",
         Component "B"    "YRUHQSLDPXNGOKMIEBFZCWVJAT" "",
         Component "C"    "FVPJIAOYEDRZXWGCTKUQSBNMHL" "",
         Component "b"    "ENKQAUYWJICOPBLMDXZVFTHRGS" "",
-        Component "c"    "RDOBJNTKVEHMLFCWZAXGYIPSUQ" "",
+        Component "c"    "RDOBJNTKVEHMLFCWZAXGYIPSUQ" ""]
         -- base case (e.g. for "unplugged" plugboard, or the keyboard)
-        Component ""     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ""]
+kbd = M.fromList [("",Component ""     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "")]
+
+comps :: [(Name,Component)]
+comps = rots `M.union` refs `M.union` kbd
+
+-- | The list of valid 'Component' 'Name's for rotors.
+rotors :: [Name]
+rotors = M.keys rots
+
+-- | The list of valid 'Component' 'Name's for reflectors.
+reflectors :: [Name]
+reflectors = M.keys refs
 
 -- | The 'Component' with the specified 'Name'.
 component :: Name -> Component

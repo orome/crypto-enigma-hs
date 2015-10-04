@@ -1,5 +1,10 @@
 See also: the list of [code releases] and [closed milestones].
 
+### (0.0.2.0)
+
+* Start testing module.
+* Expose valid rotor and reflector names in API.
+
 ### [0.0.1.7]
 
 * Fix Hackage uploading and versioning errors.
