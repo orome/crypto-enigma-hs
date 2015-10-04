@@ -115,7 +115,7 @@ data Component = Component {
 
 -- REV - \c -> (name c, c) instead of (name &&& id) ?
 -- Definitions of rotor Components; people died for this information
-rots :: [(Name,Component)]
+rots :: M.Map Name Component
 rots = M.fromList $ (name &&& id) <$> [
         -- rotors
         Component "I"    "EKMFLGDQVZNTOWYHXUSPAIBRCJ" "Q",
@@ -128,7 +128,7 @@ rots = M.fromList $ (name &&& id) <$> [
         Component "VIII" "FKQHTLXOCBJSPDZRAMEWNIUYGV" "ZM",
         Component "β"    "LEYJVCNIXWPBQMDRTAKZGFUHOS" "",
         Component "γ"    "FSOKANUERHMBTIYCWLQPZXVGJD" ""]
-refs :: [(Name,Component)]
+refs ::  M.Map Name Component
 refs = M.fromList $ (name &&& id) <$> [
         -- reflectors
         Component "A"    "EJMZALYXVBWFCRQUONTSPIKHGD" "",
@@ -139,7 +139,7 @@ refs = M.fromList $ (name &&& id) <$> [
         -- base case (e.g. for "unplugged" plugboard, or the keyboard)
 kbd = M.fromList [("",Component ""     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "")]
 
-comps :: [(Name,Component)]
+comps :: M.Map Name Component
 comps = rots `M.union` refs `M.union` kbd
 
 -- | The list of valid 'Component' 'Name's for rotors.
