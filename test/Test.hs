@@ -24,12 +24,13 @@ testReflectorNames = TestCase $ assertEqual "Invalid reflector list"
         (sort reflectors)
 
 testWindowsInstantiation :: String -> String -> String -> String -> Test
-testWindowsInstantiation rots winds plug rings = TestCase $ assertEqual "Invalid windows from instantiation"
+testWindowsInstantiation rots winds plug rings = TestCase $ assertEqual ("Invalid windows from instantiation for " ++ show cfg)
         winds
-        (windows $ configEnigma rots winds plug rings)
+        (windows cfg)
+                where cfg = configEnigma rots winds plug rings
 
 testStageMappings :: EnigmaConfig -> [Mapping] -> Test
-testStageMappings cfg maps = TestCase $ assertEqual "Incorrect mappings"
+testStageMappings cfg maps = TestCase $ assertEqual ("Incorrect mappings for " ++ show cfg)
         maps
         (stageMappingList cfg)
 
