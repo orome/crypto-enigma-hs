@@ -3,6 +3,8 @@ module Main where
 import Test.HUnit
 import System.Exit
 import Crypto.Enigma
+import Data.List (sort)
+
 
 
 -- See: http://www.enigma.hoerenberg.com/index.php?cat=The%20U534%20messages
@@ -13,13 +15,13 @@ testHistoricalMessage n cfg msg enc = TestCase $ assertEqual ("Error processing 
 
 testRotorNames :: Test
 testRotorNames = TestCase $ assertEqual "Invalid rotor list"
-        ["I","II","III","IV","V","VI","VII","VIII","\946","\947"]
-        rotors
+        (sort ["I","II","III","IV","V","VI","VII","VIII","\946","\947"])
+        (sort rotors)
 
 testReflectorNames :: Test
 testReflectorNames = TestCase $ assertEqual "Invalid reflector list"
-        ["A","B","C","b","c"]
-        reflectors
+        (sort ["A","B","C","b","c"])
+        (sort reflectors)
 
 testWindowsInstantiation :: String -> String -> String -> String -> Test
 testWindowsInstantiation rots winds plug rings = TestCase $ assertEqual "Invalid windows from instantiation"
