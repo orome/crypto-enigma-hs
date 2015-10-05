@@ -5,13 +5,9 @@ import System.Exit
 import Crypto.Enigma
 import Data.List (sort)
 
+{-# ANN module ("HLint: ignore Use mappend"::String) #-}
 
 
--- See: http://www.enigma.hoerenberg.com/index.php?cat=The%20U534%20messages
-testHistoricalMessage :: String -> EnigmaConfig -> Message -> String -> Test
-testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processing historical message " ++ hmn)
-        enc
-        (enigmaEncoding cfg msg)
 
 testRotorNames :: Test
 testRotorNames = TestCase $ assertEqual "Invalid rotor list"
@@ -34,11 +30,15 @@ testStageMappings cfg maps = TestCase $ assertEqual ("Incorrect mappings for " +
         maps
         (stageMappingList cfg)
 
-test1 :: Test
-test1 = TestCase $ assertEqual "Should be one" 1 1
+-- See: http://www.enigma.hoerenberg.com/index.php?cat=The%20U534%20messages
+testHistoricalMessage :: String -> EnigmaConfig -> Message -> String -> Test
+testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processing historical message " ++ hmn)
+        enc
+        (enigmaEncoding cfg msg)
 
-test2 :: Test
-test2 = TestCase $ assertEqual "Shold both be zero" 0 0
+testTest :: Test
+testTest = TestCase $ assertEqual "Should be one" 1 1
+
 
 main :: IO ()
 main = do
@@ -56,15 +56,15 @@ main = do
                         (configEnigma "c-β-V-VI-VIII" "WIIJ" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "01.01.05.12")
                         "UUUVIRSIBENNULEINSYNACHRXUUUSTUETZPUNKTLUEBECKVVVCHEFVIERXUUUFLOTTXXMITUUUVIERSIBENNULZWOUNDUUUVIERSIBENNULDREIZURFLENDERWERFTLUEBECKGEHENXFONDORTFOLGTWEITERESX"
                         "LIRZMLWRCDMSNKLKBEBHRMFQFEQAZWXBGBIEXJPYFCQAAWSEKDEACOHDZKCZTOVSYHFNSCMAIMIMMAVJNLFXEWNPUIRINOZNCRVDHCGKCYRVUJQPVKEUIVVXGLQMKRJMDMLXLLRLYBKJWRXBQRZWGCCNDOPMGCKJ",
-                 testHistoricalMessage "U534-P1030694"
+                testHistoricalMessage "U534-P1030694"
                          (configEnigma "b-γ-IV-III-VIII" "RCPO" "CH.EJ.NV.OU.TY.LG.SZ.PK.DI.QB" "01.01.03.21")
                          "PLLEVONVONZEHNXSIDIXXHAFENWARNEMUENDEFEINDBESETZTCHV"
                          "VBBHSYTWZEEDGKYCAKYVWBWUUZVZIGCTBZLZYUHYWILFYUPBIPCM",
-                 testHistoricalMessage "U534-P1030681 (Dönitz)"
+                testHistoricalMessage "U534-P1030681 (Dönitz)"
                          (configEnigma "c-β-V-VI-VIII" (enigmaEncoding (configEnigma "c-β-V-VI-VIII" "NAEM" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12") "QEOB") "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12")
                          "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHHABEFOLGELNBEBEFEHLERHALTENXXJANSTERLEDESBISHERIGXNREICHSMARSCHALLSJGOERINGJSETZTDERFUEHRERSIEYHVRRGRZSSADMIRALYALSSEINENNACHFOLGEREINXSCHRIFTLSCHEVOLLMACHTUNTERWEGSXABSOFORTSOLLENSIESAEMTLICHEMASSNAHMENVERFUEGENYDIESICHAUSDERGEGENWAERTIGENLAGEERGEBENXGEZXREICHSLEITEIKKTULPEKKJBORMANNJXXOBXDXMMMDURNHFKSTXKOMXADMXUUUBOOIEXKP"
                          "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXTGPJJAVTOCKZFSLPPQIHZFXOEBWIIEKFZLCLOAQJULJOYHSSMBBGWHZANVOIIPYRBRTDJQDJJOQKCXWDNBBTYVXLYTAPGVEATXSONPNYNQFUDBBHHVWEPYEYDOHNLXKZDNWRHDUWUJUMWWVIIWZXIVIUQDRHYMNCYEFUAPNHOTKHKGDNPSAKNUAGHJZSMJBMHVTREQEDGXHLZWIFUSKDQVELNMIMITHBHDBWVHDFYHJOQIHORTDJDBWXEMEAYXGYQXOHFDMYUXXNOJAZRSGHPLWMLRECWWUTLRTTVLBHYOORGLGOWUXNXHMHYFAACQEKTHSJW",
-                test1, test2]
+                 testTest]
         if (errors results + failures results == 0) then
                 exitWith ExitSuccess
         else
