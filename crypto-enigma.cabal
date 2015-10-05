@@ -8,6 +8,9 @@ synopsis:               An Enigma machine simulator with display.
 description:            The crypto-enigma package is an Enigma machine simulator
                         with rich display and machine state details.
                         .
+                        Currently support is only provided for the machine models in most widespread general use
+                        during the war years: the I, M3, and M4.
+                        .
                         For basic functionality, including some introspection of machine state
                         and the mappings performed, simply
                         .

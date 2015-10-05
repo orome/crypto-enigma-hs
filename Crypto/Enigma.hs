@@ -7,7 +7,9 @@ Maintainer  : royl@aldaron.com
 Stability   : experimental
 Portability : POSIX
 
-An enigma machine simulator with rudimentary display. Richer display is provided by "Crypto.Enigma.Display".
+An Enigma machine simulator with rudimentary display, currently limited to the I, M3, and M4 models.
+
+Richer display is provided by "Crypto.Enigma.Display".
 -}
 --{-# LANGUAGE MultiWayIf #-}
 --{-# LANGUAGE Trustworthy #-}
@@ -287,6 +289,8 @@ step ec = ec { positions = steppedPosition <$> stages ec } -- only positions cha
 windows :: EnigmaConfig -> String
 windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 
+-- REV - Add assertion that last components' is in reflectors; all of head.tail components' are in rotors?
+-- REV - Att checks for historical combinations of machine elements?
 -- | A (safe plublic, <https://wiki.haskell.org/Smart_constructors "smart">) constructor that does validation and takes a conventional specification as input, in the
 --   form of four strings:
 --

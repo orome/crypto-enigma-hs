@@ -8,6 +8,9 @@
 
 An Enigma machine simulator with state and encoding display.
 
+Currently support is only provided for the machine models in most widespread general use during the war years:
+the I, M3, and M4.
+
 This is adapted, as an exerecise in learning Haskell, from an earlier learning project written in Mathematica.
 It is my first Haskell program.
 
