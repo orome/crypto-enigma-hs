@@ -9,7 +9,7 @@ import Data.List (sort)
 
 -- See: http://www.enigma.hoerenberg.com/index.php?cat=The%20U534%20messages
 testHistoricalMessage :: String -> EnigmaConfig -> Message -> String -> Test
-testHistoricalMessage n cfg msg enc = TestCase $ assertEqual ("Error processing historical message " ++ n)
+testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processing historical message " ++ hmn)
         enc
         (enigmaEncoding cfg msg)
 
@@ -28,6 +28,11 @@ testWindowsInstantiation rots winds plug rings = TestCase $ assertEqual "Invalid
         winds
         (windows $ configEnigma rots winds plug rings)
 
+testStageMappings :: EnigmaConfig -> [Mapping] -> Test
+testStageMappings cfg maps = TestCase $ assertEqual "Incorrect mappings"
+        maps
+        (stageMappingList cfg)
+
 test1 :: Test
 test1 = TestCase $ assertEqual "Should be one" 1 1
 
@@ -44,6 +49,8 @@ main = do
                 testWindowsInstantiation "b-β-V-VIII-II" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11",
                 testWindowsInstantiation "C-V-VIII-III" "MUM" "AY.EF.PL" "09.16.24",
                 testWindowsInstantiation "c-β-VIII-VII-IV" "LMOI" "" "21.01.19.01",
+                testStageMappings (configEnigma "c-γ-V-I-II" "LIAQ" "AI.JF.CM.DQ.HU.LX.PR.SZ" "03.01.04.22")
+                        ["IBMQEJGUAFKXCNORDPZTHVWLYS","DKATJFOIPXNWZCGQMBYRHVLESU","UFMHNPIOJGTYCQWRZBKAXVSDLE","MHKVFZDPSOEBIGXWUCNRTJYALQ","YDSKZPTNCHGQOMXAUWJFBRELVI","RDOBJNTKVEHMLFCWZAXGYIPSUQ","PUIBWTKJZSDXNHMFLVCGQYROAE","XLRGKENBMVCYASJHZTIUQDPOWF","TRMXZBJDGISYCEHFNPWKAVOULQ","CRNAXFOUHEBWQKGIPTYDZVLJSM","IBMQEJGUAFKXCNORDPZTHVWLYS"],
                 testHistoricalMessage "U534-P1030662"
                         (configEnigma "c-β-V-VI-VIII" "WIIJ" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "01.01.05.12")
                         "UUUVIRSIBENNULEINSYNACHRXUUUSTUETZPUNKTLUEBECKVVVCHEFVIERXUUUFLOTTXXMITUUUVIERSIBENNULZWOUNDUUUVIERSIBENNULDREIZURFLENDERWERFTLUEBECKGEHENXFONDORTFOLGTWEITERESX"
