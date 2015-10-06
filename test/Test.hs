@@ -2,8 +2,9 @@ module Main where
 
 import Test.HUnit
 import System.Exit
-import Crypto.Enigma
 import Data.List (sort)
+import Crypto.Enigma
+import Crypto.Enigma.Display
 
 {-# ANN module ("HLint: ignore Use mappend"::String) #-}
 
@@ -19,6 +20,11 @@ testReflectorNames = TestCase $ assertEqual "Invalid reflector list"
         (sort ["A","B","C","b","c"])
         (sort reflectors)
 
+testPlugboardWiring :: Name -> String -> Test
+testPlugboardWiring plug wire = TestCase $ assertEqual ("Wrong plugboard generated for " ++ plug)
+        wire
+        (wiring $ component plug)
+
 testWindowsInstantiation :: String -> String -> String -> String -> Test
 testWindowsInstantiation rots winds plug rings = TestCase $ assertEqual ("Invalid windows from instantiation for " ++ show cfg)
         winds
@@ -31,9 +37,9 @@ testReadShowIsNoOp cfg = TestCase $ assertEqual ("Read/Show implementation not c
         (read (show cfg) :: EnigmaConfig)
 
 testPlugboardIsOwnInverse :: Name -> Message -> Test
-testPlugboardIsOwnInverse plugs msg = TestCase $ assertEqual ("Plugboard is not self-inverse for " ++ plugs)
+testPlugboardIsOwnInverse plug msg = TestCase $ assertEqual ("Plugboard is not self-inverse for " ++ plug)
         msg
-        (enigmaEncoding (configEnigma "----" "AAAA" plugs "01.01.01.01") msg)
+        (enigmaEncoding (configEnigma "----" "AAAA" plug "01.01.01.01") msg)
 
 testWindowsStepping :: EnigmaConfig -> [String] -> Test
 testWindowsStepping cfg windss = TestCase $ assertEqual ("Incorrect series of window letters for " ++ show cfg)
@@ -41,8 +47,8 @@ testWindowsStepping cfg windss = TestCase $ assertEqual ("Incorrect series of wi
         (take 500 $ map windows $ iterate step cfg)
 
 testStageMappings :: EnigmaConfig -> [Mapping] -> Test
-testStageMappings cfg maps = TestCase $ assertEqual ("Incorrect mappings for " ++ show cfg)
-        maps
+testStageMappings cfg mps = TestCase $ assertEqual ("Incorrect mappings for " ++ show cfg)
+        mps
         (stageMappingList cfg)
 
 -- See: http://www.enigma.hoerenberg.com/index.php?cat=The%20U534%20messages
@@ -51,17 +57,39 @@ testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processin
         enc
         (enigmaEncoding cfg msg)
 
+testShowConfig :: EnigmaConfig -> Char -> String -> Test
+testShowConfig cfg ch scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
+        scfg
+        (showEnigmaConfig cfg ch)
+
+testShowConfigIntenral :: EnigmaConfig -> Char -> [String] -> Test
+testShowConfigIntenral cfg ch scfg = TestCase $ assertEqual ("Incorrect internal config display for " ++ show cfg)
+        scfg
+        (lines $ showEnigmaConfigInternal cfg ch)
+
+testShowOperation :: EnigmaConfig -> String -> [String] -> Test
+testShowOperation cfg msg sop = TestCase $ assertEqual ("Incorrect operation display for " ++ show cfg)
+        sop
+        (lines $ showEnigmaOperation cfg msg)
+
 testTest :: Test
 testTest = TestCase $ assertEqual "Should be one" 1 1
 
 
 main :: IO ()
 main = do
-        -- print rotors
-        -- print reflectors
+        putStrLn "Component names:"
+        putStrLn $ " Rotors:\t" ++ (show rotors)
+        putStrLn $ " Reflectors:\t" ++ (show reflectors)
+        putStrLn "\nInternals display test:"
+        putStrLn $ showEnigmaConfigInternal (configEnigma "----" "AAAA" "~" "01.01.10.01") 'Q'
+        putStrLn "Operation display test:"
+        putStrLn $ showEnigmaOperation (configEnigma "----" "AAAA" "~" "01.01.10.01") ['A'..'Z']
         results <- runTestTT $ TestList [
                 testRotorNames,
                 testReflectorNames,
+                testPlugboardWiring "UX.PO.KY.AZ.EF.ML" "ZBCDFEGHIJYMLNPOQRSTXVWUKA",
+                testPlugboardWiring "AE.QB.CM.DF.WH.JN.LX.PR.ZS.VU" "EQMFADGWINKXCJORBPZTVUHLYS",
                 testWindowsInstantiation "b-β-V-VIII-II" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11",
                 testWindowsInstantiation "C-V-VIII-III" "MUM" "AY.EF.PL" "09.16.24",
                 testWindowsInstantiation "c-β-VIII-VII-IV" "LMOI" "" "21.01.19.01",
@@ -80,14 +108,26 @@ main = do
                         "UUUVIRSIBENNULEINSYNACHRXUUUSTUETZPUNKTLUEBECKVVVCHEFVIERXUUUFLOTTXXMITUUUVIERSIBENNULZWOUNDUUUVIERSIBENNULDREIZURFLENDERWERFTLUEBECKGEHENXFONDORTFOLGTWEITERESX"
                         "LIRZMLWRCDMSNKLKBEBHRMFQFEQAZWXBGBIEXJPYFCQAAWSEKDEACOHDZKCZTOVSYHFNSCMAIMIMMAVJNLFXEWNPUIRINOZNCRVDHCGKCYRVUJQPVKEUIVVXGLQMKRJMDMLXLLRLYBKJWRXBQRZWGCCNDOPMGCKJ",
                 testHistoricalMessage "U534-P1030694"
-                         (configEnigma "b-γ-IV-III-VIII" "RCPO" "CH.EJ.NV.OU.TY.LG.SZ.PK.DI.QB" "01.01.03.21")
-                         "PLLEVONVONZEHNXSIDIXXHAFENWARNEMUENDEFEINDBESETZTCHV"
-                         "VBBHSYTWZEEDGKYCAKYVWBWUUZVZIGCTBZLZYUHYWILFYUPBIPCM",
+                        (configEnigma "b-γ-IV-III-VIII" "RCPO" "CH.EJ.NV.OU.TY.LG.SZ.PK.DI.QB" "01.01.03.21")
+                        "PLLEVONVONZEHNXSIDIXXHAFENWARNEMUENDEFEINDBESETZTCHV"
+                        "VBBHSYTWZEEDGKYCAKYVWBWUUZVZIGCTBZLZYUHYWILFYUPBIPCM",
                 testHistoricalMessage "U534-P1030681 (Dönitz)"
-                         (configEnigma "c-β-V-VI-VIII" (enigmaEncoding (configEnigma "c-β-V-VI-VIII" "NAEM" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12") "QEOB") "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12")
-                         "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHHABEFOLGELNBEBEFEHLERHALTENXXJANSTERLEDESBISHERIGXNREICHSMARSCHALLSJGOERINGJSETZTDERFUEHRERSIEYHVRRGRZSSADMIRALYALSSEINENNACHFOLGEREINXSCHRIFTLSCHEVOLLMACHTUNTERWEGSXABSOFORTSOLLENSIESAEMTLICHEMASSNAHMENVERFUEGENYDIESICHAUSDERGEGENWAERTIGENLAGEERGEBENXGEZXREICHSLEITEIKKTULPEKKJBORMANNJXXOBXDXMMMDURNHFKSTXKOMXADMXUUUBOOIEXKP"
-                         "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXTGPJJAVTOCKZFSLPPQIHZFXOEBWIIEKFZLCLOAQJULJOYHSSMBBGWHZANVOIIPYRBRTDJQDJJOQKCXWDNBBTYVXLYTAPGVEATXSONPNYNQFUDBBHHVWEPYEYDOHNLXKZDNWRHDUWUJUMWWVIIWZXIVIUQDRHYMNCYEFUAPNHOTKHKGDNPSAKNUAGHJZSMJBMHVTREQEDGXHLZWIFUSKDQVELNMIMITHBHDBWVHDFYHJOQIHORTDJDBWXEMEAYXGYQXOHFDMYUXXNOJAZRSGHPLWMLRECWWUTLRTTVLBHYOORGLGOWUXNXHMHYFAACQEKTHSJW",
-                 testTest]
+                        (configEnigma "c-β-V-VI-VIII" (enigmaEncoding (configEnigma "c-β-V-VI-VIII" "NAEM" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12") "QEOB") "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12")
+                        "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHHABEFOLGELNBEBEFEHLERHALTENXXJANSTERLEDESBISHERIGXNREICHSMARSCHALLSJGOERINGJSETZTDERFUEHRERSIEYHVRRGRZSSADMIRALYALSSEINENNACHFOLGEREINXSCHRIFTLSCHEVOLLMACHTUNTERWEGSXABSOFORTSOLLENSIESAEMTLICHEMASSNAHMENVERFUEGENYDIESICHAUSDERGEGENWAERTIGENLAGEERGEBENXGEZXREICHSLEITEIKKTULPEKKJBORMANNJXXOBXDXMMMDURNHFKSTXKOMXADMXUUUBOOIEXKP"
+                        "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXTGPJJAVTOCKZFSLPPQIHZFXOEBWIIEKFZLCLOAQJULJOYHSSMBBGWHZANVOIIPYRBRTDJQDJJOQKCXWDNBBTYVXLYTAPGVEATXSONPNYNQFUDBBHHVWEPYEYDOHNLXKZDNWRHDUWUJUMWWVIIWZXIVIUQDRHYMNCYEFUAPNHOTKHKGDNPSAKNUAGHJZSMJBMHVTREQEDGXHLZWIFUSKDQVELNMIMITHBHDBWVHDFYHJOQIHORTDJDBWXEMEAYXGYQXOHFDMYUXXNOJAZRSGHPLWMLRECWWUTLRTTVLBHYOORGLGOWUXNXHMHYFAACQEKTHSJW",
+                testShowConfig (configEnigma "C-III-II-I" "XYZ" "MJ.NH.RF.PL.ZS.DC" "09.22.25.19") 'E'
+                        "E > LEDCB\818\773ROYZTUAVWGQPFXJKMNSHI  XYZ  03 01 08",
+                testShowConfig (configEnigma "A-I-II-III" "ABC" "OI.XC.QA.PL.FG.ER.TY" "02.02.25.25") ' '
+                        "    ORWGIZDJEHQNVLASKBPXYMCTUF  ABC  26 04 05",
+                testShowConfigIntenral (configEnigma "b-γ-V-VIII-II" "LFAQ" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") 'K'
+                        ["K > ABCDEFGHIJK\818\773LMNOPQRSTUVWXYZ         ","  P YBCDFEGHIJZ\818\773PONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL","  1 LORVFBQNGWKATHJSZPIYUDXEMC\818\773  Q  07  II","  2 BJY\818\773INTKWOARFEMVSGCUDPHZQLX  A  24  VIII","  3 ILHXUBZQPNVGKMCRTEJFADOYS\818\773W  F  16  V","  4 YDSKZPTNCHGQOMXAUWJ\818\773FBRELVI  L  10  \947","  R ENKQAUYWJI\818\773COPBLMDXZVFTHRGS         b","  4 PUIBWTKJZ\818\773SDXNHMFLVCGQYROAE         \947","  3 UFOVRTLCASMBNJWIHPYQEKZDXG\818\773         V","  2 JARTMLQ\818\773VDBGYNEIUXKPFSOHZCW         VIII","  1 LFZVXEINSOKAYHBRG\818\773CPMUDJWTQ         II","  P YBCDFEG\818\773HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL","G < CMAWFEKLNVG\818\773HBIUYTXZQOJDRPS         "],
+                testShowConfigIntenral (configEnigma "A-I-II-III" "ABC" "OI.XC.QA.PL.FG.ER.TY" "02.02.25.25") ' '
+                        ["    ABCDEFGHIJKLMNOPQRSTUVWXYZ         ","  P QBXDRGFHOJKPMNILAESYUVWCTZ         OI.XC.QA.PL.FG.ER.TY","  1 FHYLNPTRVJUAESCWGIQOMKXZBD  C  05  III","  2 HPFORUYIETQJZNDWKMVCSLBXGA  B  04  II","  3 KFLNGMHERWAOUPXZIYVTQBJCSD  A  26  I","  R EFKNABMZYWCXGDSRVPOUTQJLIH         A","  3 KVXZHBEGQWACFDLNUIYTMSJORP         I","  2 ZWTOICYAHLQVRNDBKEUJFSPXGM         II","  1 LYOZMAQBRJVDUETFSHNGKIPWCX         III","  P QBXDRGFHOJKPMNILAESYUVWCTZ         OI.XC.QA.PL.FG.ER.TY","    ORWGIZDJEHQNVLASKBPXYMCTUF         "],
+                testShowOperation (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KRIEG"
+                        ["    OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06","K > CMAWFEKLNVG\818\773HBIUYTXZQOJDRPS  LFAQ  10 16 24 07","R > HXETCUMASQNZGKRYJO\818\773IDFWVBPL  LFAR  10 16 24 08","I > FGRJUABYW\818\773DZSXVQTOCLPENIMHK  LFAS  10 16 24 09","E > SJWYN\818\773UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10","G > EOKPAQW\818\773JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11"],
+                testShowOperation (configEnigma "c-β-VI-VIII-V" "OMLQ" "AI.JF.CM.DQ.HU.LX.PR.SZ" "03.16.04.11") "UBOOT"
+                        ["    LQZRYKTWJIFAXUVSBDPGNOHMEC  OMLQ  13 24 09 07","U > TDRBJWSNVEPMLHUKXCGAO\818\773IFQZY  OMLR  13 24 09 08","B > VK\818\773JTYSXMLCBIHRZWUNFDQAPGEO  OMLS  13 24 09 09","O > VTSFJDZWNEPRUIY\818\773KXLCBMAHQOG  OMLT  13 24 09 10","O > VYPSMILKFQHGEZW\818\773CJUDXRAOTBN  OMLU  13 24 09 11","T > BARPQGFWLTUIZXVDECYJ\818\773KOHNSM  OMLV  13 24 09 12"],
+                testTest]
         if (errors results + failures results == 0) then
                 exitWith ExitSuccess
         else
