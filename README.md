@@ -8,8 +8,8 @@
 
 An Enigma machine simulator with state and encoding display.
 
-Currently support is only provided for the machine models in most widespread general use during the war years:
-the I, M3, and M4.
+Currently support is only provided for those [machine models] in most widespread general use during the war years:
+the [I], [M3], and [M4].
 
 This is adapted, as an exerecise in learning Haskell, from an earlier learning project written in Mathematica.
 It is my first Haskell program.
@@ -38,3 +38,8 @@ scheduled [milestones] and in the list of [open issues].
 [development version]: https://github.com/orome/crypto-enigma/tree/develop
 [milestones]: https://github.com/orome/crypto-enigma/milestones
 [open issues]: https://github.com/orome/crypto-enigma/issues
+
+[machine models]: http://www.cryptomuseum.com/crypto/enigma/tree.htm
+[I]: http://www.cryptomuseum.com/crypto/enigma/i/index.htm
+[M3]: http://www.cryptomuseum.com/crypto/enigma/m3/index.htm
+[M4]: http://www.cryptomuseum.com/crypto/enigma/m4/index.htm
