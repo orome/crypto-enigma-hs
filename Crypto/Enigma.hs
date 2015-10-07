@@ -75,8 +75,6 @@ import           Crypto.Enigma.Utils
 -- TBD - Use Arrow more?
 -- TBD - EnigmaMachine as Monad instance?
 -- TBD - Add more walkthroughs to documentation (either README or Haddock)?
--- TBD - Proper testing script - <http://dev.stephendiehl.com/hask/#testing> <<<
--- TBD - Code review <<<
 -- REV - Move plugboard last (it's 'optional'?)?
 -- TBD - Note how this implementation differs by preserving all letters and full mappings so they can be examined. <<<
 -- REV - Have lists and display omit plugboard stage if not used or present; distinguishing non-use and absence?
@@ -155,12 +153,12 @@ reflectors = M.keys refs
 -- | The 'Component' with the specified 'Name'.
 component :: Name -> Component
 component n = fromMaybe (Component n (foldr plug letters (splitOn "." n)) "") (M.lookup n comps)
-            -- Either lookup the rotor or reflector by name, or use the plugboard spec to
-            -- generate a component with wiring in which the specified letter pairs are exchanged.
-            where
-                c = find ((== n).name) comps
-                plug [p1,p2] = map (\ch -> if ch == p1 then p2 else if ch == p2 then p1 else ch)
-                plug _       = id       -- Anything but a .-separated pair will have no effect
+        -- Either lookup the rotor or reflector by name, or use the plugboard spec to
+        -- generate a component with wiring in which the specified letter pairs are exchanged.
+    where
+        c = find ((== n).name) comps
+        plug [p1,p2] = map (\ch -> if ch == p1 then p2 else if ch == p2 then p1 else ch)
+        plug _       = id       -- Anything but a .-separated pair will have no effect
 
 
 -- Machine configurations and transitions ------------------------------------
@@ -178,45 +176,45 @@ type Position = Int
 
 -- | The complete description of the state of an Enigma machine, consisting 'components', 'positions', and 'rings'.
 data EnigmaConfig = EnigmaConfig {
-                        -- | The 'Name' of each 'Component' in an 'EnigmaConfig', in processing order.
-                        --   Unchanged by 'step'.
-                        --
-                        --   >>> components $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
-                        --   ["AM.EU.ZL","II","III","V","\946","c"]
-                        --
-                        --   (Note that any Unicode charcters are
-                        --   <http://stackoverflow.com/a/24953885/656912 stored by Haskell> as their Unicode value:
-                        --   here @"\\946" == "β"@.)
-                        components :: ![Name],
-                        -- | The 'Position' of each 'Component' in an 'EnigmaConfig', in machine processing order.
-                        --   May be changed by 'step'.
-                        --
-                        --   >>> positions $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
-                        --   [1,25,2,17,23,1]
-                        --
-                        --   For plugboard and reflector, this will always be @1@ since the former cannot rotate,
-                        --   and the latter does not (neither will be changed by 'step'):
-                        --
-                        --   prop> head (positions cfg) == 1
-                        --   prop> last (positions cfg) == 1
-                        --
-                        --   This determines the encoding performed by a component (see 'componentMapping').
-                        positions :: ![Position],
-                        -- | The location of ring letter 'A' on the rotor for each 'Component' in an 'EnigmaConfig',
-                        --   in machine processing order.
-                        --   Unchanged by 'step'.
-                        --
-                        --   >>> rings $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
-                        --   [1,11,21,1,16,1]
-                        --
-                        --   For plugboard and reflector, this will always be @1@ since the former lacks a ring,
-                        --   and for latter ring position is irrelevant (the letter ring is not visible, and has
-                        --   no effect on turnovers):
-                        --
-                        --   prop> head (rings cfg) == 1
-                        --   prop> last (rings cfg) == 1
-                        rings :: ![Int]
-                    } deriving Eq
+        -- | The 'Name' of each 'Component' in an 'EnigmaConfig', in processing order.
+        --   Unchanged by 'step'.
+        --
+        --   >>> components $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
+        --   ["AM.EU.ZL","II","III","V","\946","c"]
+        --
+        --   (Note that any Unicode charcters are
+        --   <http://stackoverflow.com/a/24953885/656912 stored by Haskell> as their Unicode value:
+        --   here @"\\946" == "β"@.)
+        components :: ![Name],
+        -- | The 'Position' of each 'Component' in an 'EnigmaConfig', in machine processing order.
+        --   May be changed by 'step'.
+        --
+        --   >>> positions $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
+        --   [1,25,2,17,23,1]
+        --
+        --   For plugboard and reflector, this will always be @1@ since the former cannot rotate,
+        --   and the latter does not (neither will be changed by 'step'):
+        --
+        --   prop> head (positions cfg) == 1
+        --   prop> last (positions cfg) == 1
+        --
+        --   This determines the encoding performed by a component (see 'componentMapping').
+        positions :: ![Position],
+        -- | The location of ring letter 'A' on the rotor for each 'Component' in an 'EnigmaConfig',
+        --   in machine processing order.
+        --   Unchanged by 'step'.
+        --
+        --   >>> rings $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
+        --   [1,11,21,1,16,1]
+        --
+        --   For plugboard and reflector, this will always be @1@ since the former lacks a ring,
+        --   and for latter ring position is irrelevant (the letter ring is not visible, and has
+        --   no effect on turnovers):
+        --
+        --   prop> head (rings cfg) == 1
+        --   prop> last (rings cfg) == 1
+        rings :: ![Int]
+        } deriving Eq
 
 -- | The sequential, (forward) processing-order, 'Stage' occupied by each 'Component' in an 'EnigmaConfig', starting
 --   with @0@ for the plugboard and ending with the reflector.
@@ -272,7 +270,7 @@ step ec = ec { positions = steppedPosition <$> stages ec } -- only positions cha
                    | i >  3                 = 0  -- only the first three rotors can step
                    | i == 1                 = 1  -- the first rotor always steps
                    | i == 2 && isTurn 2     = 1  -- the second rotor steps if it is in a turnover position
-                   |           isTurn (i-1) = 1  -- other rotors (<=3) step if the previous component is in a turnover position
+                   |           isTurn (i-1) = 1  -- others (<=3) step if previous component is in a turnover position
                    | otherwise              = 0
                 isTurn :: Stage -> Bool
                 isTurn j = elem (windowLetter ec j) (turnovers $ component (components ec !! j))
@@ -289,8 +287,8 @@ step ec = ec { positions = steppedPosition <$> stages ec } -- only positions cha
 windows :: EnigmaConfig -> String
 windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 
--- REV - Add assertion that last components' is in reflectors; all of head.tail components' are in rotors?
--- REV - Att checks for historical combinations of machine elements?
+-- REV - Add assertion that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
+-- REV - Add checks for historical combinations of machine elements?
 -- | A (safe plublic, <https://wiki.haskell.org/Smart_constructors "smart">) constructor that does validation and takes a conventional specification as input, in the
 --   form of four strings:
 --
@@ -314,17 +312,17 @@ configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> 
                                                             ((\s -> s == nub s) $ filter (/='.') plug))
                                             ) &&
                                             (and $ (`M.member` comps) <$> tail components'))
-                                           EnigmaConfig {
-                                               components = components',
-                                               positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
-                                              rings = rngs'
-                                           }
-                                            where
-                                                -- Order is reversed, from physical to processing order
-                                                -- Rings and windows are padded with values for the plugboard and reflector
-                                                rngs' = reverse $ (read <$> (splitOn "." $ "01." ++ rngs ++ ".01") :: [Int])
-                                                winds' = "A" ++ reverse winds ++ "A"
-                                                components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
+        EnigmaConfig {
+                components = components',
+                positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
+                rings = rngs'
+        }
+    where
+        -- Order is reversed, from physical to processing order
+        -- Rings and windows are padded with values for the plugboard and reflector
+        rngs' = reverse $ (read <$> (splitOn "." $ "01." ++ rngs ++ ".01") :: [Int])
+        winds' = "A" ++ reverse winds ++ "A"
+        components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
 
 
 -- TBD - Some checking, e.g. that four "words" have been provided?
@@ -335,21 +333,21 @@ configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> 
 --   >>> cfg == cfg'
 --   True
 instance Read EnigmaConfig where
-    readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
+        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
 -- | Show the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
 --
 --   >>> configEnigma "b-β-V-VIII-II" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11"
 --   "b-β-V-VIII-III XQVI UX.MO.KZ.AY.EF.PL 03.17.24.11"
 instance Show EnigmaConfig where
-    show ec = unwords [intercalate "-" $ reverse.tail $ components ec,
-                       windows ec,
-                       head $ components ec,
-                       intercalate "." $ reverse.tail.init $ (printf "%02d") <$> (rings ec)]
+        show ec = unwords [intercalate "-" $ reverse.tail $ components ec,
+                           windows ec,
+                           head $ components ec,
+                           intercalate "." $ reverse.tail.init $ (printf "%02d") <$> (rings ec)]
 
 -- | Show a 'Component' as a formatted string consisting of its 'name', 'wiring', and 'turnovers' (if any).
 instance Show Component where
-    show c = printf "%-5.5s" (name c) ++ " " ++ wiring c ++ " " ++ turnovers c
+        show c = printf "%-5.5s" (name c) ++ " " ++ wiring c ++ " " ++ turnovers c
 
 
 
@@ -396,11 +394,11 @@ data Direction = Fwd | Rev
 --   True
 componentMapping:: Direction -> Component -> Position -> Mapping
 componentMapping d c p = case d of
-                        Fwd -> map (\ch -> rotMap (1-p) letters !! (numA0 ch)) (rotMap (p-1) (wiring c))
-                        Rev -> chrA0 <$> (ordering $ componentMapping Fwd c p)
-                    where
-                        rotMap :: Int -> Wiring -> Mapping
-                        rotMap o w = take 26 . drop (mod o 26) . cycle $ w
+        Fwd -> map (\ch -> rotMap (1-p) letters !! (numA0 ch)) (rotMap (p-1) (wiring c))
+        Rev -> chrA0 <$> (ordering $ componentMapping Fwd c p)
+    where
+        rotMap :: Int -> Wiring -> Mapping
+        rotMap o w = take 26 . drop (mod o 26) . cycle $ w
 
 -- | The list of 'Mapping's for each stage of an 'EnigmaConfig': the encoding performed by the
 --   'Component' /at that point/ in the progress through the machine.
@@ -435,9 +433,9 @@ componentMapping d c p = case d of
 --   can be found in "Crypto.Enigma.Display#showEnigmaConfigInternalEG".
 stageMappingList:: EnigmaConfig -> [Mapping]
 stageMappingList ec = ((stageMapping Fwd) <$>) <> ((stageMapping Rev) <$>).tail.reverse $ stages ec
-                where
-                        stageMapping :: Direction -> Stage -> Mapping
-                        stageMapping d sn = componentMapping d (component $ components ec !! sn) (positions ec !! sn)
+    where
+        stageMapping :: Direction -> Stage -> Mapping
+        stageMapping d sn = componentMapping d (component $ components ec !! sn) (positions ec !! sn)
 
 -- | The list of 'Mapping's an 'EnigmaConfig' has performed by each stage:
 --   the encoding performed by the 'EnigmaConfig' /up to that point/ in the progress through the machine.
@@ -492,6 +490,6 @@ type Message = String
 --   prop> enigmaEncoding cfg (enigmaEncoding cfg msg) == msg
 enigmaEncoding :: EnigmaConfig -> Message -> String
 enigmaEncoding ec msg = assert (all (`elem` letters) msg) $
-                        -- The encoding of a string is the sequence encodings performed by sequentially
-                        -- stepped configurations (preceded by a step)
-                        zipWith encode (enigmaMapping <$> (iterate step (step ec))) msg
+        -- The encoding of a string is the sequence encodings of each character
+        -- performed by sequentially stepped configurations (preceded by a step)
+        zipWith encode (enigmaMapping <$> cfgs) msg where cfgs = iterate step (step ec)

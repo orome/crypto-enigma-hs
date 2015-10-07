@@ -50,11 +50,11 @@ import Crypto.Enigma
 -- Some standard substitions performed by (Kriegsmarine) operators
 preproc :: String -> Message
 preproc s = filter (`elem` ['A'..'Z']) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
-            where
-                subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
-                        ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
-                        ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
-                        ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
+    where
+        subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
+                ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
+                ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
+                ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
 
 
 -- Message display -----------------------------------------------------------
@@ -105,14 +105,16 @@ showEnigmaOperation_ df ec msg = unlines $ zipWith df (iterate step ec) (' ':(pr
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc) (windows ec) (reverse $ tail.init $ positions ec)
-                            where
-                                ch' = if ch `elem` letters then ch else ' '
-                                enc = enigmaMapping ec
-                                fmt ch e ws ps = lbl ++ " " ++ e ++ "  " ++ ws ++ "  "++ ps'
-                                    where
-                                       lbl = if ch == ' ' then "   " else  ch:" >"
-                                       ps' = unwords $ (printf "%02d") <$> ps
+showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
+                                 (windows ec)
+                                 (reverse $ tail.init $ positions ec)
+    where
+        ch' = if ch `elem` letters then ch else ' '
+        enc = enigmaMapping ec
+        fmt ch e ws ps = lbl ++ " " ++ e ++ "  " ++ ws ++ "  "++ ps'
+            where
+                lbl = if ch == ' ' then "   " else  ch:" >"
+                ps' = unwords $ (printf "%02d") <$> ps
 
 -- TBD - Add figure from MMA tool showing mapping
 -- | Display a summary of the Enigma machine configuration as a schematic showing the encoding (see 'Mapping')
@@ -171,22 +173,25 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc) (windo
 --   Note that (as follows from 'Mapping') the position of the marked letter at each stage is the alphabetic position
 --   of the marked letter at the previous stage.
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch = unlines $
-                            [fmt (if ch' == ' ' then "" else ch':" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
-                            (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                          (zipWith markedMapping (tail.init $ charLocs) (stageMappingList ec))
-                                          (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
-                                          ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
-                                          (components ec ++ (tail $ reverse $ components ec))
-                            ) ++
-                            [fmt (if ch' == ' ' then "" else (encode (enigmaMapping ec) ch'):" <") (markedMapping (last charLocs) (enigmaMapping ec)) ' ' 0 ""]
-                        where
-                            ch' = if ch `elem` letters then ch else ' '
-                            charLocs = zipWith (locCar ch') ([letters] ++ stageMappingList ec ++ [enigmaMapping ec]) ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
-                            fmt l e w p n = lbl ++ " " ++ e ++ "  " ++ (w:[]) ++ "  " ++ p' ++ "  " ++ n
-                                where
-                                    lbl = printf "%3.3s" l :: String
-                                    p' = if p == 0 then "  " else printf "%02d" (p::Int)
+showEnigmaConfigInternal ec ch =
+        unlines $ [fmt (if ch' == ' ' then "" else ch':" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
+                  (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
+                                (zipWith markedMapping (tail.init $ charLocs) (stageMappingList ec))
+                                (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
+                                ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
+                                (components ec ++ (tail $ reverse $ components ec))
+                  ) ++
+                  [fmt (if ch' == ' ' then "" else (encode (enigmaMapping ec) ch'):" <")
+                       (markedMapping (last charLocs) (enigmaMapping ec)) ' ' 0 ""]
+    where
+        ch' = if ch `elem` letters then ch else ' '
+        charLocs = zipWith (locCar ch')
+                           ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
+                           ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
+        fmt l e w p n = lbl ++ " " ++ e ++ "  " ++ (w:[]) ++ "  " ++ p' ++ "  " ++ n
+            where
+                lbl = printf "%3.3s" l :: String
+                p' = if p == 0 then "  " else printf "%02d" (p::Int)
 
 
 -- Operation display ---------------------------------------------------------

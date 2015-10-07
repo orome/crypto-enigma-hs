@@ -29,7 +29,7 @@ testWindowsInstantiation :: String -> String -> String -> String -> Test
 testWindowsInstantiation rots winds plug rings = TestCase $ assertEqual ("Invalid windows from instantiation for " ++ show cfg)
         winds
         (windows cfg)
-                where cfg = configEnigma rots winds plug rings
+    where cfg = configEnigma rots winds plug rings
 
 testReadShowIsNoOp :: EnigmaConfig -> Test
 testReadShowIsNoOp cfg = TestCase $ assertEqual ("Read/Show implementation not compliant for " ++ show cfg)
