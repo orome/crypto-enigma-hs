@@ -19,6 +19,9 @@ description:            The crypto-enigma package is an Enigma machine simulator
                         For richer display functionality additionally
                         .
                         > > import Crypto.Enigma.Display
+                        .
+                        (Note that this package assumes support for combining Unicode, without which some output may
+                        appear garbled.)
 homepage:               https://github.com/orome/crypto-enigma
 bug-reports:	        https://github.com/orome/crypto-enigma/issues
 license:                BSD3
