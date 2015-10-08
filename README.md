@@ -14,6 +14,11 @@ the [I], [M3], and [M4].
 This is adapted, as an exerecise in learning Haskell, from an earlier learning project written in Mathematica.
 It is my first Haskell program.
 
+Note that the correct display of some characters used to represent components
+(thin Naval rotors) assumes support for Unicode, while some aspects of the display of machine state
+depend on support for combining Unicode. This is a [known limitation](https://github.com/orome/crypto-enigma/issues/10)
+that will be addressed in a future release.
+
 Full [documentation] — for the latest [release version] — is available on Hackage.
 
 For other Haskell Enigma machines see:
