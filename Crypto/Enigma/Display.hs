@@ -1,13 +1,14 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
 {-|
 Module      : Crypto.Enigma.Display
-Description : Display of Enigma machine state and encoding.
+Description : Display of Enigma machine state and encoding
+Copyright   : (c) 2014-2015 Roy Levien
 License     : BSD3
 Maintainer  : royl@aldaron.com
 Stability   : experimental
 Portability : POSIX
 
-A module for rich display of the state state of and encoding performed by Enigma machines defined in "Crypto.Enigma".
+A module for rich display of the state of and encoding performed by Enigma machines defined in "Crypto.Enigma".
 -}
 
 module Crypto.Enigma.Display (

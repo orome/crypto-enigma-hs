@@ -1,7 +1,8 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
 {-|
 Module      : Crypto.Enigma
-Description : Enigma machine simulator.
+Description : Enigma machine simulator
+Copyright   : (c) 2014-2015 Roy Levien
 License     : BSD3
 Maintainer  : royl@aldaron.com
 Stability   : experimental
