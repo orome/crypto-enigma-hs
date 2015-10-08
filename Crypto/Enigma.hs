@@ -369,8 +369,9 @@ type Mapping = String
 
 -- REV - These only need to be exposed to allow componentMapping to be exposed; necessary? <<<
 -- | The direction that a signal flows through a 'Component'. During encoding of a character, the signal
---   passes first through every component in a forward ('Fwd') direction, then through the reflector, and then, in
---   revers order, through each component again, in reverse ('Rev').
+--   passes first through the wiring of each component, from right to left in the machine, in a forward ('Fwd')
+--   direction, then through the reflector, and then, from left to right, through each component again,
+--   in reverse ('Rev').
 --   This direction affects the encoding performed by the component (see 'componentMapping').
 data Direction = Fwd | Rev
 
