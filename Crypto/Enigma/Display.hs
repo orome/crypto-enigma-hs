@@ -111,7 +111,7 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
     where
         ch' = if ch `elem` letters then ch else ' '
         enc = enigmaMapping ec
-        fmt ch e ws ps = lbl ++ " " ++ e ++ "  " ++ ws ++ "  "++ ps'
+        fmt ch e ws ps = printf "%s %s  %s  %s" lbl e ws ps'
             where
                 lbl = if ch == ' ' then "   " else  ch:" >"
                 ps' = unwords $ (printf "%02d") <$> ps
@@ -188,9 +188,8 @@ showEnigmaConfigInternal ec ch =
         charLocs = zipWith (locCar ch')
                            ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
                            ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
-        fmt l e w p n = lbl ++ " " ++ e ++ "  " ++ (w:[]) ++ "  " ++ p' ++ "  " ++ n
+        fmt l e w p n = printf "%3.3s %s  %s  %s  %s" l e (w:[]) p' n
             where
-                lbl = printf "%3.3s" l :: String
                 p' = if p == 0 then "  " else printf "%02d" (p::Int)
 
 
@@ -213,7 +212,7 @@ showEnigmaConfigInternal ec ch =
 showEnigmaOperation :: EnigmaConfig -> String -> String
 showEnigmaOperation ec msg = showEnigmaOperation_ showEnigmaConfig ec msg
 
--- | Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal')
+-- | Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
 --   and for each subsequent configuration as it processes each letter of a message.
 --
 --   >>> putStr $ showEnigmaOperationInternal (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KR"
@@ -261,7 +260,7 @@ showEnigmaOperation ec msg = showEnigmaOperation_ showEnigmaConfig ec msg
 --
 --   Note that the first block of the display represents the initial configuration of the machine, but does not
 --   perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
---   as one displayed in the example for 'showEnigmaConfigInternal'.
+--   as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 showEnigmaOperationInternal :: EnigmaConfig -> String -> String
 showEnigmaOperationInternal ec msg = showEnigmaOperation_ showEnigmaConfigInternal ec msg
 
