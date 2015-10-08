@@ -37,7 +37,7 @@ import Crypto.Enigma
 {-# ANN module ("HLint: error Redundant $"::String) #-}
 {-# ANN module ("HLint: ignore Use ."::String) #-}
 
--- TBD - Fix name of more detaild display -> ..EnigmConfigSchematic ? <<<
+-- TBD - Fix name of more detailed display -> ..EnigmConfigSchematic ? <<<
 -- REV - Final newline in show... functions is a bit inconsistent
 
 
@@ -47,7 +47,7 @@ import Crypto.Enigma
 
 -- Message entry -------------------------------------------------------------
 
--- Some standard substitions performed by (Kriegsmarine) operators
+-- Some standard substitutions performed by (Kriegsmarine) operators
 preproc :: String -> Message
 preproc s = filter (`elem` ['A'..'Z']) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
     where
@@ -85,8 +85,8 @@ markedMapping Nothing e     = e
 
 -- Machine operation display =================================================
 
--- Preprocess a message and produce a configuration display for the starting configuraiton
--- and for each character of the message, using the provied configuration display function.
+-- Preprocess a message and produce a configuration display for the starting configuration
+-- and for each character of the message, using the provided configuration display function.
 showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> String -> String
 showEnigmaOperation_ df ec msg = unlines $ zipWith df (iterate step ec) (' ':(preproc msg))
 
@@ -121,7 +121,7 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
 --   performed by each stage (see 'stageMappingList'), along with an indication of the stage
 --   (rotor number, @\"P\"@ for plugboard, or @\"R\"@ for reflector), window letter (see 'windows'),
 --   'Position' (see 'positions') and 'Name',
---   followed by the encoding for the machine, and preceeded by  a (trivial, no-op) keyboard \"encoding\"
+--   followed by the encoding for the machine, and preceded by  a (trivial, no-op) keyboard \"encoding\"
 --   for reference.
 --
 --   If a valid 'Message' character is provided, indicate that as input and mark the letter it is encoded to at
@@ -209,7 +209,7 @@ showEnigmaConfigInternal ec ch =
 --
 --   Note that the first line of the display represents the initial configuration of the machine, but does not
 --   perform any encoding (as explained in 'step').
---   Note also that the second line of this display is the same as one displayed in the examle for 'showEnigmaConfig'.
+--   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> String -> String
 showEnigmaOperation ec msg = showEnigmaOperation_ showEnigmaConfig ec msg
 
@@ -261,7 +261,7 @@ showEnigmaOperation ec msg = showEnigmaOperation_ showEnigmaConfig ec msg
 --
 --   Note that the first block of the display represents the initial configuration of the machine, but does not
 --   perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
---   as one displayed in the examle for 'showEnigmaConfigInternal'.
+--   as one displayed in the example for 'showEnigmaConfigInternal'.
 showEnigmaOperationInternal :: EnigmaConfig -> String -> String
 showEnigmaOperationInternal ec msg = showEnigmaOperation_ showEnigmaConfigInternal ec msg
 
@@ -269,7 +269,7 @@ showEnigmaOperationInternal ec msg = showEnigmaOperation_ showEnigmaConfigIntern
 
 -- Encoding display ==========================================================
 
--- | Show the conventionally formatted encoding of a mssage by an (initial) Enigma machine configuration.
+-- | Show the conventionally formatted encoding of a message by an (initial) Enigma machine configuration.
 --
 --   >>> let cfg = configEnigma "c-β-V-VI-VIII" "CDTJ" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12"
 --   >>> putStr $ showEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"

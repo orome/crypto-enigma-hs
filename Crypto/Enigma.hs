@@ -289,7 +289,7 @@ windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 
 -- REV - Add assertion that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
 -- REV - Add checks for historical combinations of machine elements?
--- | A (safe plublic, <https://wiki.haskell.org/Smart_constructors "smart">) constructor that does validation and takes a conventional specification as input, in the
+-- | A (safe public, <https://wiki.haskell.org/Smart_constructors "smart">) constructor that does validation and takes a conventional specification as input, in the
 --   form of four strings:
 --
 --   * The rotor 'Name's, separated by dashes (e.g. @\"C-V-I-II\"@); see 'Name'.
