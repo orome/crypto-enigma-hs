@@ -1,6 +1,6 @@
 See also: the list of [code releases] and [closed milestones].
 
-### (0.0.2.0)
+### [0.0.2.0]
 
 * Start testing module.
 * Expose valid rotor and reflector names in API.
@@ -25,7 +25,6 @@ See also: the list of [code releases] and [closed milestones].
 * Added CHANGELOG.
 * Support for [build checks].
 
-
 ### [0.0.1.3]
 
 Initial Hackage version. First upload of package to Hackage,
@@ -35,6 +34,7 @@ Stable enough for use, but not reviewed.
 [build checks]: https://travis-ci.org/orome/crypto-enigma/branches
 [code releases]: https://github.com/orome/crypto-enigma/releases
 [closed milestones]: https://github.com/orome/crypto-enigma/milestones?state=closed
+[0.0.2.0]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.0
 [0.0.1.7]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.7
 [0.0.1.6]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.6
 [0.0.1.5]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.5
