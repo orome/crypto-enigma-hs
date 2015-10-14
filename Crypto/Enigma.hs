@@ -1,4 +1,5 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
+--{-# OPTIONS_GHC -fno-ignore-asserts #-} -- REV - Use to keep asserts for valid 'Message'? <<<
 {-|
 Module      : Crypto.Enigma
 Description : Enigma machine simulator
@@ -471,11 +472,11 @@ enigmaMapping :: EnigmaConfig -> Mapping
 enigmaMapping ec = last $ enigmaMappingList ec  -- The final stage's progressive encoding
 
 -- TBD - Keep? Not enforced except by assertion in 'enigmaEncoding', and by substitution of ' ' in showEnigmaConfigS
--- BUG - Why does this assertion seem to pass and generate an out of bounds error with e.g., '.' in a msg? <<<
 -- | A valid keyboard entry into an Enigma machine: a string of uppercase characters.
 type Message = String
 
--- REV -- Move preprocessing back; move assertion out?
+-- TBD - Either keep assertion enabled or replace with if/else or other enforcement or check <<<
+-- REV - Move preprocessing back; move assertion out?
 -- | Encode a 'Message' using a given (starting) machine configuration, by 'step'ping the configuration prior to
 --   processing each character of the message. This produces a new configuration (with new 'positions' only)
 --   for encoding each character, which serves as the "starting" configuration for subsequent
