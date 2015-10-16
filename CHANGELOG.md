@@ -2,7 +2,7 @@ See also: the list of [code releases] and [closed milestones].
 
 ### (0.0.2.1)
 
-TBD
+* Add figures to documentation.
 
 ### [0.0.2.0]
 
