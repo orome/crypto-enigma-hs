@@ -23,7 +23,7 @@ description:            The crypto-enigma package is an Enigma machine simulator
                         (Note that this package assumes support for combining Unicode, without which some output may
                         appear garbled.)
 homepage:               https://github.com/orome/crypto-enigma
-bug-reports:	        https://github.com/orome/crypto-enigma/issues
+bug-reports:            https://github.com/orome/crypto-enigma/issues
 license:                BSD3
 license-file:           LICENSE
 author:                 Roy Levien

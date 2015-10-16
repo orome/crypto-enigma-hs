@@ -168,7 +168,7 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
 --     to __@\'Q\'@__, which is then
 --   * encoded in reverse by the first rotor (@\'1\'@),
 --     to __@\'G\'@__, which is then
---   * encoded left unchainged by the plugboard (@\'P\'@), and finally
+--   * left unchanged by the plugboard (@\'P\'@), and finally
 --   * displayed as __@\'G\'@__
 --
 --   Note that (as follows from 'Mapping') the position of the marked letter at each stage is the alphabetic position
