@@ -117,7 +117,7 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
                 lbl = if ch == ' ' then "   " else  ch:" >"
                 ps' = unwords $ (printf "%02d") <$> ps
 
--- TBD - Add figure from MMA tool showing mapping
+-- TBD - Improve resolution of figure showing mapping <<<
 -- | Display a summary of the Enigma machine configuration as a schematic showing the encoding (see 'Mapping')
 --   performed by each stage (see 'stageMappingList'), along with an indication of the stage
 --   (rotor number, @\"P\"@ for plugboard, or @\"R\"@ for reflector), window letter (see 'windows'),
