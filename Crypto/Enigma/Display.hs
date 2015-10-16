@@ -173,6 +173,8 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
 --
 --   Note that (as follows from 'Mapping') the position of the marked letter at each stage is the alphabetic position
 --   of the marked letter at the previous stage.
+--
+--   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
 showEnigmaConfigInternal ec ch =
         unlines $ [fmt (if ch' == ' ' then "" else ch':" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++

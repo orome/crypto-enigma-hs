@@ -33,6 +33,7 @@ category:               Cryptography, Education
 build-type:             Simple
 extra-source-files:     CHANGELOG.md
                         README.md
+extra-doc-files:        figs/*.jpg
 cabal-version:          >=1.22
 
 source-repository head
