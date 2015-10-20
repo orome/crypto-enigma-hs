@@ -174,6 +174,8 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
 --   Note that (as follows from 'Mapping') the position of the marked letter at each stage is the alphabetic position
 --   of the marked letter at the previous stage.
 --
+--   This can be represented schematically (with input arriving and outupt exiting on the right) as #showEnigmaConfigInternalFIG#
+--
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
 showEnigmaConfigInternal ec ch =
