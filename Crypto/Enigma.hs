@@ -218,6 +218,7 @@ data EnigmaConfig = EnigmaConfig {
         rings :: ![Int]
         } deriving Eq
 
+-- REV - Is this needed anywhere but in display functions? The Python version can avoid it.
 -- | The sequential, (forward) processing-order, 'Stage' occupied by each 'Component' in an 'EnigmaConfig', starting
 --   with @0@ for the plugboard and ending with the reflector.
 --
