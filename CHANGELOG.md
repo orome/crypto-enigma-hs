@@ -1,8 +1,8 @@
 See also: the list of [code releases] and [closed milestones].
 
-### (0.0.2.3)
+### [0.0.2.3]
 
-TBD
+* Minor tidying and organization.
 
 ### [0.0.2.2]
 
@@ -48,6 +48,7 @@ Stable enough for use, but not reviewed.
 [build checks]: https://travis-ci.org/orome/crypto-enigma/branches
 [code releases]: https://github.com/orome/crypto-enigma/releases
 [closed milestones]: https://github.com/orome/crypto-enigma/milestones?state=closed
+[0.0.2.3]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.3
 [0.0.2.2]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.2
 [0.0.2.1]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.1
 [0.0.2.0]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.0
