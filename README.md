@@ -1,10 +1,10 @@
 ## crypto-enigma
 
 [![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)](https://www.haskell.org)
-[![Hackage](https://img.shields.io/hackage/v/crypto-enigma.svg)](https://hackage.haskell.org/package/crypto-enigma)
-![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
-[![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma/blob/hackage/LICENSE)
-[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma/branches)
+[![Hackage](https://img.shields.io/hackage/v/crypto-enigma-hs.svg)](https://hackage.haskell.org/package/crypto-enigma-hs)
+![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma-hs.svg)
+[![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma-hs/blob/hackage/LICENSE)
+[![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
 
 An Enigma machine simulator with state and encoding display.
 
@@ -16,7 +16,7 @@ It is my first Haskell program.
 
 Note that the correct display of some characters used to represent components
 (thin Naval rotors) assumes support for Unicode, while some aspects of the display of machine state
-depend on support for combining Unicode. This is a [known limitation](https://github.com/orome/crypto-enigma/issues/10)
+depend on support for combining Unicode. This is a [known limitation](https://github.com/orome/crypto-enigma-hs/issues/10)
 that will be addressed in a future release.
 
 Full [documentation] — for the latest [release version] — is available on Hackage.
@@ -32,17 +32,17 @@ For other Haskell Enigma machines see:
 
 ### Development status
 
-[![Build Status](https://travis-ci.org/orome/crypto-enigma.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma/branches)
+[![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
 
 I'm currently learning and experimenting with some Haskell language features and can't promise the
 [development version] will work. More detail about planned releases and activities can be found the list of
 scheduled [milestones] and in the list of [open issues].
 
 [documentation]: https://hackage.haskell.org/package/crypto-enigma
-[release version]: https://github.com/orome/crypto-enigma/tree/hackage
-[development version]: https://github.com/orome/crypto-enigma/tree/develop
-[milestones]: https://github.com/orome/crypto-enigma/milestones
-[open issues]: https://github.com/orome/crypto-enigma/issues
+[release version]: https://github.com/orome/crypto-enigma-hs/tree/hackage
+[development version]: https://github.com/orome/crypto-enigma-hs/tree/develop
+[milestones]: https://github.com/orome/crypto-enigma-hs/milestones
+[open issues]: https://github.com/orome/crypto-enigma-hs/issues
 
 [machine models]: http://www.cryptomuseum.com/crypto/enigma/tree.htm
 [I]: http://www.cryptomuseum.com/crypto/enigma/i/index.htm

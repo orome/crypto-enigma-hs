@@ -1,8 +1,8 @@
 See also: the list of [code releases] and [closed milestones].
 
-### (0.0.2.4)
+### [0.0.2.4]
 
-TBD
+* Correct errors in project repo and CI linls
 
 ### [0.0.2.3]
 
@@ -49,15 +49,16 @@ without ([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/
 Stable enough for use, but not reviewed.
 
 [test figure]: https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma-Display.html#showEnigmaConfigInternalFIG
-[build checks]: https://travis-ci.org/orome/crypto-enigma/branches
-[code releases]: https://github.com/orome/crypto-enigma/releases
-[closed milestones]: https://github.com/orome/crypto-enigma/milestones?state=closed
-[0.0.2.3]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.3
-[0.0.2.2]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.2
-[0.0.2.1]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.1
-[0.0.2.0]: https://github.com/orome/crypto-enigma/releases/tag/0.0.2.0
-[0.0.1.7]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.7
-[0.0.1.6]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.6
-[0.0.1.5]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.5
-[0.0.1.4]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.4
-[0.0.1.3]: https://github.com/orome/crypto-enigma/releases/tag/0.0.1.3
+[build checks]: https://travis-ci.org/orome/crypto-enigma-hs/branches
+[code releases]: https://github.com/orome/crypto-enigma-hs/releases
+[closed milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=closed
+[0.0.2.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.4
+[0.0.2.3]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.3
+[0.0.2.2]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.2
+[0.0.2.1]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.1
+[0.0.2.0]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.0
+[0.0.1.7]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.1.7
+[0.0.1.6]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.1.6
+[0.0.1.5]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.1.5
+[0.0.1.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.1.4
+[0.0.1.3]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.1.3
