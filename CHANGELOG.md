@@ -1,8 +1,12 @@
 See also: the list of [code releases] and [closed milestones].
 
+### (0.0.2.5)
+
+TBD
+
 ### [0.0.2.4]
 
-* Correct errors in project repo and CI linls
+* Correct errors in project repo and CI links
 
 ### [0.0.2.3]
 
