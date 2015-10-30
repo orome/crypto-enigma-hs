@@ -1,12 +1,12 @@
 See also: the list of [code releases] and [closed milestones].
 
-### (0.0.2.5)
+### [0.0.2.5]
 
-TBD
+* Automatic [Travis CI Hackage deployment](http://docs.travis-ci.com/user/deployment/hackage/).
 
 ### [0.0.2.4]
 
-* Correct errors in project repo and CI links
+* Correct minor errors in project repo and CI links.
 
 ### [0.0.2.3]
 
@@ -56,6 +56,7 @@ Stable enough for use, but not reviewed.
 [build checks]: https://travis-ci.org/orome/crypto-enigma-hs/branches
 [code releases]: https://github.com/orome/crypto-enigma-hs/releases
 [closed milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=closed
+[0.0.2.5]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.5
 [0.0.2.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.4
 [0.0.2.3]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.3
 [0.0.2.2]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.2
