@@ -2,7 +2,7 @@ See also: the list of [code releases] and [closed milestones].
 
 ### [0.0.2.5]
 
-* Automatic [Travis CI Hackage deployment](http://docs.travis-ci.com/user/deployment/hackage/).
+* Test and abandon [Travis CI Hackage deployment](http://docs.travis-ci.com/user/deployment/hackage/).
 
 ### [0.0.2.4]
 
