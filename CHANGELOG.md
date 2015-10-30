@@ -1,5 +1,9 @@
 See also: the list of [code releases] and [closed milestones].
 
+### (0.0.2.6)
+
+TBD
+
 ### [0.0.2.5]
 
 * Test and abandon [Travis CI Hackage deployment](http://docs.travis-ci.com/user/deployment/hackage/).
