@@ -81,6 +81,7 @@ import           Crypto.Enigma.Utils
 -- TBD - Note how this implementation differs by preserving all letters and full mappings so they can be examined. <<<
 -- REV - Have lists and display omit plugboard stage if not used or present; distinguishing non-use and absence?
 -- REV - Show degenerate case in list and display examples?
+-- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
 
 
 
