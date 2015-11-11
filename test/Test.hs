@@ -1,14 +1,50 @@
+{-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 module Main where
 
 import Test.HUnit
+import Test.QuickCheck
+import Test.QuickCheck.Test (isSuccess)
+import Control.Monad (unless)
 import System.Exit
-import Data.List (sort)
+import Data.List (sort,intercalate)
+import Text.Printf (printf)
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
 {-# ANN module ("HLint: ignore Use mappend"::String) #-}
 
+instance Arbitrary EnigmaConfig where
+        arbitrary = do
+                w1 <- elements ['A'..'Z']
+                w2 <- elements ['A'..'Z']
+                w3 <- elements ['A'..'Z']
+                w4 <- elements ['A'..'Z']
+                c1 <- elements rotors
+                c2 <- elements rotors --(drop 2 . reverse  $ rotors)
+                c3 <- elements rotors
+                c4 <- elements rotors
+                uk <- elements reflectors
+                r1 <- choose (1,26)
+                r2 <- choose (1,26)
+                r3 <- choose (1,26)
+                r4 <- choose (1,26)
+--                 Positive x <- arbitrary
+--                 Positive y <- arbitrary
 
+                return $ configEnigma (intercalate "-" [uk,c4,c3,c2,c1])
+                                      [w1,w2,w3,w4]
+                                      "UX.MO.KZ.AY.EF.PL"
+                                      (intercalate "." $ (printf "%02d") <$> ([r1,r2,r3,r4] :: [Int]))
+
+-- REV - Requires TypeSynonymInstances, FlexibleInstances; find a better way <<<
+instance Arbitrary Message where
+        arbitrary = elements ["FUSHFJSHF","KLSJDHFLSKJDHFLSKJDFHLSKJDHFLSKJOIWURURW","GHSHDHUUUHHHA"]
+
+prop_ReadShowIsNoOp :: EnigmaConfig -> Bool
+prop_ReadShowIsNoOp cfg = cfg == (read (show cfg) :: EnigmaConfig)
+
+prop_EncodeEncodeIsMessage :: EnigmaConfig -> Message -> Bool
+prop_EncodeEncodeIsMessage cfg msg = enigmaEncoding cfg (enigmaEncoding cfg msg) == msg
 
 testRotorNames :: Test
 testRotorNames = TestCase $ assertEqual "Invalid rotor list"
@@ -88,6 +124,18 @@ testTest = TestCase $ assertEqual "Should be one" 1 1
 
 main :: IO ()
 main = do
+        putStrLn "\n\nQuickCheck Tests"
+        sample (arbitrary :: Gen EnigmaConfig)
+        sample (arbitrary :: Gen Message)
+        -- verboseCheck prop_ReadShowIsNoOp
+        putStrLn "\nQuickCheck - read.show is id:"
+        result <- quickCheckResult prop_ReadShowIsNoOp
+        unless (isSuccess result) exitFailure
+        -- quickCheckWith stdArgs { maxSuccess = 500 } prop_ReadShowIsNoOp
+        putStrLn "\nQuickCheck - encoding of encoding is message:"
+        result <- quickCheckWithResult stdArgs { maxSuccess = 500 } prop_EncodeEncodeIsMessage
+        unless (isSuccess result) exitFailure
+        putStrLn "\n\n"
         putStrLn "\nComponent names:"
         putStrLn $ " Rotors:\t" ++ (show rotors)
         putStrLn $ " Reflectors:\t" ++ (show reflectors)
