@@ -46,7 +46,7 @@ prop_EncodeEncodeIsMessage cfg msg = enigmaEncoding cfg (enigmaEncoding cfg msg)
 
 main :: IO ()
 main = do
-        putStrLn "\n\nQuickCheck Tests"
+        putStrLn "\nQuickCheck Tests"
         -- sample (arbitrary :: Gen EnigmaConfig)
         -- sample (arbitrary :: Gen Message)
         -- verboseCheck prop_ReadShowIsNoOp
@@ -57,3 +57,4 @@ main = do
         putStrLn "\nQuickCheck - encoding of encoding is message:"
         result <- quickCheckWithResult stdArgs { maxSuccess = 100, chatty = True } prop_EncodeEncodeIsMessage
         unless (isSuccess result) exitFailure
+        putStrLn "\n\n"
