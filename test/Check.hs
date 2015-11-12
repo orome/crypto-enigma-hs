@@ -15,6 +15,9 @@ import Crypto.Enigma.Display
 
 capitals = elements ['A'..'Z']
 
+-- TBD - Can I provide the number of stages as an argument (parameterize) ? <<<
+-- TBD - Consistent formatting and labeling of tests <<<
+-- ASK - Retina figures? <<<
 instance Arbitrary EnigmaConfig where
         arbitrary = do
                 nc <- choose (3,4)  -- This could cover a wider range
@@ -26,7 +29,7 @@ instance Arbitrary EnigmaConfig where
 --                 Positive y <- arbitrary
                 return $ configEnigma (intercalate "-" (uk:cs))
                                       ws
-                                      "UX.MO.KZ.AY.EF.PL"
+                                      "UX.MO.KZ.AY.EF.PL"  -- TBD - Generate plugboard and test <<<
                                       (intercalate "." $ (printf "%02d") <$> (rs :: [Int]))
 
 -- REV - Requires TypeSynonymInstances, FlexibleInstances; find a better way <<<
@@ -46,15 +49,20 @@ prop_EncodeEncodeIsMessage cfg msg = enigmaEncoding cfg (enigmaEncoding cfg msg)
 
 main :: IO ()
 main = do
-        putStrLn "\nQuickCheck Tests"
-        -- sample (arbitrary :: Gen EnigmaConfig)
-        -- sample (arbitrary :: Gen Message)
-        -- verboseCheck prop_ReadShowIsNoOp
+        putStrLn "\n==== QuickCheck Tests"
+        putStrLn "\nExample EnigmaConfig test values:"
+        sample (arbitrary :: Gen EnigmaConfig)
+        sample (arbitrary :: Gen EnigmaConfig)
+        putStrLn "\nExample Message test values:"
+        sample (arbitrary :: Gen Message)
         putStrLn "\nQuickCheck - read.show is id:"
-        result <- quickCheckWithResult stdArgs { maxSuccess = 100, chatty = True }  prop_ReadShowIsNoOp
+        result <- verboseCheckWithResult stdArgs { maxSuccess = 10, chatty = True }  prop_ReadShowIsNoOp
         unless (isSuccess result) exitFailure
-        -- quickCheckWith stdArgs { maxSuccess = 500 } prop_ReadShowIsNoOp
+        result <- quickCheckWithResult stdArgs { maxSuccess = 200, chatty = True }  prop_ReadShowIsNoOp
+        unless (isSuccess result) exitFailure
         putStrLn "\nQuickCheck - encoding of encoding is message:"
+        result <- verboseCheckWithResult stdArgs { maxSuccess = 5, chatty = True } prop_EncodeEncodeIsMessage
+        unless (isSuccess result) exitFailure
         result <- quickCheckWithResult stdArgs { maxSuccess = 100, chatty = True } prop_EncodeEncodeIsMessage
         unless (isSuccess result) exitFailure
-        putStrLn "\n\n"
+        putStrLn "\n"
