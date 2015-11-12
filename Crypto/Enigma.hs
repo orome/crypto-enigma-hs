@@ -161,7 +161,7 @@ component n = fromMaybe (Component n (foldr plug letters (splitOn "." n)) "") (M
     where
         c = find ((== n).name) comps
         plug [p1,p2] = map (\ch -> if ch == p1 then p2 else if ch == p2 then p1 else ch)
-        plug _       = id       -- Anything but a .-separated pair will have no effect
+        plug _       = id       -- Anything but a .-separated pair will have no effect (configEnigma assertion)
 
 
 -- Machine configurations and transitions ------------------------------------
@@ -311,9 +311,11 @@ configEnigma :: String -> String -> String -> String -> EnigmaConfig
 configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> [length winds', length rngs']) &&
                                             (and $ [(>=1),(<=26)] <*> rngs') &&
                                             (and $ (`elem` letters) <$> winds') &&
-                                            (plug == "" || ((and $ (==2).length <$> splitOn "." plug) &&
-                                                            (and $ (`elem` letters) <$> filter (/='.') plug) &&
-                                                            ((\s -> s == nub s) $ filter (/='.') plug))
+                                            -- REV - plug assertion is more restrictive than component
+                                            (plug `elem` ["~",""," "] ||
+                                                        ((and $ (==2).length <$> splitOn "." plug) &&
+                                                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
+                                                         ((\s -> s == nub s) $ filter (/='.') plug))
                                             ) &&
                                             (and $ (`M.member` comps) <$> tail components'))
         EnigmaConfig {
