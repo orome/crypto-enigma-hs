@@ -55,10 +55,13 @@ module Crypto.Enigma (
 
 import           Control.Arrow
 import           Control.Exception      (assert)
+--import           Control.Monad          (unless)
 import           Control.Applicative
 import           Data.Monoid
 import           Data.List
 import           Data.List.Split        (splitOn)
+--import Control.Monad.Except
+--import           Data.Ix                (inRange)
 import qualified Data.Map               as M
 import           Data.Maybe
 import           Text.Printf            (printf)
@@ -82,6 +85,8 @@ import           Crypto.Enigma.Utils
 -- REV - Have lists and display omit plugboard stage if not used or present; distinguishing non-use and absence?
 -- REV - Show degenerate case in list and display examples?
 -- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
+
+
 
 
 
@@ -292,6 +297,7 @@ windows :: EnigmaConfig -> String
 windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 
 -- REV - Add assertion that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
+-- TBD - Replace assertions with something that remains -http://stackoverflow.com/q/33713212/656912 <<<
 -- REV - Add checks for historical combinations of machine elements?
 -- | A (safe public, <https://wiki.haskell.org/Smart_constructors "smart">) constructor that does validation and takes a conventional specification as input, in the
 --   form of four strings:
@@ -307,22 +313,46 @@ windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 --   Validation is permissive, allowing for ahistorical collections and numbers of rotors (including reflectors
 --   at the rotor stage, and trivial degenerate machines;
 --   e.g., @configEnigma "-" \"A\" "" "01"@), and any number of (non-contradictory) plugboard wirings (including none).
+
+data EnigmaError = BadNumbers
+                 | BadRings String
+                 | BadWindows String
+                 | BadPlugs String
+                 | BadRotors String
+                 | MiscError String
+
+instance Show EnigmaError where
+  show BadNumbers = "Numbers of windows, ring settings, and components don't match"
+  show (BadRings s) = "Bad ring settings: " ++ s
+  show (BadWindows s) = "Bad windows: " ++ s
+  show (BadPlugs s) = "Bad plugboard : " ++ s
+  show (BadRotors s) = "Bad rotors : " ++ s
+  show (MiscError s) = s
+
+-- instance Error CustomError where
+--   noMsg = MiscError "Unknown error"
+--   strMsg str = MiscError str
+-- type LengthMonad = Either CustomError
+
+
 configEnigma :: String -> String -> String -> String -> EnigmaConfig
-configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> [length winds', length rngs']) &&
-                                            (and $ [(>=1),(<=26)] <*> rngs') &&
-                                            (and $ (`elem` letters) <$> winds') &&
-                                            -- REV - plug assertion is more restrictive than component
-                                            (plug `elem` ["~",""," "] ||
-                                                        ((and $ (==2).length <$> splitOn "." plug) &&
-                                                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
-                                                         ((\s -> s == nub s) $ filter (/='.') plug))
-                                            ) &&
-                                            (and $ (`M.member` comps) <$> tail components'))
-        EnigmaConfig {
-                components = components',
-                positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
-                rings = rngs'
-        }
+configEnigma rots winds plug rngs
+        | not (and $ (==(length components')) <$> [length winds', length rngs'])
+                                                  = error (show (BadNumbers))
+        | not (and $ [(>=1),(<=26)] <*> rngs')    = error (show (BadRings rngs))
+        | not (and $ (`elem` letters) <$> winds') = error (show (BadWindows winds))
+        | not (plug `elem` ["~",""," "] ||
+                ((and $ (==2).length <$> splitOn "." plug) &&
+                 (and $ (`elem` letters) <$> filter (/='.') plug) &&
+                 ((\s -> s == nub s) $ filter (/='.') plug))
+              )                                    = error (show (BadPlugs plug))
+        | not (and $ (`M.member` comps) <$> tail components')
+                                                   = error (show (BadRotors rots))
+        | otherwise = EnigmaConfig {
+                        components = components',
+                        positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
+                        rings = rngs'
+                      }
     where
         -- Order is reversed, from physical to processing order
         -- Rings and windows are padded with values for the plugboard and reflector
@@ -330,6 +360,52 @@ configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> 
         winds' = "A" ++ reverse winds ++ "A"
         components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
 
+
+
+-- configEnigma :: String -> String -> String -> String -> EnigmaConfig
+-- configEnigma rots winds plug rngs = case runExcept (configEnigma' rots winds plug rngs) of
+--         Right cfg  -> cfg
+--         Left err -> error (show err) -- [] -- undefined
+--
+-- configEnigma' :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
+-- configEnigma' rots winds plug rngs = do
+--         unless (and $ [(>=1),(<=26)] <*> rngs') (throwError (BadRotors rngs))
+--         unless (and $ (`elem` letters) <$> winds') (throwError (BadWindows winds))
+--         return EnigmaConfig {
+--                 components = components',
+--                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
+--                 rings = rngs'
+--         }
+--     where
+--         -- Order is reversed, from physical to processing order
+--         -- Rings and windows are padded with values for the plugboard and reflector
+--         rngs' = reverse $ (read <$> (splitOn "." $ "01." ++ rngs ++ ".01") :: [Int])
+--         winds' = "A" ++ reverse winds ++ "A"
+--         components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
+
+
+
+-- configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> [length winds', length rngs']) &&
+--                                             (and $ [(>=1),(<=26)] <*> rngs') &&
+--                                             (and $ (`elem` letters) <$> winds') &&
+--                                             -- REV - plug assertion is more restrictive than component
+--                                             (plug `elem` ["~",""," "] ||
+--                                                         ((and $ (==2).length <$> splitOn "." plug) &&
+--                                                          (and $ (`elem` letters) <$> filter (/='.') plug) &&
+--                                                          ((\s -> s == nub s) $ filter (/='.') plug))
+--                                             ) &&
+--                                             (and $ (`M.member` comps) <$> tail components'))
+--         EnigmaConfig {
+--                 components = components',
+--                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
+--                 rings = rngs'
+--         }
+--     where
+--         -- Order is reversed, from physical to processing order
+--         -- Rings and windows are padded with values for the plugboard and reflector
+--         rngs' = reverse $ (read <$> (splitOn "." $ "01." ++ rngs ++ ".01") :: [Int])
+--         winds' = "A" ++ reverse winds ++ "A"
+--         components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
 
 -- TBD - Some checking, e.g. that four "words" have been provided?
 -- | Read the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
@@ -340,6 +416,10 @@ configEnigma rots winds plug rngs = assert ((and $ (==(length components')) <$> 
 --   True
 instance Read EnigmaConfig where
         readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
+--         readsPrec _ i = case runExcept (configEnigma c w s r) of
+--             Right cfg  -> [(cfg, "")]
+--             Left err -> error (show err) -- [] -- undefined
+--           where [c, w, s, r] = words i
 
 -- | Show the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
 --
@@ -480,6 +560,7 @@ enigmaMapping ec = last $ enigmaMappingList ec  -- The final stage's progressive
 type Message = String
 
 -- TBD - Either keep assertion enabled or replace with if/else or other enforcement or check <<<
+--       http://stackoverflow.com/q/33713212/656912
 -- REV - Move preprocessing back; move assertion out?
 -- | Encode a 'Message' using a given (starting) machine configuration, by 'step'ping the configuration prior to
 --   processing each character of the message. This produces a new configuration (with new 'positions' only)
