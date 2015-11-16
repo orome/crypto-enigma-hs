@@ -34,7 +34,7 @@ testReadShowIsNoOp cfg = TestCase $ assertEqual ("Read/Show implementation not c
         cfg
         (read (show cfg) :: EnigmaConfig)
 
-testPlugboardIsOwnInverse :: Name -> Message -> Test
+testPlugboardIsOwnInverse :: Name -> String -> Test
 testPlugboardIsOwnInverse plug msg = TestCase $ assertEqual ("Plugboard is not self-inverse for " ++ plug)
         msg
         (enigmaEncoding (configEnigma "----" "AAAA" plug "01.01.01.01") msg)
@@ -50,7 +50,7 @@ testStageMappings cfg mps = TestCase $ assertEqual ("Incorrect mappings for " ++
         (stageMappingList cfg)
 
 -- See: http://www.enigma.hoerenberg.com/index.php?cat=The%20U534%20messages
-testHistoricalMessage :: String -> EnigmaConfig -> Message -> String -> Test
+testHistoricalMessage :: String -> EnigmaConfig -> String -> String -> Test
 testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processing historical message " ++ hmn)
         enc
         (enigmaEncoding cfg msg)
@@ -75,7 +75,7 @@ testShowOperationInternal cfg msg sop = TestCase $ assertEqual ("Incorrect opera
         sop
         (lines $ showEnigmaOperationInternal cfg msg)
 
-testShowEncoding :: EnigmaConfig -> Message -> [String] -> Test
+testShowEncoding :: EnigmaConfig -> String -> [String] -> Test
 testShowEncoding cfg msg senc = TestCase $ assertEqual ("Incorrect encoding display for " ++ show cfg)
         senc
         (lines $ showEnigmaEncoding cfg msg)
@@ -86,6 +86,7 @@ testTest = TestCase $ assertEqual "Should be one" 1 1
 
 main :: IO ()
 main = do
+        print $ message "a b c X Y     Z"
         putStrLn "\n==== HUnit Tests"
         putStrLn "\nComponent names:"
         putStrLn $ " Rotors:\t" ++ (show rotors)

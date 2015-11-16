@@ -46,18 +46,6 @@ import Crypto.Enigma
 -- Helpers ===================================================================
 
 
--- Message entry -------------------------------------------------------------
-
--- Some standard substitutions performed by (Kriegsmarine) operators
-preproc :: String -> Message
-preproc s = filter (`elem` ['A'..'Z']) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
-    where
-        subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
-                ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
-                ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
-                ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
-
-
 -- Message display -----------------------------------------------------------
 
 -- TBD - Don't remove spaces (at least in showEnigmaOperation and instead put a blank line?)
@@ -89,7 +77,7 @@ markedMapping Nothing e     = e
 -- Preprocess a message and produce a configuration display for the starting configuration
 -- and for each character of the message, using the provided configuration display function.
 showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> String -> String
-showEnigmaOperation_ df ec msg = unlines $ zipWith df (iterate step ec) (' ':(preproc msg))
+showEnigmaOperation_ df ec msg = unlines $ zipWith df (iterate step ec) (' ':(message msg))
 
 
 -- Configuration display -----------------------------------------------------
@@ -215,7 +203,7 @@ showEnigmaConfigInternal ec ch =
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> String -> String
-showEnigmaOperation ec msg = showEnigmaOperation_ showEnigmaConfig ec msg
+showEnigmaOperation ec str = showEnigmaOperation_ showEnigmaConfig ec str
 
 -- | Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
 --   and for each subsequent configuration as it processes each letter of a message.
@@ -267,7 +255,7 @@ showEnigmaOperation ec msg = showEnigmaOperation_ showEnigmaConfig ec msg
 --   perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
 --   as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 showEnigmaOperationInternal :: EnigmaConfig -> String -> String
-showEnigmaOperationInternal ec msg = showEnigmaOperation_ showEnigmaConfigInternal ec msg
+showEnigmaOperationInternal ec str = showEnigmaOperation_ showEnigmaConfigInternal ec str
 
 
 
@@ -279,5 +267,5 @@ showEnigmaOperationInternal ec msg = showEnigmaOperation_ showEnigmaConfigIntern
 --   >>> putStr $ showEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 --   RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 showEnigmaEncoding :: EnigmaConfig -> String -> String
-showEnigmaEncoding ec msg = postproc $ enigmaEncoding ec (preproc msg)
+showEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
 

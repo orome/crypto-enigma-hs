@@ -32,8 +32,9 @@ instance Arbitrary EnigmaConfig where
                                       "UX.MO.KZ.AY.EF.PL"  -- TBD - Generate plugboard and test <<<
                                       (intercalate "." $ (printf "%02d") <$> (rs :: [Int]))
 
+type MsgString = String
 -- REV - Requires TypeSynonymInstances, FlexibleInstances; find a better way <<<
-instance Arbitrary Message where
+instance Arbitrary MsgString where
         arbitrary = do
           l <- choose (1,200)
           replicateM l capitals
@@ -41,7 +42,7 @@ instance Arbitrary Message where
 prop_ReadShowIsNoOp :: EnigmaConfig -> Bool
 prop_ReadShowIsNoOp cfg = cfg == (read (show cfg) :: EnigmaConfig)
 
-prop_EncodeEncodeIsMessage :: EnigmaConfig -> Message -> Bool
+prop_EncodeEncodeIsMessage :: EnigmaConfig -> MsgString -> Bool
 prop_EncodeEncodeIsMessage cfg msg = enigmaEncoding cfg (enigmaEncoding cfg msg) == msg
 
 
@@ -54,7 +55,7 @@ main = do
         sample (arbitrary :: Gen EnigmaConfig)
         sample (arbitrary :: Gen EnigmaConfig)
         putStrLn "\nExample Message test values:"
-        sample (arbitrary :: Gen Message)
+        sample (arbitrary :: Gen MsgString)
         putStrLn "\nQuickCheck - read.show is id:"
         result <- verboseCheckWithResult stdArgs { maxSuccess = 10, chatty = True }  prop_ReadShowIsNoOp
         unless (isSuccess result) exitFailure

@@ -12,7 +12,7 @@ import Data.List (sort)
 
 -- REV - Could make this [MsgChar]
 letters :: String
-letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+letters = ['A'..'Z']
 
 numA0 :: Char -> Int
 numA0 ch = ord ch - ord 'A'
