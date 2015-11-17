@@ -1,5 +1,9 @@
 See also: the list of [code releases] and [closed milestones].
 
+### (0.0.2.7)
+
+TBD
+
 ### [0.0.2.6]
 
 * Add [QuickCheck](https://hackage.haskell.org/package/QuickCheck) tests.
@@ -7,7 +11,6 @@ See also: the list of [code releases] and [closed milestones].
   and fail with an error when bad arguments are given.
 * Convert all strings provided as `Message` arguments to valid machine input
   (see [`message`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:message)).
-
 
 ### [0.0.2.5]
 
