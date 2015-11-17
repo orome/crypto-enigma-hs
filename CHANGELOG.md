@@ -1,8 +1,13 @@
 See also: the list of [code releases] and [closed milestones].
 
-### (0.0.2.6)
+### [0.0.2.6]
 
-TBD
+* Add [QuickCheck](https://hackage.haskell.org/package/QuickCheck) tests.
+* Remove (disabled) assertions from [`configEnigma`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:configEnigma)
+  and fail with an error when bad arguments are given.
+* Convert all strings provided as `Message` arguments to valid machine input
+  (see [`message`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:message)).
+
 
 ### [0.0.2.5]
 
@@ -60,6 +65,7 @@ Stable enough for use, but not reviewed.
 [build checks]: https://travis-ci.org/orome/crypto-enigma-hs/branches
 [code releases]: https://github.com/orome/crypto-enigma-hs/releases
 [closed milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=closed
+[0.0.2.6]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.6
 [0.0.2.5]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.5
 [0.0.2.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.4
 [0.0.2.3]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.3
