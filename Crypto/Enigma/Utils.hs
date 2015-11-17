@@ -10,6 +10,7 @@ import Data.List (sort)
 
 -- Some character utilities --------------------------------------------------
 
+-- REV - Use to enforce type constraints on Mapping and Message (and valid message characters); see issue 12 <<<
 -- REV - Could make this [MsgChar]
 letters :: String
 letters = ['A'..'Z']

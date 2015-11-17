@@ -321,6 +321,7 @@ configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots wind
         Right cfg  -> cfg
         Left err -> error (show err)
 
+-- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes; see issue 12 <<<
 -- A safe (total) constructor; not currently exposed
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
@@ -393,7 +394,7 @@ instance Show Component where
 
 -- Mapping ==================================================================
 
-
+-- REV - Enforce as a calss (in encoding functions too)'; see issue 12 <<<
 -- | The mapping used by a component (see 'wiring' and 'componentMapping')
 --   or by the machine (see 'enigmaMapping') to perform a
 --   <https://en.wikipedia.org/wiki/Substitution_cipher#Simple_substitution simple substitution encoding>.
@@ -532,11 +533,8 @@ enigmaEncoding ec str =
 
 
 
--- REV - Decide what (if any) functions should force String->Message and which (if any) should requre as arg <<<
---       (Currently all force internally).
--- TBD - Fold message into message' and rename message; require Message for some funcs (list); check docs <<<
 
-
+-- REV - Make 'Message' a class and require explicty use of (replacement) 'message'; see issue 12 <<<
 -- Message entry -------------------------------------------------------------
 
 -- | A 'String', to which 'message' is applied by functions taking it as an argument.
