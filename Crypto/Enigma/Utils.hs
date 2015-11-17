@@ -34,3 +34,10 @@ encode e ch = e !! (numA0 ch)
 -- standard simple-substitution cypher encoding
 encode' :: String -> String -> String
 encode' e s = (encode e) <$> s
+
+
+-- Character restriction ----------------------------------------------------
+
+-- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
+messageChar :: Char -> Char
+messageChar ch = if ch `elem` letters then ch else ' '

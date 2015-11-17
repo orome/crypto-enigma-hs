@@ -8,16 +8,17 @@ import Control.Monad (unless, replicateM)
 import System.Exit
 import Data.List (sort,intercalate)
 import Text.Printf (printf)
+
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
 {-# ANN module ("HLint: ignore Use mappend"::String) #-}
 
 capitals = elements ['A'..'Z']
+anychars = elements (['A'..'Z'] ++ " .,'><!?-:()1234567890" ++ ['a'..'z'] ++  "$@&^=|~")
 
--- TBD - Can I provide the number of stages as an argument (parameterize) ? <<<
+-- ASK - Can I provide the number of stages as an argument (parameterize) ? <<<
 -- TBD - Consistent formatting and labeling of tests <<<
--- ASK - Retina figures? <<<
 instance Arbitrary EnigmaConfig where
         arbitrary = do
                 nc <- choose (3,4)  -- This could cover a wider range
@@ -32,21 +33,21 @@ instance Arbitrary EnigmaConfig where
                                       "UX.MO.KZ.AY.EF.PL"  -- TBD - Generate plugboard and test <<<
                                       (intercalate "." $ (printf "%02d") <$> (rs :: [Int]))
 
-type MsgString = String
 -- REV - Requires TypeSynonymInstances, FlexibleInstances; find a better way <<<
-instance Arbitrary MsgString where
+instance Arbitrary String where
         arbitrary = do
           l <- choose (1,200)
-          replicateM l capitals
+          replicateM l anychars
+
 
 prop_ReadShowIsNoOp :: EnigmaConfig -> Bool
 prop_ReadShowIsNoOp cfg = cfg == (read (show cfg) :: EnigmaConfig)
 
-prop_EncodeEncodeIsMessage :: EnigmaConfig -> MsgString -> Bool
-prop_EncodeEncodeIsMessage cfg msg = enigmaEncoding cfg (enigmaEncoding cfg msg) == msg
+prop_EncodeEncodeIsMessage :: EnigmaConfig -> String -> Bool
+prop_EncodeEncodeIsMessage cfg str = enigmaEncoding cfg (enigmaEncoding cfg str) == message str
 
-
-
+prop_NoEncodeIsMessage :: String -> Bool
+prop_NoEncodeIsMessage str = enigmaEncoding (configEnigma "----" "AAAA" "" "01.01.01.01") str == message str
 
 main :: IO ()
 main = do
@@ -55,15 +56,20 @@ main = do
         sample (arbitrary :: Gen EnigmaConfig)
         sample (arbitrary :: Gen EnigmaConfig)
         putStrLn "\nExample Message test values:"
-        sample (arbitrary :: Gen MsgString)
+        sample (arbitrary :: Gen Message)
         putStrLn "\nQuickCheck - read.show is id:"
-        result <- verboseCheckWithResult stdArgs { maxSuccess = 10, chatty = True }  prop_ReadShowIsNoOp
+        result <- verboseCheckWithResult stdArgs { maxSuccess = 10, chatty = True } prop_ReadShowIsNoOp
         unless (isSuccess result) exitFailure
-        result <- quickCheckWithResult stdArgs { maxSuccess = 200, chatty = True }  prop_ReadShowIsNoOp
+        result <- quickCheckWithResult stdArgs { maxSuccess = 200, chatty = True } prop_ReadShowIsNoOp
         unless (isSuccess result) exitFailure
         putStrLn "\nQuickCheck - encoding of encoding is message:"
         result <- verboseCheckWithResult stdArgs { maxSuccess = 5, chatty = True } prop_EncodeEncodeIsMessage
         unless (isSuccess result) exitFailure
         result <- quickCheckWithResult stdArgs { maxSuccess = 100, chatty = True } prop_EncodeEncodeIsMessage
+        unless (isSuccess result) exitFailure
+        putStrLn "\nQuickCheck - no-op incoding is message:"
+        result <- verboseCheckWithResult stdArgs { maxSuccess = 5, chatty = True } prop_NoEncodeIsMessage
+        unless (isSuccess result) exitFailure
+        result <- quickCheckWithResult stdArgs { maxSuccess = 100, chatty = True } prop_NoEncodeIsMessage
         unless (isSuccess result) exitFailure
         putStrLn "\n"

@@ -49,8 +49,7 @@ module Crypto.Enigma (
         enigmaMapping,
         -- * Encoding
         -- | Encoding messages.
-        --Message,
-        --Message',
+        Message,
         message,
         enigmaEncoding
 ) where
@@ -89,7 +88,7 @@ import           Crypto.Enigma.Utils
 -- REV - Have lists and display omit plugboard stage if not used or present; distinguishing non-use and absence?
 -- REV - Show degenerate case in list and display examples?
 -- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
-
+-- ASK - Retina figures? <<<
 
 
 
@@ -510,31 +509,6 @@ enigmaMappingList ec = scanl1 (flip encode') (stageMappingList ec)
 enigmaMapping :: EnigmaConfig -> Mapping
 enigmaMapping ec = last $ enigmaMappingList ec  -- The final stage's progressive encoding
 
--- REV - Decide what (if any) functions should force String->Message and which (if any) should requre as arg <<<
---       (Currently all force internally).
--- TBD - Fold message into message' and rename message; require Message for some funcs (list); check docs <<<
--- TBD - Keep? Not enforced except by assertion in 'enigmaEncoding', and by substitution of ' ' in showEnigmaConfigS
--- | A valid keyboard entry into an Enigma machine: a string of uppercase characters (or symbols for which there
---   are standard Kriegsmarine subsitutions. (See 'message')
---type Message = String
-data Message = Message String deriving Show
-
-message' :: String -> Message
-message' s = Message (message s)
-
--- Message entry -------------------------------------------------------------
-
--- Some standard substitutions performed by (Kriegsmarine) operators
-message :: String -> String
-message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
-    where
-        subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
-                ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
-                ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
-                ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
-
-
---       http://stackoverflow.com/q/33713212/656912
 -- | Encode a 'Message' using a given (starting) machine configuration, by 'step'ping the configuration prior to
 --   processing each character of the message. This produces a new configuration (with new 'positions' only)
 --   for encoding each character, which serves as the "starting" configuration for subsequent
@@ -550,8 +524,42 @@ message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ t
 --   all uppercase letters) that
 --
 --   prop> enigmaEncoding cfg (enigmaEncoding cfg msg) == msg
-enigmaEncoding :: EnigmaConfig -> String -> String
+enigmaEncoding :: EnigmaConfig -> Message -> String
 enigmaEncoding ec str =
         -- The encoding of a string is the sequence encodings of each character
         -- performed by sequentially stepped configurations (preceded by a step)
         zipWith encode (enigmaMapping <$> cfgs) (message str) where cfgs = iterate step (step ec)
+
+
+
+-- REV - Decide what (if any) functions should force String->Message and which (if any) should requre as arg <<<
+--       (Currently all force internally).
+-- TBD - Fold message into message' and rename message; require Message for some funcs (list); check docs <<<
+
+
+-- Message entry -------------------------------------------------------------
+
+-- | A 'String', to which 'message' is applied by functions taking it as an argument.
+type Message = String
+
+-- | Convert a 'String' to valid Enigma machine input: replace any symbols for which there are standard Kriegsmarine
+--   substitutions, remove any remaining non letter characters, and convert to uppercase. This function is applied
+--   automatically to 'Message' arguments for functions defined here.
+message :: String -> String
+message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
+    where
+        subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
+                ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
+                ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
+                ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
+
+-- REV - Possible future version in which 'Message' is at type (and caller is responsible for making Message).
+-- data Message = Message String deriving Show
+--
+-- message :: String -> Message
+-- message s = Message (filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s)
+--     where
+--         subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
+--                 ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
+--                 ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
+--                 ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]

@@ -45,7 +45,6 @@ import Crypto.Enigma
 
 -- Helpers ===================================================================
 
-
 -- Message display -----------------------------------------------------------
 
 -- TBD - Don't remove spaces (at least in showEnigmaOperation and instead put a blank line?)
@@ -76,8 +75,8 @@ markedMapping Nothing e     = e
 
 -- Preprocess a message and produce a configuration display for the starting configuration
 -- and for each character of the message, using the provided configuration display function.
-showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> String -> String
-showEnigmaOperation_ df ec msg = unlines $ zipWith df (iterate step ec) (' ':(message msg))
+showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> Message -> String
+showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(message str))
 
 
 -- Configuration display -----------------------------------------------------
@@ -94,11 +93,11 @@ showEnigmaOperation_ df ec msg = unlines $ zipWith df (iterate step ec) (' ':(me
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
+showEnigmaConfig ec ch = fmt mch (markedMapping (locCar mch enc enc) enc)
                                  (windows ec)
                                  (reverse $ tail.init $ positions ec)
     where
-        ch' = if ch `elem` letters then ch else ' '
+        mch = messageChar ch
         enc = enigmaMapping ec
         fmt ch e ws ps = printf "%s %s  %s  %s" lbl e ws ps'
             where
@@ -167,18 +166,18 @@ showEnigmaConfig ec ch = fmt ch' (markedMapping (locCar ch' enc enc) enc)
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
 showEnigmaConfigInternal ec ch =
-        unlines $ [fmt (if ch' == ' ' then "" else ch':" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
+        unlines $ [fmt (if mch == ' ' then "" else mch:" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
                   (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
                                 (zipWith markedMapping (tail.init $ charLocs) (stageMappingList ec))
                                 (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                 ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                 (components ec ++ (tail $ reverse $ components ec))
                   ) ++
-                  [fmt (if ch' == ' ' then "" else (encode (enigmaMapping ec) ch'):" <")
+                  [fmt (if mch == ' ' then "" else (encode (enigmaMapping ec) mch):" <")
                        (markedMapping (last charLocs) (enigmaMapping ec)) ' ' 0 ""]
     where
-        ch' = if ch `elem` letters then ch else ' '
-        charLocs = zipWith (locCar ch')
+        mch = messageChar ch
+        charLocs = zipWith (locCar mch)
                            ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
                            ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
         fmt l e w p n = printf "%3.3s %s  %s  %s  %s" l e (w:[]) p' n
@@ -261,11 +260,11 @@ showEnigmaOperationInternal ec str = showEnigmaOperation_ showEnigmaConfigIntern
 
 -- Encoding display ==========================================================
 
--- | Show the conventionally formatted encoding of a message by an (initial) Enigma machine configuration.
+-- | Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma machine configuration.
 --
 --   >>> let cfg = configEnigma "c-β-V-VI-VIII" "CDTJ" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12"
 --   >>> putStr $ showEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 --   RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
-showEnigmaEncoding :: EnigmaConfig -> String -> String
+showEnigmaEncoding :: EnigmaConfig -> Message -> String
 showEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
 
