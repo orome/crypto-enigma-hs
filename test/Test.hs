@@ -3,6 +3,7 @@ module Main where
 import Test.HUnit
 import System.Exit
 import Data.List (sort)
+
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
@@ -42,7 +43,7 @@ testPlugboardIsOwnInverse plug msg = TestCase $ assertEqual ("Plugboard is not s
 testWindowsStepping :: EnigmaConfig -> [String] -> Test
 testWindowsStepping cfg windss = TestCase $ assertEqual ("Incorrect series of window letters for " ++ show cfg)
         windss
-        (take 500 $ map windows $ iterate step cfg)
+        (take 500 . map windows $ iterate step cfg)
 
 testStageMappings :: EnigmaConfig -> [Mapping] -> Test
 testStageMappings cfg mps = TestCase $ assertEqual ("Incorrect mappings for " ++ show cfg)
@@ -86,7 +87,6 @@ testTest = TestCase $ assertEqual "Should be one" 1 1
 
 main :: IO ()
 main = do
-        print $ message "a b c X Y     Z"
         putStrLn "\n==== HUnit Tests"
         putStrLn "\nComponent names:"
         putStrLn $ " Rotors:\t" ++ (show rotors)
