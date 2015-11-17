@@ -543,7 +543,7 @@ enigmaEncoding ec str =
 type Message = String
 
 -- | Convert a 'String' to valid Enigma machine input: replace any symbols for which there are standard Kriegsmarine
---   substitutions, remove any remaining non letter characters, and convert to uppercase. This function is applied
+--   substitutions, remove any remaining non-letter characters, and convert to uppercase. This function is applied
 --   automatically to 'Message' arguments for functions defined here.
 message :: String -> String
 message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
