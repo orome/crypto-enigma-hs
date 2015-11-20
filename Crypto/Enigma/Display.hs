@@ -45,6 +45,7 @@ import Crypto.Enigma
 
 -- Helpers ===================================================================
 
+
 -- Message display -----------------------------------------------------------
 
 -- TBD - Don't remove spaces (at least in showEnigmaOperation and instead put a blank line?)
@@ -57,9 +58,9 @@ postproc = unlines . chunksOf 60 . unwords . chunksOf 4
 
 -- TBD Move up (closer to encoding?)
 -- TBD - Can't use below unless encode handles ch == ' '
--- locate the index of the encoding with enc of ch, in s
+-- locate the index of the encoding with m of ch, in s
 locCar :: Char -> String -> Mapping -> Maybe Int
-locCar ch s enc = elemIndex (encode enc ch) s
+locCar ch s m = elemIndex (encode m ch) s
 
 decorate :: Char -> String
 decorate ch = ch:"\818\773"
@@ -68,6 +69,13 @@ decorate ch = ch:"\818\773"
 markedMapping :: Maybe Int -> Mapping -> String
 markedMapping (Just loc) e  = take loc <> decorate.(!!loc) <> drop (loc + 1) $ e
 markedMapping Nothing e     = e
+
+
+-- Character restriction ----------------------------------------------------
+
+-- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
+enigmaChar :: Char -> Char
+enigmaChar ch = if ch `elem` letters then ch else ' '
 
 
 
@@ -86,7 +94,8 @@ showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(me
 -- | Display a summary of the Enigma machine configuration as its encoding (see 'Mapping'),
 --   the letters at the windows (see 'windows'), and the 'Position's of the rotors (see 'positions').
 --
---   If a valid 'Message' character is provided, indicate that as input and mark the encoded letter.
+--   If a an uppercase letter is provided, indicate that as input and mark the encoded letter.
+--   Other characters will be ignored.
 --
 --   For example, #showEnigmaConfigEG#
 --
@@ -95,11 +104,11 @@ showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(me
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = fmt mch (markedMapping (locCar mch enc enc) enc)
+showEnigmaConfig ec ch = fmt ech (markedMapping (locCar ech enc enc) enc)
                                  (windows ec)
                                  (reverse $ tail.init $ positions ec)
     where
-        mch = messageChar ch
+        ech = enigmaChar ch
         enc = enigmaMapping ec
         fmt ch e ws ps = printf "%s %s  %s  %s" lbl e ws ps'
             where
@@ -114,8 +123,8 @@ showEnigmaConfig ec ch = fmt mch (markedMapping (locCar mch enc enc) enc)
 --   followed by the encoding for the machine, and preceded by  a (trivial, no-op) keyboard \"encoding\"
 --   for reference.
 --
---   If a valid 'Message' character is provided, indicate that as input and mark the letter it is encoded to at
---   each stage; mark its encoding as output.
+--   If a an uppercase letter is provided, indicate that as input and mark the letter it is encoded to at
+--   each stage; mark its encoding as output. Other characters will be ignored.
 --
 --   For example, #showEnigmaConfigInternalEG#
 --
@@ -168,18 +177,18 @@ showEnigmaConfig ec ch = fmt mch (markedMapping (locCar mch enc enc) enc)
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
 showEnigmaConfigInternal ec ch =
-        unlines $ [fmt (if mch == ' ' then "" else mch:" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
+        unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
                   (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
                                 (zipWith markedMapping (tail.init $ charLocs) (stageMappingList ec))
                                 (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                 ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                 (components ec ++ (tail $ reverse $ components ec))
                   ) ++
-                  [fmt (if mch == ' ' then "" else (encode (enigmaMapping ec) mch):" <")
+                  [fmt (if ech == ' ' then "" else (encode (enigmaMapping ec) ech):" <")
                        (markedMapping (last charLocs) (enigmaMapping ec)) ' ' 0 ""]
     where
-        mch = messageChar ch
-        charLocs = zipWith (locCar mch)
+        ech = enigmaChar ch
+        charLocs = zipWith (locCar ech)
                            ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
                            ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
         fmt l e w p n = printf "%3.3s %s  %s  %s  %s" l e (w:[]) p' n
@@ -269,4 +278,5 @@ showEnigmaOperationInternal ec str = showEnigmaOperation_ showEnigmaConfigIntern
 --   RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 showEnigmaEncoding :: EnigmaConfig -> Message -> String
 showEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
+
 

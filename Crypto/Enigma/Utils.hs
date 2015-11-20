@@ -10,8 +10,6 @@ import Data.List (sort)
 
 -- Some character utilities --------------------------------------------------
 
--- REV - Use to enforce type constraints on Mapping and Message (and valid message characters); see issue 12 <<<
--- REV - Could make this [MsgChar]
 letters :: String
 letters = ['A'..'Z']
 
@@ -29,16 +27,11 @@ ordering xs = snd <$> sort (zip xs [0..])
 
 -- encode a single character
 encode :: String -> Char -> Char
-encode e ' ' = ' '
-encode e ch = e !! (numA0 ch)
+-- encode e ' ' = ' '
+-- encode e ch = e !! (numA0 ch)
+encode m ch = if i `elem` [0..(length m)-1] then (m !! i) else ' ' where i = numA0 ch
+
 
 -- standard simple-substitution cypher encoding
 encode' :: String -> String -> String
-encode' e s = (encode e) <$> s
-
-
--- Character restriction ----------------------------------------------------
-
--- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
-messageChar :: Char -> Char
-messageChar ch = if ch `elem` letters then ch else ' '
+encode' m s = (encode m) <$> s
