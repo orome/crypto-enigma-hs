@@ -31,7 +31,6 @@ encode :: String -> Char -> Char
 -- encode e ch = e !! (numA0 ch)
 encode m ch = if i `elem` [0..(length m)-1] then (m !! i) else ' ' where i = numA0 ch
 
-
 -- standard simple-substitution cypher encoding
 encode' :: String -> String -> String
 encode' m s = (encode m) <$> s

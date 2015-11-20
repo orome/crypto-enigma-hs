@@ -93,7 +93,15 @@ main = do
         putStrLn $ " Reflectors:\t" ++ (show reflectors)
         putStrLn "\nInternals display test:"
         putStrLn $ showEnigmaConfigInternal (configEnigma "----" "AAAA" "" "01.01.01.01") ' '
-        putStrLn "Operation display test:"
+        putStrLn "\nDisplay test - '@':"
+        putStrLn $ showEnigmaConfig (configEnigma "----" "AAAA" "" "01.01.01.01") '@'
+        putStrLn "\nDisplay test - '\\':"
+        putStrLn $ showEnigmaConfig (configEnigma "----" "AAAA" "" "01.01.01.01") '\\'
+        putStrLn "\nDisplay test - ' ':"
+        putStrLn $ showEnigmaConfig (configEnigma "----" "AAAA" "" "01.01.01.01") ' '
+        putStrLn "\nDisplay test - '.':"
+        putStrLn $ showEnigmaConfig (configEnigma "----" "AAAA" "" "01.01.01.01") '.'
+        putStrLn "\nOperation display test:"
         putStrLn $ showEnigmaOperation (configEnigma "----" "AAAA" "~" "01.01.10.01") ['A'..'Z']
         putStrLn "Encoding display test:"
         putStrLn $ showEnigmaEncoding (configEnigma "----" "AAAA" " " "01.01.10.01") (concatMap (replicate 8) ['A'..'Z'])
