@@ -73,8 +73,10 @@ markedMapping Nothing e     = e
 
 -- Machine operation display =================================================
 
--- Preprocess a message and produce a configuration display for the starting configuration
--- and for each character of the message, using the provided configuration display function.
+-- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
+-- starting configuration and for each character of the message, using the provided configuration display function.
+-- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
+-- this function, which both call, that applies 'message'.
 showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> Message -> String
 showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(message str))
 
@@ -188,7 +190,7 @@ showEnigmaConfigInternal ec ch =
 -- Operation display ---------------------------------------------------------
 
 -- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
---   and for each subsequent configuration as it processes each letter of a message. #showEnigmaOperationEG#
+--   and for each subsequent configuration as it processes each letter of a 'Message'. #showEnigmaOperationEG#
 --
 --   >>> putStr $ showEnigmaOperation (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KRIEG"
 --       OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
@@ -201,11 +203,11 @@ showEnigmaConfigInternal ec ch =
 --   Note that the first line of the display represents the initial configuration of the machine, but does not
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
-showEnigmaOperation :: EnigmaConfig -> String -> String
+showEnigmaOperation :: EnigmaConfig -> Message -> String
 showEnigmaOperation ec str = showEnigmaOperation_ showEnigmaConfig ec str
 
 -- | Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
---   and for each subsequent configuration as it processes each letter of a message.
+--   and for each subsequent configuration as it processes each letter of a 'Message'.
 --
 --   >>> putStr $ showEnigmaOperationInternal (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KR"
 --       ABCDEFGHIJKLMNOPQRSTUVWXYZ
@@ -253,7 +255,7 @@ showEnigmaOperation ec str = showEnigmaOperation_ showEnigmaConfig ec str
 --   Note that the first block of the display represents the initial configuration of the machine, but does not
 --   perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
 --   as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
-showEnigmaOperationInternal :: EnigmaConfig -> String -> String
+showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
 showEnigmaOperationInternal ec str = showEnigmaOperation_ showEnigmaConfigInternal ec str
 
 

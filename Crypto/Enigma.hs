@@ -532,18 +532,16 @@ enigmaEncoding ec str =
         zipWith encode (enigmaMapping <$> cfgs) (message str) where cfgs = iterate step (step ec)
 
 
-
-
--- REV - Make 'Message' a class and require explicty use of (replacement) 'message'; see issue 12 <<<
 -- Message entry -------------------------------------------------------------
 
--- | A 'String', to which 'message' is applied by functions taking it as an argument.
+-- | A (<https://wiki.haskell.org/Type_synonym#synonym> for) 'String', indicating that 'message' will be applied
+--   to the corresponding argument.
 type Message = String
 
 -- | Convert a 'String' to valid Enigma machine input: replace any symbols for which there are standard Kriegsmarine
 --   substitutions, remove any remaining non-letter characters, and convert to uppercase. This function is applied
 --   automatically to 'Message' arguments for functions defined here.
-message :: String -> String
+message :: String -> Message
 message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
     where
         subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
@@ -551,7 +549,7 @@ message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ t
                 ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
                 ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
 
--- REV - Possible future version in which 'Message' is at type (and caller is responsible for making Message).
+-- REV - Rejected (#12) alternate version in which 'Message' is at class (and caller is responsible for making Message).
 -- data Message = Message String deriving Show
 --
 -- message :: String -> Message
