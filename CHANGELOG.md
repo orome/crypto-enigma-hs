@@ -1,4 +1,13 @@
-See also: the list of [code releases] and [closed milestones].
+A list of key changes in [Hackage releases],
+along with planned features of some expected future releases (in parentheses).
+
+See also:
+
+* the list of [code releases];
+* [open milestones];
+* [closed milestones]; and
+* [issues].
+
 
 ### (0.0.2.7)
 
@@ -64,10 +73,13 @@ Initial Hackage version. First upload of package to Hackage,
 without ([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/reports/1)) Hacakge-built documentation.
 Stable enough for use, but not reviewed.
 
+[Hackage releases]: https://hackage.haskell.org/package/crypto-enigma
 [test figure]: https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma-Display.html#showEnigmaConfigInternalFIG
 [build checks]: https://travis-ci.org/orome/crypto-enigma-hs/branches
 [code releases]: https://github.com/orome/crypto-enigma-hs/releases
 [closed milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=closed
+[open milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=open
+[issues]: https://github.com/orome/crypto-enigma-hs/issues?utf8=✓&q=
 [0.0.2.6]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.6
 [0.0.2.5]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.5
 [0.0.2.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.4
