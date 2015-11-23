@@ -8,10 +8,14 @@ See also:
 * [closed milestones]; and
 * [issues].
 
+### (0.0.2.?)
+
+* ([First stable release].)
 
 ### (0.0.2.7)
 
-TBD
+* (Unicode checking for messages and letters.)
+* (Force characters into map range or catch indexing errors in encoding.)
 
 ### [0.0.2.6]
 
@@ -80,6 +84,7 @@ Stable enough for use, but not reviewed.
 [closed milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=closed
 [open milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=open
 [issues]: https://github.com/orome/crypto-enigma-hs/issues?utf8=✓&q=
+[First stable release]: https://github.com/orome/crypto-enigma-hs/milestones/First%20Stable%20Release
 [0.0.2.6]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.6
 [0.0.2.5]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.5
 [0.0.2.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.4
