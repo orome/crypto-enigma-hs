@@ -534,7 +534,7 @@ enigmaEncoding ec str =
 
 -- Message entry -------------------------------------------------------------
 
--- | A (<https://wiki.haskell.org/Type_synonym#synonym> for) 'String', indicating that 'message' will be applied
+-- | A (<https://wiki.haskell.org/Type_synonym synonym> for) 'String', indicating that 'message' will be applied
 --   to the corresponding argument.
 type Message = String
 
