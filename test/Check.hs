@@ -60,6 +60,8 @@ prop_NoEncodeIsMessage str = enigmaEncoding (configEnigma "----" "AAAA" "" "01.0
 prop_BadCharIsBlankInConfig :: EnigmaConfig -> BadChar -> Bool
 prop_BadCharIsBlankInConfig cfg bchr = showEnigmaConfig cfg (chr bchr) == showEnigmaConfig cfg ' '
 
+-- TBD - Add test of stepped encoding start (see test_encoding_stepped_start) in Python version <<<
+
 main :: IO ()
 main = do
         putStrLn "\n==== QuickCheck Tests"
