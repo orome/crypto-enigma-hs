@@ -193,7 +193,7 @@ data EnigmaConfig = EnigmaConfig {
         --   >>> components $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
         --   ["AM.EU.ZL","II","III","V","\946","c"]
         --
-        --   (Note that any Unicode charcters are
+        --   (Note that any Unicode characters are
         --   <http://stackoverflow.com/a/24953885/656912 stored by Haskell> as their Unicode value:
         --   here @"\\946" == "β"@.)
         components :: ![Name],
@@ -306,7 +306,7 @@ windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 --
 --   * The rotor 'Name's, separated by dashes (e.g. @\"C-V-I-II\"@); see 'Name'.
 --   * The letters visible at the windows (e.g. @\"MQR\"@); see 'windows'.
---   * The plugboard specification (which may me omitted with  @\"~\"@); see 'Name'.
+--   * The plugboard specification (which may be omitted with  @\"~\"@); see 'Name'.
 --   * The position of the letter ring on each rotor, separated by periods (e.g. @\"22.11.16\"@); see 'rings'.
 --
 --   Following convention, the elements of these specifications are in physical machine order as the operator sees
