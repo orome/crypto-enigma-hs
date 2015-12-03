@@ -309,7 +309,7 @@ windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 --   * The plugboard specification (which may be omitted with  @\"~\"@); see 'Name'.
 --   * The position of the letter ring on each rotor, separated by periods (e.g. @\"22.11.16\"@); see 'rings'.
 --
---   Following convention, the elements of these specifications are in physical machine order as the operator sees
+--   Following convention, the elements of these strings are in physical machine order as the operator sees
 --   them, which is the reverse of the order in which they are encountered in processing (see 'stages').
 --
 --   Validation is permissive, allowing for ahistorical collections and numbers of rotors (including reflectors
