@@ -60,6 +60,10 @@ prop_NoEncodeIsMessage str = enigmaEncoding (configEnigma "----" "AAAA" "" "01.0
 prop_BadCharIsBlankInConfig :: EnigmaConfig -> BadChar -> Bool
 prop_BadCharIsBlankInConfig cfg bchr = showEnigmaConfig cfg (chr bchr) == showEnigmaConfig cfg ' '
 
+-- TBD - Confirm that this actually tests ==
+prop_StepEqual :: EnigmaConfig -> Bool
+prop_StepEqual cfg = step cfg == step cfg
+
 -- TBD - Add test of stepped encoding start (see test_encoding_stepped_start) in Python version <<<
 
 main :: IO ()
@@ -89,5 +93,10 @@ main = do
         result <- verboseCheckWithResult stdArgs { maxSuccess = 10, chatty = True } prop_BadCharIsBlankInConfig
         unless (isSuccess result) exitFailure
         result <- quickCheckWithResult stdArgs { maxSuccess = 200, chatty = True } prop_BadCharIsBlankInConfig
+        unless (isSuccess result) exitFailure
+        putStrLn "\nQuickCheck - step once is equal:"
+        result <- verboseCheckWithResult stdArgs { maxSuccess = 10, chatty = True } prop_StepEqual
+        unless (isSuccess result) exitFailure
+        result <- quickCheckWithResult stdArgs { maxSuccess = 200, chatty = True } prop_StepEqual
         unless (isSuccess result) exitFailure
         putStrLn "\n"
