@@ -220,7 +220,7 @@ data EnigmaConfig = EnigmaConfig {
         --
         --   For plugboard and reflector, this will always be @1@ since the former lacks a ring,
         --   and for latter ring position is irrelevant (the letter ring is not visible, and has
-        --   no effect on turnovers):
+        --   no effect on when turnovers occur):
         --
         --   prop> head (rings cfg) == 1
         --   prop> last (rings cfg) == 1
@@ -292,7 +292,7 @@ step ec = ec { positions = steppedPosition <$> stages ec } -- only positions cha
 -- Instantiation, display, and reading ---------------------------------------
 
 -- | The letters at the window in an 'EnigmaConfig', in physical, conventional order.
---   This is the (only) visible manifestations of configuration changes during operation.
+--   This is the (only) visible manifestation of configuration changes during operation.
 --
 --   >>> windows $ configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZL" "16.01.21.11"
 --   "LQVI"
