@@ -100,7 +100,7 @@ import           Crypto.Enigma.Utils
 
 -- REV - Actually any string that does not contain periods will be taken as no plugboard; see 'component'.
 -- | A string identifying a 'Component' of an Enigma machine.
---   For rotors (including the reflector) this is one of the conventional letter or roman numeral designations
+--   For rotors (including the reflector) this is one of the conventional letter or Roman numeral designations
 --   (e.g., @\"IV\"@ or @\"β\"@). For the plugboard this is the conventional string of letter pairs (separated by periods),
 --   indicating letters wired together by plugging (e.g., @\"AU.ZM.ZL.RQ\"@).
 --   Absence or non-use of a plugboard can be indicated with a lone "~". See 'name'.
