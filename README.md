@@ -75,6 +75,8 @@ For other Haskell Enigma machines see:
 * [enigma.lhs](https://gist.github.com/erantapaa/f071bc3f58d017f9280a)
 * [henigma](https://github.com/erantapaa/henigma)
 
+This package served as the basis for a [https://pypi.python.org/pypi/crypto-enigma], with essentialy the same API.
+
 ### Development status
 
 [![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
