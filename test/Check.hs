@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 module Main where
 
 -- import Test.HUnit
@@ -35,12 +34,6 @@ instance Arbitrary EnigmaConfig where
                                       ws
                                       "UX.MO.KZ.AY.EF.PL"  -- TBD - Generate plugboard and test <<<
                                       (intercalate "." $ (printf "%02d") <$> (rs :: [Int]))
-
--- REV - Requires TypeSynonymInstances, FlexibleInstances; find a better way <<<
-instance Arbitrary String where
-        arbitrary = do
-          l <- choose (1,200)
-          replicateM l (elements anychars)
 
 data BadChar = BadChar {chr :: Char} deriving Show
 instance Arbitrary BadChar where
