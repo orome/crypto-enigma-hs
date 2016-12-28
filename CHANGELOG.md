@@ -8,6 +8,15 @@ See also:
 * [closed milestones]; and
 * [issues].
 
+### (0.0.2.?)
+
+* ([First stable release].)
+
+### (0.0.2.8)
+
+* (Unicode checking for messages and letters.)
+* (Force characters into map range or catch indexing errors in encoding.)
+
 ### [0.0.2.7]
 
 * Fix [testing (build) error](https://travis-ci.org/orome/crypto-enigma-hs/jobs/187207215).
