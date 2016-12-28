@@ -20,8 +20,7 @@ addons:
 # See list here -- https://www.stackage.org/snapshots
 env:
 - ARGS="--resolver lts-3.7"
-#- ARGS="--resolver lts-3.18"
-- ARGS="--resolver nightly-2015-12-16"
+- ARGS="--resolver lts-7.14"
 - ARGS="--resolver nightly"
 #- ARGS=""
 
