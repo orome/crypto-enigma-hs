@@ -3,7 +3,7 @@
 {-|
 Module      : Crypto.Enigma
 Description : Enigma machine simulator
-Copyright   : (c) 2014-2015 Roy Levien
+Copyright   : (c) 2014-2017 Roy Levien
 License     : BSD3
 Maintainer  : royl@aldaron.com
 Stability   : experimental
