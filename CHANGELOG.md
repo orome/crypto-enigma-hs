@@ -11,12 +11,13 @@ See also:
 ### (0.0.2.?)
 
 * ([First stable release].)
-* ([Submit to Stackage](https://github.com/orome/crypto-enigma-hs/issues/19).)
 
 ### (0.0.2.9)
 
 * (Unicode checking for messages and letters.)
 * (Force characters into map range or catch indexing errors in encoding.)
+* ([Submit to Stackage](https://github.com/orome/crypto-enigma-hs/issues/19).)
+* (Further workflow changes: stack integration, Stackage, etc.)
 
 ### [0.0.2.8]
 
