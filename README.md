@@ -5,6 +5,7 @@
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma-hs/blob/hackage/LICENSE)
 [![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
+[![Gitter](https://img.shields.io/gitter/room/badges/shields.svg)](https://gitter.im/orome/crypto-enigma-hs)
 
 An Enigma machine simulator with state and encoding display.
 
