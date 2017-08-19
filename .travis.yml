@@ -19,9 +19,10 @@ addons:
 # change flags or use --stack-yaml to point to a different file.
 # See list here -- https://www.stackage.org/snapshots
 env:
-- ARGS="--resolver lts-3.7"
+- ARGS="--resolver lts-4.0"
 - ARGS="--resolver lts-7.14"
 - ARGS="--resolver lts-8.0"
+- ARGS="--resolver lts-9.1"
 - ARGS="--resolver nightly"
 #- ARGS=""
 
