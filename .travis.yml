@@ -19,12 +19,12 @@ addons:
 # change flags or use --stack-yaml to point to a different file.
 # See list here -- https://www.stackage.org/snapshots
 env:
-- ARGS="--resolver lts-4.0"
-- ARGS="--resolver lts-7.14"
-- ARGS="--resolver lts-8.0"
-- ARGS="--resolver lts-9.1"
-- ARGS="--resolver nightly"
-#- ARGS=""
+#- $RESOLVER="lts-3.22"
+- $RESOLVER="lts-6.35"
+- $RESOLVER="lts-7.24"
+- $RESOLVER="lts-8.0"
+- $RESOLVER="lts-9.1"
+- $RESOLVER="nightly"
 
 before_install:
 # Download and unpack the stack executable -- https://docs.haskellstack.org/en/stable/travis_ci/?highlight=travis
@@ -34,11 +34,11 @@ before_install:
 
 install:
 # Build dependencies
-- stack --no-terminal --install-ghc test --only-dependencies
+- stack --resolver $RESOLVER --no-terminal --install-ghc test --only-dependencies
 
 script:
 # Build the package, its tests, and its docs and run the tests
-- stack --no-terminal --install-ghc test --haddock --no-haddock-deps
+- stack --resolver $RESOLVER --no-terminal --install-ghc test --haddock --no-haddock-deps
 
 notifications:
   webhooks:
