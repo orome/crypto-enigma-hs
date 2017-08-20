@@ -82,9 +82,12 @@ This package served as the basis for a [Python version], with essentially the sa
 
 [![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
 
-I'm currently learning and experimenting with some Haskell language features and can't promise the
-[development version] will work. More detail about planned releases and activities can be found the list of
-scheduled [milestones] and in the list of [open issues].
+I'm currently learning and experimenting with some Haskell language
+features and can't promise the [development version] will work. More
+detail about planned releases and activities can be found the list of
+scheduled [milestones] and in the list of [open issues]. For information
+on which GHC versions are supported by each release, see the [package's
+Hackage Matrix](https://matrix.hackage.haskell.org/package/crypto-enigma).
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
 [documentation]: https://hackage.haskell.org/package/crypto-enigma
