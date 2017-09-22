@@ -148,7 +148,7 @@ showEnigmaConfig ec ch = fmt ech (markedMapping (locCar ech enc enc) enc)
 --   * __@\'K\'@__ is entered at the keyboard, which is then
 --   * encoded by the plugboard (@\'P\'@), which includes  @\"KZ\"@ in its specification (see 'Name'),
 --     to __@\'Z\'@__, which is then
---   * encoded by the first rotor (@\'1\'@), a @\"II\"@ rotor in the @06@ position (and @\'Q\'@ at the window),
+--   * encoded by the first rotor (@\'1\'@), a @\"II\"@ rotor in the @07@ position (and @\'Q\'@ at the window),
 --     to __@\'C\'@__, which is then
 --   * encoded by the second rotor (@\'2\'@), a @\"VIII\"@ rotor in the @24@ position (and @\'A\'@ at the window),
 --     to __@\'Y\'@__, which is then
