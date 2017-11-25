@@ -18,6 +18,7 @@ See also:
 * (Force characters into map range or catch indexing errors in encoding.)
 * ([Submit to Stackage](https://github.com/orome/crypto-enigma-hs/issues/19).)
 * (Further workflow changes: stack integration, Stackage, etc.)
+* ([Update for base 4.10.1.0.](https://github.com/orome/crypto-enigma-hs/issues/24))
 
 ### [0.0.2.9]
 
