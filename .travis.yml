@@ -24,7 +24,7 @@ env:
 - $RESOLVER="lts-7.24"
 - $RESOLVER="lts-8.0"
 - $RESOLVER="lts-9.1"
-- $RESOLVER="lts-9.14"
+- $RESOLVER="lts-9.17"
 - $RESOLVER="nightly"
 
 before_install:
