@@ -94,7 +94,7 @@ showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(me
 -- | Display a summary of the Enigma machine configuration as its encoding (see 'Mapping'),
 --   the letters at the windows (see 'windows'), and the 'Position's of the rotors (see 'positions').
 --
---   If a an uppercase letter is provided, indicate that as input and mark the encoded letter.
+--   If an uppercase letter is provided, indicate that as input and mark the encoded letter.
 --   Other characters will be ignored.
 --
 --   For example, #showEnigmaConfigEG#
@@ -123,7 +123,7 @@ showEnigmaConfig ec ch = fmt ech (markedMapping (locCar ech enc enc) enc)
 --   followed by the encoding for the machine, and preceded by  a (trivial, no-op) keyboard \"encoding\"
 --   for reference.
 --
---   If a an uppercase letter is provided, indicate that as input and mark the letter it is encoded to at
+--   If an uppercase letter is provided, indicate that as input and mark the letter it is encoded to at
 --   each stage; mark its encoding as output. Other characters will be ignored.
 --
 --   For example, #showEnigmaConfigInternalEG#
