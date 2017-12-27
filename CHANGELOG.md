@@ -15,14 +15,15 @@ See also:
 ### (0.0.2.10)
 
 * (Unicode checking for messages and letters.)
-* (Force characters into map range or catch indexing errors in encoding.)
-* ([Submit to Stackage](https://github.com/orome/crypto-enigma-hs/issues/19).)
+* (Force characters into map range or catch indexing errors in
+  encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
-* ([Update for base 4.10.1.0.](https://github.com/orome/crypto-enigma-hs/issues/24))
 
 ### [0.0.2.9]
 
+* [Submit to Stackage](https://github.com/orome/crypto-enigma-hs/issues/19).
 * [Update for base 4.10.0.0.](https://github.com/orome/crypto-enigma-hs/issues/22)
+* [Update for base 4.10.1.0.](https://github.com/orome/crypto-enigma-hs/issues/24)
 
 ### [0.0.2.8]
 
