@@ -28,7 +28,7 @@ license:                BSD3
 license-file:           LICENSE
 author:                 Roy Levien
 maintainer:             royl@aldaron.com
-copyright:              (c) 2014-2017 Roy Levien
+copyright:              (c) 2014-2018 Roy Levien
 category:               Cryptography, Education
 build-type:             Simple
 extra-source-files:     CHANGELOG.md

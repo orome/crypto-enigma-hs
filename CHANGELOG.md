@@ -22,6 +22,7 @@ See also:
 ### (0.0.2.10)
 
 * [Include Stackage LTS 10.1](https://www.stackage.org/lts-10.1)
+* Minor workflow and tidying
 
 ### [0.0.2.9]
 
