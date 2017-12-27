@@ -12,12 +12,16 @@ See also:
 
 * ([First stable release].)
 
-### (0.0.2.10)
+### (0.0.2.11)
 
 * (Unicode checking for messages and letters.)
 * (Force characters into map range or catch indexing errors in
   encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
+
+### (0.0.2.10)
+
+* [Include Stackage LTS 10.1](https://www.stackage.org/lts-10.1)
 
 ### [0.0.2.9]
 
