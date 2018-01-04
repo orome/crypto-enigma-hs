@@ -19,12 +19,12 @@ addons:
 # change flags or use --stack-yaml to point to a different file.
 # See list here -- https://www.stackage.org/snapshots
 env:
-- $RESOLVER="lts-0.7"
-- $RESOLVER="lts-2.22"
-- $RESOLVER="lts-3.22"
+#- $RESOLVER="lts-0.7"    # Fails on Travis (unsupported GHC on Travis)
+#- $RESOLVER="lts-2.22"   # Fails on Travis (too old)
+# - $RESOLVER="lts-3.22"  # Fails on Travis (too old)
 - $RESOLVER="lts-6.35"
 - $RESOLVER="lts-7.24"
-#- $RESOLVER="lts-8.0"
+#- $RESOLVER="lts-8.0"    # Removed from most recents on Stackage; Unreliable/slow build on Travis
 - $RESOLVER="lts-9.21"
 - $RESOLVER="lts-10.2"
 - $RESOLVER="nightly"
