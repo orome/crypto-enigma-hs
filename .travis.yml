@@ -28,7 +28,7 @@ env:
 - $RESOLVER="lts-9.21"
 - $RESOLVER="lts-10.3"
 - $RESOLVER="lts-11.0"
-- $RESOLVER="nightly"
+#- $RESOLVER="nightly"     # Removed to prevent erroring due to missing persistent-sqlite and yaml
 
 before_install:
 # Download and unpack the stack executable -- https://docs.haskellstack.org/en/stable/travis_ci/?highlight=travis
