@@ -41,11 +41,11 @@ source-repository head
         location:       git://github.com/orome/crypto-enigma-hs.git
         branch:         develop
 
---source-repository this
---        type:           git
---        location:       git://github.com/orome/crypto-enigma-hs.git
---        branch:         hackage
---        tag:            0.0.2.11
+source-repository this
+        type:           git
+        location:       git://github.com/orome/crypto-enigma-hs.git
+        branch:         hackage
+        tag:            0.0.2.11
 
 library
     -- default-extensions: Trustworthy
