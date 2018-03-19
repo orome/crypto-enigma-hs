@@ -187,7 +187,7 @@ type Stage = Int
 --   'Wiring' to produce its current 'Mapping' (see 'componentMapping').
 type Position = Int
 
--- | The complete description of the state of an Enigma machine, consisting 'components', 'positions', and 'rings'.
+-- | The complete description of the state of an Enigma machine, consisting of 'components', 'positions', and 'rings'.
 data EnigmaConfig = EnigmaConfig {
         -- | The 'Name' of each 'Component' in an 'EnigmaConfig', in processing order.
         --   Unchanged by 'step'.
