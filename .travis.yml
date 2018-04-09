@@ -27,7 +27,7 @@ env:
 #- $RESOLVER="lts-8.0"    # Removed from most recents on Stackage; Unreliable/slow build on Travis
 - $RESOLVER="lts-9.21"
 - $RESOLVER="lts-10.3"
-- $RESOLVER="lts-11.1"
+- $RESOLVER="lts-11.4"
 - $RESOLVER="nightly"
 
 before_install:
