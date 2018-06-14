@@ -38,7 +38,7 @@ before_install:
 
 install:
 # Build dependencies
-- stack --resolver $RESOLVER --no-terminal --install-ghc test --only-dependencies --verbose
+- stack --resolver $RESOLVER --no-terminal --install-ghc test --only-dependencies
 
 script:
 # Build the package, its tests, and its docs and run the tests
