@@ -1,4 +1,4 @@
-# Use new container infrastructure to enable caching
+# See https://docs.travis-ci.com/user/reference/overview/#Virtualisation-Environment-vs-Operating-System
 sudo: required
 
 # Choose a lightweight base image; we provide our own build tools.
