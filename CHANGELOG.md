@@ -16,6 +16,11 @@ See also:
   encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
 
+### [0.0.2.13]
+
+* Update for GHC 8.4.3
+* Travis CI infrastructure and resolver updates
+
 ### [0.0.2.12]
 
 * Update for base 4.11.1.0.
@@ -111,6 +116,7 @@ Stable enough for use, but not reviewed.
 [open milestones]: https://github.com/orome/crypto-enigma-hs/milestones?state=open
 [issues]: https://github.com/orome/crypto-enigma-hs/issues?utf8=✓&q=
 [First stable release]: https://github.com/orome/crypto-enigma-hs/milestones/First%20Stable%20Release
+[0.0.2.13]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.13
 [0.0.2.12]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.12
 [0.0.2.11]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.11
 [0.0.2.10]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.10
