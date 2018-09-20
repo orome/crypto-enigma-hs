@@ -29,7 +29,7 @@ env:
 - $RESOLVER="lts-9.6"     # 'Haskell for Mac' LTS
 - $RESOLVER="lts-10.3"
 - $RESOLVER="lts-11.22"
-- $RESOLVER="lts-12.9"
+- $RESOLVER="lts-12.10"
 - $RESOLVER="nightly"
 
 before_install:
