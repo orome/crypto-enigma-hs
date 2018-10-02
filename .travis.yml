@@ -15,22 +15,33 @@ addons:
     packages:
     - libgmp-dev
 
-# The different configurations we want to test. You could also do things like
-# change flags or use --stack-yaml to point to a different file.
-# See list here -- https://www.stackage.org/snapshots
-env:
-#- $RESOLVER="lts-0.7"    # Fails on Travis (unsupported GHC on Travis)
-#- $RESOLVER="lts-2.22"   # Fails on Travis (too old)
-# - $RESOLVER="lts-3.22"  # Fails on Travis (too old)
-- $RESOLVER="lts-6.35"
-- $RESOLVER="lts-7.24"
-#- $RESOLVER="lts-8.0"    # Removed from most recents on Stackage; Unreliable/slow build on Travis
-- $RESOLVER="lts-9.21"
-- $RESOLVER="lts-9.6"     # 'Haskell for Mac' LTS
-- $RESOLVER="lts-10.3"
-- $RESOLVER="lts-11.22"
-- $RESOLVER="lts-12.11"
-- $RESOLVER="nightly"
+#
+jobs:
+  include:
+  - name: "LTS 6.35"
+    env: RESOLVER=lts-6.35  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 7.24"
+    env: RESOLVER=lts-7.24  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 9.21"
+    env: RESOLVER=lts-9.21  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 9.6 (Haskell for macOS)"
+    env: RESOLVER=lts-9.6  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 10.3"
+    env: RESOLVER=lts-10.3  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 11.22"
+    env: RESOLVER=lts-11.22  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 12.12"
+    env: RESOLVER=lts-12.12  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS Latest"
+    env: RESOLVER=lts  STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS Nightly (excluded from master)"
+    env: RESOLVER=nightly STACK_YAML=travis-stacks/patch-lts-nightly.yaml
+    if: branch != "master"
+
+# lts-0.7 - Fails on Travis (unsupported GHC on Travis)
+# lts-2.22 - Fails on Travis (too old)
+# lts-3.22 - Fails on Travis (too old)
+# lts-8.0  - Removed from most recents on Stackage; Unreliable/slow build on Travis
 
 before_install:
 # Download and unpack the stack executable -- https://docs.haskellstack.org/en/stable/travis_ci/?highlight=travis
@@ -40,13 +51,13 @@ before_install:
 
 install:
 # Build dependencies
-- stack --resolver $RESOLVER --no-terminal --install-ghc test --only-dependencies
+- stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --only-dependencies
 
 script:
 # Build the package, its tests, and its docs and run the tests
-- stack --resolver $RESOLVER --no-terminal --install-ghc test --haddock --no-haddock-deps
+- stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --haddock --no-haddock-deps
 # List components explicitly; ignoring failure
-- stack --resolver $RESOLVER exec ghc-pkg list || true
+- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec ghc-pkg list || true
 
 notifications:
   webhooks:

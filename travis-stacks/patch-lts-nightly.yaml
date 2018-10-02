@@ -1,0 +1,11 @@
+# Patch for current LTS nightly
+
+resolver: ghc-7.8.3   # Overridden by resolver
+
+name: "Stack configruation for patching current nightly LTS"
+
+packages:
+- '..'
+
+extra-deps:
+- MissingH-1.4.1.0    # MissingH excluded from LTS nightly after 8.6.1
