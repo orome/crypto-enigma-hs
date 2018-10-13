@@ -1,6 +1,6 @@
 # Empty stack config, to be overridden by resolver
 
-resolver: ghc-7.8.3   # Overridden by resolver
+resolver: USE-RESOLVER-CLI-OPTION   # Overridden by resolver cli option
 
 name: "Resolver-only stack configuration"
 
