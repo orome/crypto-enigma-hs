@@ -24,7 +24,7 @@ jobs:
     env: RESOLVER=lts-7.24  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 9.21"
     env: RESOLVER=lts-9.21  STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 9.6 (Haskell for macOS)"
+  - name: "Haskell for Mac (test LTS used by Haskell for Mac on macOS)"
     os: osx
     osx_image: xcode10
     env: RESOLVER=lts-9.6  STACK_YAML=travis-stacks/resolver-only.yaml
@@ -49,7 +49,11 @@ before_install:
 # Download and unpack the stack executable -- https://docs.haskellstack.org/en/stable/travis_ci/?highlight=travis
 - mkdir -p ~/.local/bin
 - export PATH=$HOME/.local/bin:$PATH
-- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+# Ensure we are using GNU tar on macOS -- https://stackoverflow.com/a/52796679/656912
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  brew update ;  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  brew install stack ;  fi
+#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH" ;  fi
+- if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then  travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack' ;  fi
 
 install:
 # Build dependencies
