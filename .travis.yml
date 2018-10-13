@@ -25,6 +25,8 @@ jobs:
   - name: "LTS 9.21"
     env: RESOLVER=lts-9.21  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 9.6 (Haskell for macOS)"
+    os: osx
+    osx_image: xcode10
     env: RESOLVER=lts-9.6  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 10.3"
     env: RESOLVER=lts-10.3  STACK_YAML=travis-stacks/resolver-only.yaml
