@@ -18,9 +18,9 @@ addons:
 # Create jobs for all recent LTS resolvers, nightly, and some special configurations
 jobs:
   include:
-  - name: "LTS 3.22"
+  - name: "LTS 3.22" # crypto-enigma not in snapshot
     env: RESOLVER=lts-3.22  STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 6.35"
+  - name: "LTS 6.35" # crypto-enigma not in snapshot
     env: RESOLVER=lts-6.35  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 7.24"
     env: RESOLVER=lts-7.24  STACK_YAML=travis-stacks/resolver-only.yaml
