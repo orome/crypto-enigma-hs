@@ -16,6 +16,10 @@ See also:
   encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
 
+### (0.0.2.15)
+
+Current development version
+
 ### [0.0.2.14]
 
 * Update for GHC 8.6.1
