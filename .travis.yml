@@ -15,7 +15,7 @@ addons:
     packages:
     - libgmp-dev
 
-#
+# Create jobs for all recent LTS resolvers, nightly, and some special configurations
 jobs:
   include:
   - name: "LTS 6.35"
@@ -24,10 +24,6 @@ jobs:
     env: RESOLVER=lts-7.24  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 9.21"
     env: RESOLVER=lts-9.21  STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "Haskell for Mac (test LTS used by Haskell for Mac on macOS)"
-    os: osx
-    osx_image: xcode10
-    env: RESOLVER=lts-9.6  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 10.3"
     env: RESOLVER=lts-10.3  STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 11.22"
@@ -39,6 +35,10 @@ jobs:
   - name: "LTS Nightly (excluded from master)"
     env: RESOLVER=nightly STACK_YAML=travis-stacks/patch-lts-nightly.yaml
     if: branch != "master"
+  - name: "Haskell for Mac (test LTS used by Haskell for Mac on macOS)"
+    env: RESOLVER=lts-9.6  STACK_YAML=travis-stacks/resolver-only.yaml
+    os: osx
+    osx_image: xcode10
 
 # lts-0.7 - Fails on Travis (unsupported GHC on Travis)
 # lts-2.22 - Fails on Travis (too old)
