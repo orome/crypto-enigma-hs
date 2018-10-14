@@ -2,7 +2,5 @@
 
 resolver: USE-RESOLVER-CLI-OPTION   # Overridden by resolver cli option
 
-name: "Resolver-only stack configuration"
-
 packages:
 - '..'

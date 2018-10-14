@@ -2,8 +2,6 @@
 
 resolver: USE-RESOLVER-CLI-OPTION   # Overridden by resolver cli option
 
-name: "Stack configruation for patching current nightly LTS"
-
 packages:
 - '..'
 
