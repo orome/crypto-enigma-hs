@@ -5,5 +5,5 @@ resolver: USE-RESOLVER-CLI-OPTION   # Overridden by resolver cli option
 packages:
 - '..'
 
-extra-deps:
-- MissingH-1.4.1.0    # MissingH excluded from LTS nightly after 8.6.1
+#extra-deps:
+#- MissingH-1.4.1.0    # MissingH excluded from LTS nightly after 8.6.1
