@@ -63,6 +63,12 @@ Note that the correct display of some characters used to represent components
 depend on support for combining Unicode. This is a [known limitation](https://github.com/orome/crypto-enigma-hs/issues/10)
 that will be addressed in a future release.
 
+### Compatability
+
+Versions of this package have been part of [Stackage] LTS Haskell since LTS 7.24, and will work with LTS since 3.2.2.
+For information on which GHC versions are supported by each release, see the
+[package's Hackage Matrix](https://matrix.hackage.haskell.org/package/crypto-enigma).
+
 ### Documentation
 
 Full [documentation] — for the latest [release version] — is available on Hackage.
@@ -85,9 +91,7 @@ This package served as the basis for a [Python version], with essentially the sa
 I'm currently learning and experimenting with some Haskell language
 features and can't promise the [development version] will work. More
 detail about planned releases and activities can be found the list of
-scheduled [milestones] and in the list of [open issues]. For information
-on which GHC versions are supported by each release, see the [package's
-Hackage Matrix](https://matrix.hackage.haskell.org/package/crypto-enigma).
+scheduled [milestones] and in the list of [open issues].
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
 [documentation]: https://hackage.haskell.org/package/crypto-enigma
@@ -104,3 +108,5 @@ Hackage Matrix](https://matrix.hackage.haskell.org/package/crypto-enigma).
 [I]: http://www.cryptomuseum.com/crypto/enigma/i/index.htm
 [M3]: http://www.cryptomuseum.com/crypto/enigma/m3/index.htm
 [M4]: http://www.cryptomuseum.com/crypto/enigma/m4/index.htm
+
+[Stackage]: https://www.stackage.org
