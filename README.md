@@ -9,12 +9,12 @@
 
 An Enigma machine simulator with state and encoding display.
 
-Currently support is only provided for those [machine models] in most widespread general use during the war years:
-the [I], [M3], and [M4].
+Currently support is only provided for those [machine models] in most widespread general use during the war years: the
+[I], [M3], and [M4].
 
-This is adapted, as an exercise in learning Haskell, from an earlier learning project written in Mathematica.
-It is my first Haskell program. A [Python version] with substantially the same API, plus a command line interface, is
-also available.
+This is adapted, as an exercise in learning Haskell, from an earlier learning project written in Mathematica. It is my
+first Haskell program. A [Python version] with substantially the same API, plus a command line interface, is also
+available.
 
 ### Functionality
 
@@ -58,10 +58,9 @@ Simulate [machine operation]:
 
 ### Limitations
 
-Note that the correct display of some characters used to represent components
-(thin Naval rotors) assumes support for Unicode, while some aspects of the display of machine state
-depend on support for combining Unicode. This is a [known limitation](https://github.com/orome/crypto-enigma-hs/issues/10)
-that will be addressed in a future release.
+Note that the correct display of some characters used to represent components (thin Naval rotors) assumes support for
+Unicode, while some aspects of the display of machine state depend on support for combining Unicode. This is a
+[known limitation](https://github.com/orome/crypto-enigma-hs/issues/10) that will be addressed in a future release.
 
 ### Compatability
 
@@ -88,10 +87,9 @@ This package served as the basis for a [Python version], with essentially the sa
 
 [![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
 
-I'm currently learning and experimenting with some Haskell language
-features and can't promise the [development version] will work. More
-detail about planned releases and activities can be found the list of
-scheduled [milestones] and in the list of [open issues].
+I'm currently learning and experimenting with some Haskell language features and can't promise the [development version]
+will work. More detail about planned releases and activities can be found the list of scheduled [milestones] and in the
+list of [open issues].
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
 [documentation]: https://hackage.haskell.org/package/crypto-enigma

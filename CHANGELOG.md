@@ -1,5 +1,5 @@
-A list of key changes in [Hackage releases],
-along with planned features of some expected future releases (in parentheses).
+A list of key changes in [Hackage releases], along with planned features of some expected future releases (in
+parentheses).
 
 See also:
 
@@ -12,8 +12,7 @@ See also:
 
 * ([First stable release].)
 * (Unicode checking for messages and letters.)
-* (Force characters into map range or catch indexing errors in
-  encoding.)
+* (Force characters into map range or catch indexing errors in encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
 
 ### (0.0.2.15)
@@ -60,10 +59,11 @@ Current development version
 ### [0.0.2.6]
 
 * Add [QuickCheck](https://hackage.haskell.org/package/QuickCheck) tests.
-* Remove (disabled) assertions from [`configEnigma`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:configEnigma)
-  and fail with an error when bad arguments are given.
-* Convert all strings provided as `Message` arguments to valid machine input
-  (see [`message`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:message)).
+* Remove (disabled) assertions from
+  [`configEnigma`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:configEnigma) and fail
+  with an error when bad arguments are given.
+* Convert all strings provided as `Message` arguments to valid machine input (see
+  [`message`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:message)).
 
 ### [0.0.2.5]
 
@@ -113,8 +113,8 @@ Current development version
 
 ### [0.0.1.3]
 
-Initial Hackage version. First upload of package to Hackage,
-without ([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/reports/1)) Hacakge-built documentation.
+Initial Hackage version. First upload of package to Hackage, without
+([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/reports/1)) Hacakge-built documentation.
 Stable enough for use, but not reviewed.
 
 [Hackage releases]: https://hackage.haskell.org/package/crypto-enigma
