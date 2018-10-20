@@ -1,4 +1,4 @@
-# Local dev and testing stack config
+# Project-specific dev and testing stack config
 
 # Specifies the GHC version and set of packages available (e.g., lts-3.5, nightly-2015-09-21, ghc-7.10.2)
 resolver: lts-12.9
