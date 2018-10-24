@@ -11,6 +11,7 @@ Portability : POSIX
 A module for rich display of the state of and encoding performed by Enigma machines defined in "Crypto.Enigma".
 -}
 
+{-# LANGUAGE Safe #-}
 module Crypto.Enigma.Display (
         -- * Configuration display
         showEnigmaConfig,
@@ -31,11 +32,6 @@ import Text.Printf              (printf)
 
 import Crypto.Enigma.Utils
 import Crypto.Enigma
-
-{-# ANN module ("HLint: ignore Use infix"::String) #-}
-{-# ANN module ("HLint: ignore Use mappend"::String) #-}
-{-# ANN module ("HLint: error Redundant $"::String) #-}
-{-# ANN module ("HLint: ignore Use ."::String) #-}
 
 -- TBD - Fix name of more detailed display -> ..EnigmConfigSchematic ? <<<
 -- REV - Final newline in show... functions is a bit inconsistent

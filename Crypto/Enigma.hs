@@ -14,8 +14,8 @@ An Enigma machine simulator with rudimentary display, currently limited to the I
 Richer display is provided by "Crypto.Enigma.Display".
 -}
 --{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE Trustworthy #-}
---{-# LANGUAGE Safe #-}
+--{-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE Safe #-}
 module Crypto.Enigma (
         -- * Machine components
         Component,
@@ -72,12 +72,6 @@ import           Data.Text              (replace, pack, unpack)
 
 import           Crypto.Enigma.Utils
 --import Data.Map (Map)
-
-{-# ANN module ("HLint: ignore Use infix"::String) #-}
-{-# ANN module ("HLint: ignore Use mappend"::String) #-}
-{-# ANN module ("HLint: ignore Use fmap"::String) #-}
-{-# ANN module ("HLint: error Redundant $"::String) #-}
-{-# ANN module ("HLint: ignore Use ."::String) #-}
 
 -- TBD - Use lenses - <http://hackage.haskell.org/package/lens> <http://dev.stephendiehl.com/hask/#lenses>
 -- TBD - Use modular arithmetic package - http://hackage.haskell.org/package/modular-arithmetic

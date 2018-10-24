@@ -2,6 +2,8 @@
 {-|
 Module      : Crypto.Enigma.Utils
 -}
+
+{-# LANGUAGE Safe #-}
 module Crypto.Enigma.Utils where
 
 import Data.Char (chr, ord)
