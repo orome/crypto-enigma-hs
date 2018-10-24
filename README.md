@@ -2,6 +2,7 @@
 
 [![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)](https://www.haskell.org)
 [![Hackage](https://img.shields.io/hackage/v/crypto-enigma.svg)](https://hackage.haskell.org/package/crypto-enigma)
+[![Stackage](https://www.stackage.org/package/crypto-enigma/badge/lts?label=lts)](https://www.stackage.org/lts/package/crypto-enigma)
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma-hs/blob/hackage/LICENSE)
 [![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
