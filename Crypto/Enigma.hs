@@ -84,7 +84,6 @@ import           Crypto.Enigma.Utils
 -- REV - Show degenerate case in list and display examples?
 -- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
 -- ASK - Retina figures? <<<
--- TBD - Move HLint config info to .hlint.yaml ? <<<
 -- REV - Explore switch from String to Text throughout (#29)
 
 
