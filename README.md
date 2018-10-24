@@ -64,13 +64,17 @@ Unicode, while some aspects of the display of machine state depend on support fo
 
 ### Compatability
 
-Versions of this package have been part of [Stackage] LTS Haskell since LTS 7.24, and will work with LTS since 3.2.2.
-For information on which GHC versions are supported by each release, see the
+[Versions](https://www.stackage.org/package/crypto-enigma/snapshots) of this package have been part of [Stackage] LTS
+Haskell since LTS 7.24, and the current version will work with LTS since 3.2.2. For information on which GHC versions
+are supported by each release, see the
 [package's Hackage Matrix](https://matrix.hackage.haskell.org/package/crypto-enigma).
 
 ### Documentation
 
 Full [documentation] — for the latest [release version] — is available on Hackage.
+[Documentation](https://www.stackage.org/haddock/lts/crypto-enigma/Crypto-Enigma.html) for the [current Stackage
+LTS version](https://hackage.haskell.org/package/crypto-enigma) — generally identical to the latest release version —
+is avalable on Stackage.
 
 ### Alternatives
 
