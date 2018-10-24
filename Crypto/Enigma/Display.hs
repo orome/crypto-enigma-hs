@@ -27,7 +27,6 @@ import Data.Monoid
 import Data.Char
 import Data.List
 import Data.List.Split          (chunksOf)
-import Data.String.Utils        (replace)
 import Text.Printf              (printf)
 
 import Crypto.Enigma.Utils

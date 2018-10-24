@@ -14,7 +14,7 @@ An Enigma machine simulator with rudimentary display, currently limited to the I
 Richer display is provided by "Crypto.Enigma.Display".
 -}
 --{-# LANGUAGE MultiWayIf #-}
---{-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE Trustworthy #-}
 --{-# LANGUAGE Safe #-}
 module Crypto.Enigma (
         -- * Machine components
@@ -68,7 +68,7 @@ import qualified Data.Map               as M
 import           Data.Maybe
 import           Text.Printf            (printf)
 import           Data.Char              (toUpper)
-import           Data.String.Utils       (replace)
+import           Data.Text              (replace, pack, unpack)
 
 import           Crypto.Enigma.Utils
 --import Data.Map (Map)
@@ -91,6 +91,7 @@ import           Crypto.Enigma.Utils
 -- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
 -- ASK - Retina figures? <<<
 -- TBD - Move HLint config info to .hlint.yaml ? <<<
+-- REV - Explore switch from String to Text throughout (#29)
 
 
 
@@ -540,16 +541,18 @@ enigmaEncoding ec str =
 --   to the corresponding argument.
 type Message = String
 
+-- REV - Awkward pack/unpack patch to remove dependency on MissingH (#29)
 -- | Convert a 'String' to valid Enigma machine input: replace any symbols for which there are standard Kriegsmarine
 --   substitutions, remove any remaining non-letter characters, and convert to uppercase. This function is applied
 --   automatically to 'Message' arguments for functions defined here.
 message :: String -> Message
-message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace <$> subs) $ toUpper <$> s
+message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace' <$> subs) $ toUpper <$> s
     where
         subs = [(" ",""),(".","X"),(",","Y"),("'","J"),(">","J"),("<","J"),("!","X"),
                 ("?","UD"),("-","YY"),(":","XX"),("(","KK"),(")","KK"),
                 ("1","YQ"),("2","YW"),("3","YE"),("4","YR"),("5","YT"),
                 ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
+        replace' a b c = unpack $ replace (pack a) (pack b) (pack c)
 
 -- REV - Rejected (#12) alternate version in which 'Message' is at class (and caller is responsible for making Message).
 -- data Message = Message String deriving Show
