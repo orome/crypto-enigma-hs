@@ -48,7 +48,7 @@ source-repository head
 --        tag:            0.0.2.15
 
 library
-    -- default-extensions: Trustworthy
+    default-extensions: Safe
     exposed-modules:    Crypto.Enigma,
                         Crypto.Enigma.Display
     other-modules:      Crypto.Enigma.Utils
