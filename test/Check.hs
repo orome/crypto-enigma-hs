@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-name-shadowing -Wno-orphans -Wno-missing-signatures #-}
 module Main where
 
 -- import Test.HUnit
