@@ -14,8 +14,8 @@ packages:
 # Override default flag values for local packages and extra-deps
 flags: {}
 
-# Control whether we use the GHC we find on the path
-# system-ghc: true
+# Default is false, but be explicit about use of local resolver GHC
+system-ghc: false
 
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
