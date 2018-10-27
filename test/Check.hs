@@ -5,7 +5,7 @@ import Test.QuickCheck
 import Test.QuickCheck.Test (isSuccess)
 import Control.Monad (unless, replicateM)
 import System.Exit
-import Data.List (sort,intercalate)
+import Data.List (intercalate)
 import Text.Printf (printf)
 
 import Crypto.Enigma
