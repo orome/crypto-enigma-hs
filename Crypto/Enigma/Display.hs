@@ -24,7 +24,7 @@ module Crypto.Enigma.Display (
 ) where
 
 --import Control.Applicative
-import Data.Monoid              ((<>))
+import Data.Monoid              ((<>))          -- For GHC < 8.4.3 - https://stackoverflow.com/a/53024485/656912
 --import Data.Char
 import Data.List
 import Data.List.Split          (chunksOf)

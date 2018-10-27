@@ -59,7 +59,7 @@ import           Control.Monad          (unless)
 import           Control.Monad.Except
 --import           Control.Monad.Zip
 --import           Control.Applicative
-import           Data.Monoid            ((<>))
+import           Data.Monoid            ((<>))          -- For GHC < 8.4.3 - https://stackoverflow.com/a/53024485/656912
 import           Data.List
 import           Data.List.Split        (splitOn)
 import qualified Data.Map               as M
@@ -82,6 +82,7 @@ import           Crypto.Enigma.Utils
 -- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
 -- ASK - Retina figures? <<<
 -- REV - Explore switch from String to Text throughout (#29)
+-- REV: Conditinally import (<>)? -- https://stackoverflow.com/a/47065610/656912 ; https://stackoverflow.com/q/53024461/656912 <<<
 
 
 
