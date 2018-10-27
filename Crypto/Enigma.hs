@@ -13,8 +13,7 @@ An Enigma machine simulator with rudimentary display, currently limited to the I
 
 Richer display is provided by "Crypto.Enigma.Display".
 -}
---{-# LANGUAGE MultiWayIf #-}
---{-# LANGUAGE Trustworthy #-}
+
 {-# LANGUAGE Safe #-}
 module Crypto.Enigma (
         -- * Machine components
@@ -63,7 +62,6 @@ import           Control.Monad.Except
 --import           Data.Monoid
 import           Data.List
 import           Data.List.Split        (splitOn)
---import           Data.Ix                (inRange)
 import qualified Data.Map               as M
 import           Data.Maybe
 import           Text.Printf            (printf)
@@ -71,7 +69,6 @@ import           Data.Char              (toUpper)
 import           Data.Text              (replace, pack, unpack)
 
 import           Crypto.Enigma.Utils
---import Data.Map (Map)
 
 -- TBD - Use lenses - <http://hackage.haskell.org/package/lens> <http://dev.stephendiehl.com/hask/#lenses>
 -- TBD - Use modular arithmetic package - http://hackage.haskell.org/package/modular-arithmetic
@@ -317,7 +314,7 @@ configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots wind
         Right cfg  -> cfg
         Left err -> error (show err)
 
--- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes; see issue 12 <<<
+-- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes (#12) <<<
 -- A safe (total) constructor; not currently exposed
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
@@ -390,7 +387,7 @@ instance Show Component where
 
 -- Mapping ==================================================================
 
--- REV - Enforce as a calss (in encoding functions too)'; see issue 12 <<<
+-- REV - Enforce as a calss (in encoding functions too)' (#12) <<<
 -- | The mapping used by a component (see 'wiring' and 'componentMapping')
 --   or by the machine (see 'enigmaMapping') to perform a
 --   <https://en.wikipedia.org/wiki/Substitution_cipher#Simple_substitution simple substitution encoding>.
