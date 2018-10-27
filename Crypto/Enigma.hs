@@ -55,12 +55,12 @@ module Crypto.Enigma (
 ) where
 
 import           Control.Arrow
-import           Control.Exception      (assert)
+--import           Control.Exception      (assert)
 import           Control.Monad          (unless)
 import           Control.Monad.Except
-import           Control.Monad.Zip
-import           Control.Applicative
-import           Data.Monoid
+--import           Control.Monad.Zip
+--import           Control.Applicative
+--import           Data.Monoid
 import           Data.List
 import           Data.List.Split        (splitOn)
 --import           Data.Ix                (inRange)
