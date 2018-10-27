@@ -24,7 +24,7 @@ module Crypto.Enigma.Display (
 ) where
 
 --import Control.Applicative
---import Data.Monoid
+import Data.Monoid              ((<>))
 --import Data.Char
 import Data.List
 import Data.List.Split          (chunksOf)

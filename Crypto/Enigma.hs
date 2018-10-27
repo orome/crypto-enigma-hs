@@ -59,7 +59,7 @@ import           Control.Monad          (unless)
 import           Control.Monad.Except
 --import           Control.Monad.Zip
 --import           Control.Applicative
---import           Data.Monoid
+import           Data.Monoid            ((<>))
 import           Data.List
 import           Data.List.Split        (splitOn)
 import qualified Data.Map               as M
