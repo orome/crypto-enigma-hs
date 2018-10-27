@@ -7,7 +7,6 @@ import Data.List (sort)
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
-{-# ANN module ("HLint: ignore Use mappend"::String) #-}
 
 testRotorNames :: Test
 testRotorNames = TestCase $ assertEqual "Invalid rotor list"

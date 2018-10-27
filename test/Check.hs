@@ -11,7 +11,6 @@ import Text.Printf (printf)
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
-{-# ANN module ("HLint: ignore Use mappend"::String) #-}
 
 
 capitals = ['A'..'Z']
