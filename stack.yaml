@@ -17,6 +17,15 @@ flags: {}
 # Default is false, but be explicit about use of local resolver GHC
 system-ghc: false
 
+# https://docs.haskellstack.org/en/stable/yaml_configuration/#ghc-options
+ghc-options:
+  # All packages
+  "$locals": -Wunsafe -Wunused-imports
+  "$targets": -Wunsafe -Wunused-imports
+  "$everything": -optc -Qunused-arguments
+  # Specific packages
+  #some-package: -DSOME_CPP_FLAG
+
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
 # require-stack-version: >= 0.1.4.0
