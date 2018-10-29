@@ -366,7 +366,7 @@ instance Show EnigmaError where
 instance Read EnigmaConfig where
         readsPrec _ i = case runExcept (configEnigmaExcept c w s r) of
             Right cfg  -> [(cfg, "")]
-            Left err -> [] -- Looses error information, but conforms to specification of 'readsPrec' in 'Read'
+            Left _ -> [] -- Looses error information, but conforms to specification of 'readsPrec' in 'Read'
           where [c, w, s, r] = words i
 --        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
