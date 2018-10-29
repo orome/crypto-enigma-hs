@@ -39,6 +39,7 @@ jobs:
   - name: "Stackage Nightly (excluded from Hackage branch tests)"
     env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
     if: branch != "hackage"
+    # TBD - Update when Haskell for Mac updates -- https://community.hfm.io/hc/en-us/requests/795
   - name: "Haskell for Mac (test LTS used by Haskell for Mac on macOS)"
     env: RESOLVER=lts-9.6     STACK_YAML=travis-stacks/resolver-only.yaml
     os: osx
