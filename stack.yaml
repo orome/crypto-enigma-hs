@@ -1,7 +1,7 @@
 # Project-specific dev and testing stack config
 
 # Specifies the GHC version and set of packages available (e.g., lts-3.5, nightly-2015-09-21, ghc-7.10.2)
-resolver: lts-12.14
+resolver: lts-12.16
 
 # Local packages, usually specified by relative directory name
 packages:
@@ -20,9 +20,9 @@ system-ghc: false
 # https://docs.haskellstack.org/en/stable/yaml_configuration/#ghc-options
 ghc-options:
   # All packages
-  "$locals": -Wunsafe -Wunused-imports
-  "$targets": -Wunsafe -Wunused-imports
-  "$everything": -optc -Qunused-arguments
+  "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
+  "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
+  "$everything": -optc -Qunused-arguments -optl -Qunused-arguments
   # Specific packages
   #some-package: -DSOME_CPP_FLAG
 
