@@ -161,7 +161,6 @@ component n = fromMaybe (Component n (foldr plug letters (splitOn "." n)) "") (M
         -- Either lookup the rotor or reflector by name, or use the plugboard spec to
         -- generate a component with wiring in which the specified letter pairs are exchanged.
     where
-        c = find ((== n).name) comps
         plug [p1,p2] = map (\ch -> if ch == p1 then p2 else if ch == p2 then p1 else ch)
         plug _       = id       -- Anything but a .-separated pair will have no effect (configEnigma assertion)
 
