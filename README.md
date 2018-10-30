@@ -94,7 +94,9 @@ This package served as the basis for a [Python version], with essentially the sa
 
 I'm currently learning and experimenting with some Haskell language features and can't promise the [development version]
 will work. More detail about planned releases and activities can be found the list of scheduled [milestones] and in the
-list of [open issues].
+list of [open issues]. I may also be working on new major features on branches seperate from the development branch
+(for example I've started work on [adding a command line interface](https://github.com/orome/crypto-enigma-hs/issues/13)
+on its [own branch](https://github.com/orome/crypto-enigma-hs/compare/develop...new/cli).)
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
 [documentation]: https://hackage.haskell.org/package/crypto-enigma
