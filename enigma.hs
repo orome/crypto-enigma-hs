@@ -1,5 +1,6 @@
 import Options.Applicative      -- http://hackage.haskell.org/package/optparse-applicative
 import Data.Maybe
+import Data.Monoid ((<>))          -- For GHC 8.0 through 8.2
 
 --import Crypto.Enigma.Utils
 import Crypto.Enigma
