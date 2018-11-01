@@ -363,11 +363,13 @@ instance Show EnigmaError where
 --   >>> cfg == cfg'
 --   True
 instance Read EnigmaConfig where
-        readsPrec _ i = case runExcept (configEnigmaExcept c w s r) of
-            Right cfg  -> [(cfg, "")]
-            Left _ -> [] -- Looses error information, but conforms to specification of 'readsPrec' in 'Read'
-          where [c, w, s, r] = words i
---        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
+        readsPrec _ i = if ((length $ words i) /= 4)
+                          then error ("Enigma machine configuration has the format 'rotors windows plugboard rings' ")
+                          else case runExcept (configEnigmaExcept c w s r) of
+                                            Right cfg  -> [(cfg, "")]
+                                            Left err -> error (show err) -- ASK: Violates specification of 'readsPrec' in 'Read' <<<
+                                   where [c, w, s, r] = words i
+                --        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
 -- | Show the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
 --
