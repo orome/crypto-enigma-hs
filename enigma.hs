@@ -11,42 +11,34 @@ import Crypto.Enigma.Display
 
 data Subcommand =
         Encode { config :: String, message :: String } |
-        Show { config :: String, letter :: Maybe String } |
-        Other1 { binary :: String } |
-        Other2 { regex  :: String } deriving Show
+        Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlight0 :: Maybe String, encoding0 :: Maybe Bool } |
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String }
+        deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
 
 commandO = Options <$> subcommandO
 --commandO = Options <$> generalOpts <*> subcommandO
-
 -- generalOpts = strOption ( long "general" <> help "General option" )
 
 subcommandO :: Parser Subcommand
 subcommandO =
   subparser (
-        command "encode" (info (Encode <$>
-                                 ( strArgument $ metavar "CONFIG" <> help "Config of machine") <*>
-                                 ( strArgument $ metavar "MESSAGE" <> help "The message"))
+        command "encode" (info (Encode <$> configArg <*> messageArg)
                          (progDesc "Encode a message")) <>
-        command "show" (info showO ( progDesc "Show a machine configuration" )) <>
-        command "UPLOADFILE" (info other1O ( progDesc "Other dummy command 1" )) <>
-        command "SEARCH" (info other2O ( progDesc "Other dummy command 2" ))
+        command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt)
+                         (progDesc "Show a machine configuration" )) <>
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt)
+                         (progDesc "Show a machine configuration" ))
    )
-
--- encodeO = Encode <$>
---   ( strArgument (metavar "CONFIG" <> help "Config of machine")) <*>
---   ( strArgument (metavar "MESSAGE" <> help "The message"))
-
-showO = Show <$>
-  ( strArgument (metavar "CONFIG" <> help "Config of machine")) <*>
-  ( optional $ strOption ( long "letter" <> short 'l' <> value " " <> help "Letter to highlight"))
-
-other1O = Other1 <$>
-  ( strOption ( long "binary" <> help "A binary option for other command 1"))
-
-other2O = Other2 <$>
-  ( strOption ( long "regex" <> help "A regex option for other command 2"))
+  where
+        configArg = strArgument $ metavar "CONFIG" <> help "Config of machine"
+        messageArg = strArgument $ metavar "MESSAGE" <> help "The message"
+        messageOpt = optional $ strOption ( long "message" <> short 'm' <> metavar "MESSAGE" <> value " " <> help "The message OPT")
+        letterOpt =  optional $ strOption ( long "letter" <> short 'l' <> metavar "LETTER" <> value " " <> help "Letter to highlight")
+        formatOpt =  optional $ strOption ( long "format" <> short 'f' <> metavar "FORMAT" <> value "single" <> help "The format")
+        highlightOpt =  optional $ strOption ( long "highlight" <> short 'H' <> metavar "HH" <> value "bars" <> help "The highlight")
+        encodingOpt =  optional $ switch ( long "showencoding" <> short 'e' <> help "Show encoding")
 
 
 main :: IO ()
@@ -55,10 +47,11 @@ main = do
     opts <- execParser optsParser
     case subcommand opts of
         Encode config message -> putStr $ showEnigmaEncoding (read config :: EnigmaConfig) message
-        Show config (Just (letter:_)) -> putStrLn $ showEnigmaConfig (read config :: EnigmaConfig) letter
-        Show config _ -> putStrLn $ showEnigmaConfig (read config :: EnigmaConfig) ' '
-        Other1 _ -> putStrLn "Other command 1"
-        Other2 _ -> putStrLn "Other command 2"
+        Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) -> putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig) letter format showenc (decorate highlight)
+--         Show config (Just (letter:_)) (Just format) -> putStrLn $ showEnigmaConfig (read config :: EnigmaConfig) letter
+--         Show config _ _ -> putStrLn $ showEnigmaConfig (read config :: EnigmaConfig) ' '
+        Run config (Just message) (Just "single")-> putStrLn $ showEnigmaOperation (read config :: EnigmaConfig) message
+        Run config (Just message) (Just "internal") -> putStrLn $ showEnigmaOperationInternal (read config :: EnigmaConfig) message
   where
     optsParser :: ParserInfo Options
     optsParser =
@@ -66,6 +59,15 @@ main = do
              (  fullDesc <>
                 progDesc "Command line interface to crypto-enigma package" <>
                 header "Enigma machine CLI" )
+    -- TBD -- Rename <<<
+    -- decorate :: String -> (Char -> String)
+    decorate spec = case spec of
+                            "bars" -> \ch -> ch:"\818\773"
+                            -- TBD - Colors
+                            [l, r] -> \c -> [l, c, r]
+                            _ -> \c -> [c]
+    --decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
+
 
 
 
@@ -80,3 +82,12 @@ main = do
 -- CallStack (from HasCallStack):
 --   error, called at ./Crypto/Enigma.hs:371:57 in main:Crypto.Enigma
 
+
+-- TBD: Update documentation for display functions (consolidate and expand under displayEnigmaConfig; just warning for old wrappers)
+-- TBD: Test and confirm correspondence with Python
+-- TBD: Better CLI error handling
+-- TBD: Errors for Display functions
+-- TBD: Test scripts for replacment Display functions
+-- TBD: Test scripts for command line?
+-- TBD: Implement operation (Display functions, using lists, and command line)
+-- TBD: Version subcommand
