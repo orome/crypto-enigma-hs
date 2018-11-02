@@ -8,6 +8,7 @@ import Crypto.Enigma
 import Crypto.Enigma.Display
 
 
+cliName = "Enigma machine CLI"
 
 data Subcommand =
         Encode { config :: String, message :: String } |
@@ -24,12 +25,12 @@ commandO = Options <$> subcommandO
 subcommandO :: Parser Subcommand
 subcommandO =
   subparser (
-        command "encode" (info (Encode <$> configArg <*> messageArg)
-                         (progDesc "Encode a message")) <>
-        command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt)
-                         (progDesc "Show a machine configuration" )) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt)
-                         (progDesc "Show a machine configuration" ))
+        command "encode" (info (Encode <$> configArg <*> messageArg <**> helper)
+                         (helpText "Encode a message" "ENCODE" "encode foot")) <>
+        command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
+                         (helpText "Show a machine configuration" "SHOW" "show foot")) <>
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <**> helper)
+                         (helpText "Run a machine " "Run" "run foot"))
    )
   where
         configArg = strArgument $ metavar "CONFIG" <> help "Config of machine"
@@ -39,6 +40,8 @@ subcommandO =
         formatOpt =  optional $ strOption ( long "format" <> short 'f' <> metavar "FORMAT" <> value "single" <> help "The format")
         highlightOpt =  optional $ strOption ( long "highlight" <> short 'H' <> metavar "HH" <> value "bars" <> help "The highlight")
         encodingOpt =  optional $ switch ( long "showencoding" <> short 'e' <> help "Show encoding")
+
+        helpText desc cmd foot = (progDesc desc <> header (cliName ++ ": "++ cmd ++" command") <> footer ("Shared footer. " ++ foot))
 
 
 main :: IO ()
@@ -58,7 +61,8 @@ main = do
         info (helper <*> commandO)
              (  fullDesc <>
                 progDesc "Command line interface to crypto-enigma package" <>
-                header "Enigma machine CLI" )
+                header cliName <>
+                footer "Some footer info")
     -- TBD -- Rename <<<
     -- decorate :: String -> (Char -> String)
     decorate spec = case spec of
@@ -91,3 +95,5 @@ main = do
 -- TBD: Test scripts for command line?
 -- TBD: Implement operation (Display functions, using lists, and command line)
 -- TBD: Version subcommand
+-- TBD: Document CLI in readme
+-- TBD: Help and desription text for CLI
