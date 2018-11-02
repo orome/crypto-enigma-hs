@@ -14,6 +14,7 @@ A module for rich display of the state of and encoding performed by Enigma machi
 {-# LANGUAGE Safe #-}
 module Crypto.Enigma.Display (
         -- * Configuration display
+        displayEnigmaConfig,
         showEnigmaConfig,
         showEnigmaConfigInternal,
         -- * Operation display
@@ -57,13 +58,13 @@ postproc = unlines . chunksOf 60 . unwords . chunksOf 4
 locCar :: Char -> String -> Mapping -> Maybe Int
 locCar ch s m = elemIndex (encode m ch) s
 
-decorate :: Char -> String
-decorate ch = ch:"\818\773"
---decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
+-- TBD - Remove when deprecated showEnigmaConfig and showEnigmaConfigInternal are removed
+decorate' :: Char -> String
+decorate' ch = ch:"\818\773"
 
-markedMapping :: Maybe Int -> Mapping -> String
-markedMapping (Just loc) e  = take loc <> decorate.(!!loc) <> drop (loc + 1) $ e
-markedMapping Nothing e     = e
+markedMapping :: Maybe Int -> Mapping -> (Char -> String) -> String
+markedMapping (Just loc) e mf = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
+markedMapping Nothing e _    = e
 
 
 -- Character restriction ----------------------------------------------------
@@ -76,16 +77,64 @@ enigmaChar ch = if ch `elem` letters then ch else ' '
 
 -- Machine operation display =================================================
 
--- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
--- starting configuration and for each character of the message, using the provided configuration display function.
--- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
--- this function, which both call, that applies 'message'.
-showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> Message -> String
-showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(message str))
+-- REV - Review positioning and exposure (could be needed for cli help) <<<
+fmtsInternal = ["internal", "detailed", "schematic"]
+fmtsSingle = ["single", "summary"]
+fmtsWindows = ["windows", "winds"]
+fmtsConfig = ["config", "configuration", "spec", "specification"]
+fmtsEncoding = ["encoding"]
+--     _FMTS_DEBUG = ['debug']
 
 
 -- Configuration display -----------------------------------------------------
 
+displayEnigmaConfig :: EnigmaConfig -> Char -> String -> Bool -> (Char -> String) -> String
+displayEnigmaConfig ec ch fmt se mf =
+    case fmt of
+        x | elem x fmtsSingle -> showEnigmaConfig_
+        x | elem x fmtsInternal -> showEnigmaConfigInternal_
+        x | elem x fmtsWindows -> (windows ec) ++ encs
+        x | elem x fmtsConfig -> (show ec) ++ encs
+        x | elem x fmtsEncoding -> drop 2 encs
+        -- TBD - How to implement debug format?
+        _ -> "Not known" ++ fmt -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
+    where
+        ech = enigmaChar ch
+        enc = enigmaMapping ec
+
+        encs = if (elem ech letters) && (se || elem fmt fmtsEncoding)
+                then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
+                else ""
+
+        showEnigmaConfig_ = fmt ech (markedMapping (locCar ech enc enc) enc mf)
+                                     (windows ec)
+                                     (reverse $ tail.init $ positions ec)
+                where
+                    fmt ch e ws ps = printf "%s %s  %s  %s" lbl e ws ps'
+                        where
+                            lbl = if ch == ' ' then "   " else  ch:" >"
+                            ps' = unwords $ (printf "%02d") <$> ps
+
+        showEnigmaConfigInternal_ =
+                unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters mf) ' ' 0 ""] ++
+                          (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
+                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500 mf)) -- TBD -- Fix replication! <<<
+                                        (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
+                                        ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
+                                        (components ec ++ (tail $ reverse $ components ec))
+                          ) ++
+                          [fmt (if ech == ' ' then "" else (encode (enigmaMapping ec) ech):" <")
+                               (markedMapping (last charLocs) (enigmaMapping ec) mf) ' ' 0 ""]
+                where
+                    -- ech = enigmaChar ch
+                    charLocs = zipWith (locCar ech)
+                                   ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
+                                   ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
+                    fmt l e w p n = printf "%3.3s %s  %s  %s  %s" l e (w:[]) p' n
+                       where
+                            p' = if p == 0 then "  " else printf "%02d" (p::Int)
+
+{-# DEPRECATED showEnigmaConfig "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprication note and supply args <<<
 -- | Display a summary of the Enigma machine configuration as its encoding (see 'Mapping'),
 --   the letters at the windows (see 'windows'), and the 'Position's of the rotors (see 'positions').
 --
@@ -99,18 +148,10 @@ showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(me
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = fmt ech (markedMapping (locCar ech enc enc) enc)
-                                 (windows ec)
-                                 (reverse $ tail.init $ positions ec)
-    where
-        ech = enigmaChar ch
-        enc = enigmaMapping ec
-        fmt ch e ws ps = printf "%s %s  %s  %s" lbl e ws ps'
-            where
-                lbl = if ch == ' ' then "   " else  ch:" >"
-                ps' = unwords $ (printf "%02d") <$> ps
+showEnigmaConfig ec ch = displayEnigmaConfig ec ch "single" True decorate'
 
 -- TBD - Improve resolution of figure showing mapping <<<
+{-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprication note and supply args <<<
 -- | Display a summary of the Enigma machine configuration as a schematic showing the encoding (see 'Mapping')
 --   performed by each stage (see 'stageMappingList'), along with an indication of the stage
 --   (rotor number, @\"P\"@ for plugboard, or @\"R\"@ for reflector), window letter (see 'windows'),
@@ -171,27 +212,17 @@ showEnigmaConfig ec ch = fmt ech (markedMapping (locCar ech enc enc) enc)
 --
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch =
-        unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters) ' ' 0 ""] ++
-                  (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                (zipWith markedMapping (tail.init $ charLocs) (stageMappingList ec))
-                                (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
-                                ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
-                                (components ec ++ (tail $ reverse $ components ec))
-                  ) ++
-                  [fmt (if ech == ' ' then "" else (encode (enigmaMapping ec) ech):" <")
-                       (markedMapping (last charLocs) (enigmaMapping ec)) ' ' 0 ""]
-    where
-        ech = enigmaChar ch
-        charLocs = zipWith (locCar ech)
-                           ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
-                           ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
-        fmt l e w p n = printf "%3.3s %s  %s  %s  %s" l e (w:[]) p' n
-            where
-                p' = if p == 0 then "  " else printf "%02d" (p::Int)
+showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decorate'
 
 
 -- Operation display ---------------------------------------------------------
+
+-- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
+-- starting configuration and for each character of the message, using the provided configuration display function.
+-- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
+-- this function, which both call, that applies 'message'.
+showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> Message -> String
+showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(message str))
 
 -- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
 --   and for each subsequent configuration as it processes each letter of a 'Message'. #showEnigmaOperationEG#
