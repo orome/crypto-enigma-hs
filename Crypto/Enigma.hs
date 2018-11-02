@@ -364,10 +364,11 @@ instance Show EnigmaError where
 --   True
 instance Read EnigmaConfig where
         readsPrec _ i = if ((length $ words i) /= 4)
-                          then error ("Enigma machine configuration has the format 'rotors windows plugboard rings' ")
+                          then error ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
                           else case runExcept (configEnigmaExcept c w s r) of
                                             Right cfg  -> [(cfg, "")]
-                                            Left err -> error (show err) -- ASK: Violates specification of 'readsPrec' in 'Read' <<<
+                                            -- ASK: Violates specification of 'readsPrec' in 'Read' -- https://stackoverflow.com/q/53104972/656912 <<<
+                                            Left err -> error (show err)
                                    where [c, w, s, r] = words i
                 --        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
