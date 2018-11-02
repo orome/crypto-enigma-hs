@@ -8,12 +8,16 @@ See also:
 * [closed milestones]; and
 * [issues].
 
-### (0.0.2.?)
+### (0.0.3.?)
 
 * ([First stable release].)
 * (Unicode checking for messages and letters.)
 * (Force characters into map range or catch indexing errors in encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
+
+### (0.0.3.1)
+
+Version with CLI and additions to (and deprecations of) display functionality
 
 ### (0.0.2.15)
 
