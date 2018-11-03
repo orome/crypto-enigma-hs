@@ -59,8 +59,6 @@ main = do
     case subcommand opts of
         Encode config message -> putStr $ showEnigmaEncoding (read config :: EnigmaConfig) message
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) -> putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig) letter format showenc (decorate highlight)
---         Show config (Just (letter:_)) (Just format) -> putStrLn $ showEnigmaConfig (read config :: EnigmaConfig) letter
---         Show config _ _ -> putStrLn $ showEnigmaConfig (read config :: EnigmaConfig) ' '
         Run config (Just message) (Just "single")-> putStrLn $ showEnigmaOperation (read config :: EnigmaConfig) message
         Run config (Just message) (Just "internal") -> putStrLn $ showEnigmaOperationInternal (read config :: EnigmaConfig) message
   where
