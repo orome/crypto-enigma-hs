@@ -12,8 +12,8 @@ cliName = "Enigma machine CLI"
 
 data Subcommand =
         Encode { config :: String, message :: String } |
-        Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlight0 :: Maybe String, encoding0 :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlight0 :: Maybe String, encoding0 :: Maybe Bool, showstepsO :: Maybe Bool }
+        Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
