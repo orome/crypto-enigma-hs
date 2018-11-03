@@ -97,7 +97,7 @@ displayEnigmaConfig ec ch fmt se mf =
         x | elem x fmtsConfig -> (show ec) ++ encs
         x | elem x fmtsEncoding -> drop 2 encs
         -- TBD - How to implement debug format?
-        _ -> "Not known" ++ fmt -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
+        _ -> error ("Not known " ++ fmt) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
     where
         ech = enigmaChar ch
         enc = enigmaMapping ec
