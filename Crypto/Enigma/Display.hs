@@ -18,6 +18,7 @@ module Crypto.Enigma.Display (
         showEnigmaConfig,
         showEnigmaConfigInternal,
         -- * Operation display
+        displayEnigmaOperation,
         showEnigmaOperation,
         showEnigmaOperationInternal,
         -- * Encoding display
@@ -217,13 +218,26 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decor
 
 -- Operation display ---------------------------------------------------------
 
+-- REV - Pull out listEnigmaOperation_ (everthing after unlines) from as displayEnigmaOperation convenience? <<<
+-- listEnigmaOperation_ :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> [String]
+-- listEnigmaOperation_ ec str fmt se mf = zipWith (\sec scr -> displayEnigmaConfig sec scr fmt se mf) (iterate step ec) (' ':(message str))
+
 -- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
 -- starting configuration and for each character of the message, using the provided configuration display function.
 -- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
 -- this function, which both call, that applies 'message'.
-showEnigmaOperation_ :: (EnigmaConfig -> Char -> String) -> EnigmaConfig -> Message -> String
-showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(message str))
+displayEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> String
+displayEnigmaOperation ec str fmt se mf ss = unlines $ zipWith3 (\n sec scr -> (fmtN ss n) ++ (displayEnigmaConfig sec scr fmt se mf))
+                                                               [0..]
+                                                               (iterate step ec)
+                                                               (' ':(message str))
+                                                        where
+                                                                -- TBD: Doublecheck formatting and sapcing for internal config <<<
+                                                                fmtN :: Bool -> Int -> String
+                                                                fmtN True n = (printf "%03d  " n) ++ (if elem fmt fmtsInternal then "\n" else "")
+                                                                fmtN False _ = ""
 
+{-# DEPRECATED showEnigmaOperation "This has been replaced by displayEnigmaOperation" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
 --   and for each subsequent configuration as it processes each letter of a 'Message'. #showEnigmaOperationEG#
 --
@@ -239,8 +253,10 @@ showEnigmaOperation_ df ec str = unlines $ zipWith df (iterate step ec) (' ':(me
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = showEnigmaOperation_ showEnigmaConfig ec str
+showEnigmaOperation ec str = displayEnigmaOperation ec str "single" False decorate' False
+-- displayEnigmaOperation
 
+{-# DEPRECATED showEnigmaOperationInternal "This has been replaced by showEnigmaOperationInternal" #-} -- TBD - Replace doc with deprication note and supply args <<<
 -- | Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
 --   and for each subsequent configuration as it processes each letter of a 'Message'.
 --
@@ -291,8 +307,7 @@ showEnigmaOperation ec str = showEnigmaOperation_ showEnigmaConfig ec str
 --   perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
 --   as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = showEnigmaOperation_ showEnigmaConfigInternal ec str
-
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str "internal" False decorate' False
 
 
 -- Encoding display ==========================================================
