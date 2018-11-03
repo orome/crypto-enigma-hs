@@ -13,7 +13,7 @@ cliName = "Enigma machine CLI"
 data Subcommand =
         Encode { config :: String, message :: String } |
         Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlight0 :: Maybe String, encoding0 :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String }
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlight0 :: Maybe String, encoding0 :: Maybe Bool, showstepsO :: Maybe Bool }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
@@ -29,7 +29,7 @@ subcommandO =
                          (helpText "Encode a message" "ENCODE" "encode foot")) <>
         command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText "Show a machine configuration" "SHOW" "show foot")) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <**> helper)
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <**> helper)
                          (helpText "Run a machine " "Run" "run foot"))
    )
   where
@@ -47,6 +47,12 @@ subcommandO =
         encodingOpt =  optional $ switch ( long "showencoding" <> short 'e' <>
                 help "Show encoding")
 
+        showstepOpt =  optional $ switch ( long "showstep" <> short 't' <>
+                help "Show step numbers")
+        stepsOpt :: Parser Int
+        stepsOpt = option auto (long "steps" <> short 's' <> metavar "STEPS" <>
+                help "Steps to run" )
+
         helpText desc cmd foot = (progDesc desc <>
                 header (cliName ++ ": "++ cmd ++" command") <>
                 footer ("Shared footer. " ++ foot))
@@ -59,8 +65,9 @@ main = do
     case subcommand opts of
         Encode config message -> putStr $ showEnigmaEncoding (read config :: EnigmaConfig) message
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) -> putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig) letter format showenc (decorate highlight)
-        Run config (Just message) (Just "single")-> putStrLn $ showEnigmaOperation (read config :: EnigmaConfig) message
-        Run config (Just message) (Just "internal") -> putStrLn $ showEnigmaOperationInternal (read config :: EnigmaConfig) message
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) -> putStr $ displayEnigmaOperation (read config :: EnigmaConfig) message format showenc (decorate highlight) showstps
+        -- Run config (Just message) (Just format) (Just highlight) (Just showenc) -> putStrLn $ showEnigmaOperation (read config :: EnigmaConfig) message
+        cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
     optsParser =
