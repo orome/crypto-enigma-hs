@@ -134,7 +134,7 @@ displayEnigmaConfig ec ch fmt se mf =
                        where
                             p' = if p == 0 then "  " else printf "%02d" (p::Int)
 
-{-# DEPRECATED showEnigmaConfig "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprication note and supply args <<<
+{-# DEPRECATED showEnigmaConfig "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Display a summary of the Enigma machine configuration as its encoding (see 'Mapping'),
 --   the letters at the windows (see 'windows'), and the 'Position's of the rotors (see 'positions').
 --
@@ -151,7 +151,7 @@ showEnigmaConfig :: EnigmaConfig -> Char -> String
 showEnigmaConfig ec ch = displayEnigmaConfig ec ch "single" True decorate'
 
 -- TBD - Improve resolution of figure showing mapping <<<
-{-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprication note and supply args <<<
+{-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Display a summary of the Enigma machine configuration as a schematic showing the encoding (see 'Mapping')
 --   performed by each stage (see 'stageMappingList'), along with an indication of the stage
 --   (rotor number, @\"P\"@ for plugboard, or @\"R\"@ for reflector), window letter (see 'windows'),
