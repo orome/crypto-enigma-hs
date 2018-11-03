@@ -33,15 +33,23 @@ subcommandO =
                          (helpText "Run a machine " "Run" "run foot"))
    )
   where
-        configArg = strArgument $ metavar "CONFIG" <> help "Config of machine"
+        configArg = strArgument $ metavar "CONFIG" <>
+                help "Config of machine"
         messageArg = strArgument $ metavar "MESSAGE" <> help "The message"
-        messageOpt = optional $ strOption ( long "message" <> short 'm' <> metavar "MESSAGE" <> value " " <> help "The message OPT")
-        letterOpt =  optional $ strOption ( long "letter" <> short 'l' <> metavar "LETTER" <> value " " <> help "Letter to highlight")
-        formatOpt =  optional $ strOption ( long "format" <> short 'f' <> metavar "FORMAT" <> value "single" <> help "The format")
-        highlightOpt =  optional $ strOption ( long "highlight" <> short 'H' <> metavar "HH" <> value "bars" <> help "The highlight")
-        encodingOpt =  optional $ switch ( long "showencoding" <> short 'e' <> help "Show encoding")
+        messageOpt = optional $ strOption ( long "message" <> short 'm' <> metavar "MESSAGE" <> value " " <>
+                help "The message OPT")
+        letterOpt =  optional $ strOption ( long "letter" <> short 'l' <> metavar "LETTER" <> value " " <>
+                help "Letter to highlight")
+        formatOpt =  optional $ strOption ( long "format" <> short 'f' <> metavar "FORMAT" <> value "single" <>
+                help "The format")
+        highlightOpt =  optional $ strOption ( long "highlight" <> short 'H' <> metavar "HH" <> value "bars" <>
+                help "The highlight")
+        encodingOpt =  optional $ switch ( long "showencoding" <> short 'e' <>
+                help "Show encoding")
 
-        helpText desc cmd foot = (progDesc desc <> header (cliName ++ ": "++ cmd ++" command") <> footer ("Shared footer. " ++ foot))
+        helpText desc cmd foot = (progDesc desc <>
+                header (cliName ++ ": "++ cmd ++" command") <>
+                footer ("Shared footer. " ++ foot))
 
 
 main :: IO ()
