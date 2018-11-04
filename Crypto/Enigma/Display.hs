@@ -256,56 +256,59 @@ showEnigmaOperation :: EnigmaConfig -> Message -> String
 showEnigmaOperation ec str = displayEnigmaOperation ec str "single" False decorate' False
 -- displayEnigmaOperation
 
-{-# DEPRECATED showEnigmaOperationInternal "This has been replaced by showEnigmaOperationInternal" #-} -- TBD - Replace doc with deprication note and supply args <<<
--- | Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
---   and for each subsequent configuration as it processes each letter of a 'Message'.
---
---   >>> putStr $ showEnigmaOperationInternal (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KR"
---       ABCDEFGHIJKLMNOPQRSTUVWXYZ
---     P YBCDFEGHIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
---     1 DMPSWGCROHXLBUIKTAQJZVEYFN  P  06  II
---     2 BJYINTKWOARFEMVSGCUDPHZQLX  A  24  VIII
---     3 ILHXUBZQPNVGKMCRTEJFADOYSW  F  16  V
---     4 YDSKZPTNCHGQOMXAUWJFBRELVI  L  10  γ
---     R ENKQAUYWJICOPBLMDXZVFTHRGS         b
---     4 PUIBWTKJZSDXNHMFLVCGQYROAE         γ
---     3 UFOVRTLCASMBNJWIHPYQEKZDXG         V
---     2 JARTMLQVDBGYNEIUXKPFSOHZCW         VIII
---     1 RMGAWYFJOTPLBZICSHDQNVEKXU         II
---     P YBCDFEGHIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
---       OHNKJYSBTEDMLCARWPGIXZQUFV
---   <BLANKLINE>
---   K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ
---     P YBCDFEGHIJZ̲̅PONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
---     1 LORVFBQNGWKATHJSZPIYUDXEMC̲̅  Q  07  II
---     2 BJY̲̅INTKWOARFEMVSGCUDPHZQLX  A  24  VIII
---     3 ILHXUBZQPNVGKMCRTEJFADOYS̲̅W  F  16  V
---     4 YDSKZPTNCHGQOMXAUWJ̲̅FBRELVI  L  10  γ
---     R ENKQAUYWJI̲̅COPBLMDXZVFTHRGS         b
---     4 PUIBWTKJZ̲̅SDXNHMFLVCGQYROAE         γ
---     3 UFOVRTLCASMBNJWIHPYQEKZDXG̲̅         V
---     2 JARTMLQ̲̅VDBGYNEIUXKPFSOHZCW         VIII
---     1 LFZVXEINSOKAYHBRG̲̅CPMUDJWTQ         II
---     P YBCDFEG̲̅HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
---   G < CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS
---   <BLANKLINE>
---   R > ABCDEFGHIJKLMNOPQR̲̅STUVWXYZ
---     P YBCDFEGHIJZPONMLQR̲̅STXVWUAK         UX.MO.KZ.AY.EF.PL
---     1 NQUEAPMFVJZSGIRYOH̲̅XTCWDLBK  R  08  II
---     2 BJYINTKW̲̅OARFEMVSGCUDPHZQLX  A  24  VIII
---     3 ILHXUBZQPNVGKMCRTEJFADO̲̅YSW  F  16  V
---     4 YDSKZPTNCHGQOMX̲̅AUWJFBRELVI  L  10  γ
---     R ENKQAUYWJICOPBLMDXZVFTHR̲̅GS         b
---     4 PUIBWTKJZSDXNHMFLV̲̅CGQYROAE         γ
---     3 UFOVRTLCASMBNJWIHPYQEK̲̅ZDXG         V
---     2 JARTMLQVDBG̲̅YNEIUXKPFSOHZCW         VIII
---     1 EYUWDHM̲̅RNJZXGAQFBOLTCIVSPK         II
---     P YBCDFEGHIJZPO̲̅NMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
---   O < HXETCUMASQNZGKRYJO̲̅IDFWVBPL
---
---   Note that the first block of the display represents the initial configuration of the machine, but does not
---   perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
---   as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
+-- REV: Trial alternate doc commenting using block comments <<<
+{-# DEPRECATED showEnigmaOperationInternal "This has been replaced by displayEnigmaOperation" #-} -- TBD - Replace doc with deprication note and supply args <<<
+{-|
+Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
+and for each subsequent configuration as it processes each letter of a 'Message'.
+
+>>> putStr $ showEnigmaOperationInternal (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KR"
+    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  P YBCDFEGHIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+  1 DMPSWGCROHXLBUIKTAQJZVEYFN  P  06  II
+  2 BJYINTKWOARFEMVSGCUDPHZQLX  A  24  VIII
+  3 ILHXUBZQPNVGKMCRTEJFADOYSW  F  16  V
+  4 YDSKZPTNCHGQOMXAUWJFBRELVI  L  10  γ
+  R ENKQAUYWJICOPBLMDXZVFTHRGS         b
+  4 PUIBWTKJZSDXNHMFLVCGQYROAE         γ
+  3 UFOVRTLCASMBNJWIHPYQEKZDXG         V
+  2 JARTMLQVDBGYNEIUXKPFSOHZCW         VIII
+  1 RMGAWYFJOTPLBZICSHDQNVEKXU         II
+  P YBCDFEGHIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+    OHNKJYSBTEDMLCARWPGIXZQUFV
+<BLANKLINE>
+K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ
+  P YBCDFEGHIJZ̲̅PONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+  1 LORVFBQNGWKATHJSZPIYUDXEMC̲̅  Q  07  II
+  2 BJY̲̅INTKWOARFEMVSGCUDPHZQLX  A  24  VIII
+  3 ILHXUBZQPNVGKMCRTEJFADOYS̲̅W  F  16  V
+  4 YDSKZPTNCHGQOMXAUWJ̲̅FBRELVI  L  10  γ
+  R ENKQAUYWJI̲̅COPBLMDXZVFTHRGS         b
+  4 PUIBWTKJZ̲̅SDXNHMFLVCGQYROAE         γ
+  3 UFOVRTLCASMBNJWIHPYQEKZDXG̲̅         V
+  2 JARTMLQ̲̅VDBGYNEIUXKPFSOHZCW         VIII
+  1 LFZVXEINSOKAYHBRG̲̅CPMUDJWTQ         II
+  P YBCDFEG̲̅HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+G < CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS
+<BLANKLINE>
+R > ABCDEFGHIJKLMNOPQR̲̅STUVWXYZ
+  P YBCDFEGHIJZPONMLQR̲̅STXVWUAK         UX.MO.KZ.AY.EF.PL
+  1 NQUEAPMFVJZSGIRYOH̲̅XTCWDLBK  R  08  II
+  2 BJYINTKW̲̅OARFEMVSGCUDPHZQLX  A  24  VIII
+  3 ILHXUBZQPNVGKMCRTEJFADO̲̅YSW  F  16  V
+  4 YDSKZPTNCHGQOMX̲̅AUWJFBRELVI  L  10  γ
+  R ENKQAUYWJICOPBLMDXZVFTHR̲̅GS         b
+  4 PUIBWTKJZSDXNHMFLV̲̅CGQYROAE         γ
+  3 UFOVRTLCASMBNJWIHPYQEK̲̅ZDXG         V
+  2 JARTMLQVDBG̲̅YNEIUXKPFSOHZCW         VIII
+  1 EYUWDHM̲̅RNJZXGAQFBOLTCIVSPK         II
+  P YBCDFEGHIJZPO̲̅NMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+O < HXETCUMASQNZGKRYJO̲̅IDFWVBPL
+
+Note that the first block of the display represents the initial configuration of the machine, but does not
+perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
+as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
+-}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
 showEnigmaOperationInternal ec str = displayEnigmaOperation ec str "internal" False decorate' False
 
