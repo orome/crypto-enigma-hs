@@ -22,6 +22,7 @@ module Crypto.Enigma.Display (
         showEnigmaOperation,
         showEnigmaOperationInternal,
         -- * Encoding display
+        displayEnigmaEncoding,
         showEnigmaEncoding
 ) where
 
@@ -315,12 +316,18 @@ showEnigmaOperationInternal ec str = displayEnigmaOperation ec str "internal" Fa
 
 -- Encoding display ==========================================================
 
+-- REV - Move postproc here
+-- TBD - Add new arguments for formatting (and use in cli)
+displayEnigmaEncoding :: EnigmaConfig -> Message -> String
+displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
+
+{-# DEPRECATED showEnigmaEncoding "This has been replaced by displayEnigmaEncoding" #-} -- TBD - Replace doc with deprication note and supply args <<<
 -- | Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma machine configuration.
 --
 --   >>> let cfg = configEnigma "c-β-V-VI-VIII" "CDTJ" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12"
 --   >>> putStr $ showEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 --   RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 showEnigmaEncoding :: EnigmaConfig -> Message -> String
-showEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
+showEnigmaEncoding ec str = displayEnigmaEncoding ec str
 
 
