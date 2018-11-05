@@ -97,9 +97,9 @@ messageOptHelp = unlines [
          "will be replaced with standard Naval substitutions or",
          "be removed"]
 
-encodeCmdArgsFoot = unlines [configArgFoot, omitArgFoot "encode"]
-showCmdArgsFoot = unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
-runCmdArgsFoot = unlines [configArgFoot, formatArgFoot "run", highlightArgFoot, omitArgFoot "run"]
+encodeCmdArgsFoot = init $ unlines [configArgFoot, omitArgFoot "encode"]
+showCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
+runCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "run", highlightArgFoot, omitArgFoot "run"]
 
 configArgFoot = unlines [
         "CONFIG specifies an Enigma machine configuration as a string based on common",
