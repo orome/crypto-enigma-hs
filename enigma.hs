@@ -66,7 +66,7 @@ main = do
     opts <- execParser optsParser
     case subcommand opts of
         Encode config message ->
-                putStr $ showEnigmaEncoding (read config :: EnigmaConfig)
+                putStr $ displayEnigmaEncoding (read config :: EnigmaConfig)
                         message
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
                 putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig)
