@@ -219,6 +219,7 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decor
 
 -- Operation display ---------------------------------------------------------
 
+-- REV - Put `(if elem fmt fmtsInternal then init else id) $` in front of `unlines` to remove final new line of internal?
 -- REV - Pull out listEnigmaOperation_ (everthing after unlines) from as displayEnigmaOperation convenience? <<<
 -- listEnigmaOperation_ :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> [String]
 -- listEnigmaOperation_ ec str fmt se mf = zipWith (\sec scr -> displayEnigmaConfig sec scr fmt se mf) (iterate step ec) (' ':(message str))
@@ -233,7 +234,6 @@ displayEnigmaOperation ec str fmt se mf ss = unlines $ zipWith3 (\n sec scr -> (
                                                                (iterate step ec)
                                                                (' ':(message str))
                                                         where
-                                                                -- TBD: Doublecheck formatting and sapcing for internal config <<<
                                                                 fmtN :: Bool -> Int -> String
                                                                 fmtN True n = (printf "%03d  " n) ++ (if elem fmt fmtsInternal then "\n" else "")
                                                                 fmtN False _ = ""
