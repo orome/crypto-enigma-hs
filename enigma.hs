@@ -97,9 +97,9 @@ messageOptHelp = unlines [
          "will be replaced with standard Naval substitutions or",
          "be removed"]
 
-encodeCmdArgsFoot = unlines [configArgFoot]
-showCmdArgsFoot = unlines [configArgFoot, formatArgFoot, highlightArgFoot, omitArgFoot "show"]
-runCmdArgsFoot = unlines [configArgFoot, formatArgFoot, highlightArgFoot, omitArgFoot "run"]
+encodeCmdArgsFoot = unlines [configArgFoot, omitArgFoot "encode"]
+showCmdArgsFoot = unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
+runCmdArgsFoot = unlines [configArgFoot, formatArgFoot "run", highlightArgFoot, omitArgFoot "run"]
 
 configArgFoot = unlines [
         "CONFIG specifies an Enigma machine configuration as a string based on common",
@@ -112,25 +112,25 @@ configArgFoot = unlines [
         " + the locations of ring letter A on the rotor for each rotor",
         "   (in physical order)"]
 
--- REV - Use of LETTER here isn't quite right for 'run'
-formatArgFoot = unlines [
+-- REV - Use of LETTER here isn't quite right for 'run' + stage vs step!
+formatArgFoot cmd = unlines $ [
         "FORMAT will determine how a configuration is represented; possible values",
         "include:",
         " + 'single' (the default) which will show a single line representing the",
         "   mapping (a string in which the letter at each position indicates the letter",
         "   encoded to by letter at that position in the alphabet) preformed by the",
         "   machine as a whole, followed by window letters (as 'windows') and",
-        "   positions, and indicating a LETTER and its encoding, if provided;",
-        " + 'internal', which will show a detailed schematic of each processing step",
+        "   positions, and indicating a letter and its encoding, if provided;",
+        " + 'internal', which will show a detailed schematic of each processing stage",
         "   (proceeding from top to bottom), in which",
         "    - each line indicates the mapping (see 'single') preformed by the",
-        "      component at that step;",
+        "      component at that stage;",
         "    - each line begins with an indication of the stage (rotor number, \"P\" for",
-        "      plugboard, or \"R\" for reflector) at that step, and ends with the",
-        "      specification of the component at that stage;",
+        "      plugboard, or \"R\" for reflector), and ends with the specification of the",
+        "      component at that stage;",
         "    - rotors also indicate their window letter, and position;",
-        "    - if a valid LETTER is provided, it is indicated as input and its",
-        "      encoding at each stage is marked;",
+        "    - the letter being encoded it is indicated as input and its encoding at",
+        "      each stage is marked;",
         "   the schematic is followed by the mapping for the machine as a whole (as",
         "   'single'), and preceded by a (trivial, no-op) keyboard 'mapping'",
         "   for reference;",
@@ -138,9 +138,15 @@ formatArgFoot = unlines [
         "    and",
         " + 'config', which simply shows the specification of the",
         "   configuration (in the same format as CONFIG).",
-        "The program is forgiving about forgotten format values and will accept a",
+        "For formats that indicate a letter and its encoding, these will correspond to"]
+        ++ letterSoruce ++
+       ["The program is forgiving about forgotten format values and will accept a",
         "range of reasonable substitutes (e.g., 'detailed' or 'schematic' for",
         "'internal')."]
+                where letterSoruce | cmd == "run" =
+                                     ["the the letter at that step of the entry of the (symbol substituted) MESSAGE ",
+                                      "provided as an argument."]
+                                   | otherwise = ["the LETTER provided as an argument."]
 
 highlightArgFoot = unlines [
         "HH can be used to determine how any encoded-to characters in mappings",
@@ -150,9 +156,12 @@ highlightArgFoot = unlines [
         "HH will be used to 'bracket' the highlighted character. To avoid errors,",
         "these characters should be enclosed in quotes."]
 
+
 omitArgFoot cmd = unlines [
         "Note that providing no value, a value of '', or just spaces or invalid",
-        "characters for " ++ (if cmd == "run" then "MESSAGE" else "LETTER") ++ " is the same as omitting it."]
+        "characters for " ++ omittedArg ++ " is the same as omitting it."]
+                where omittedArg | cmd == "show" = "LETTER"
+                                 | otherwise = "MESSAGE"
 
 
 -- stack exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
