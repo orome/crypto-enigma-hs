@@ -176,13 +176,33 @@ omitArgFoot cmd = unlines [
 --   error, called at ./Crypto/Enigma.hs:371:57 in main:Crypto.Enigma
 
 
+
+-- TBD: Implement steps (and doc)
+-- TBD: Implement noinitial (and doc)
 -- TBD: Update documentation for display functions (consolidate and expand under displayEnigmaConfig; just warning for old wrappers)
--- TBD: Test and confirm correspondence with Python
+
+-- TBD: Implement overwrite + slower (and doc) for run or remove reference in readme
+-- TBD: Implement verbose (and doc)
+
+-- TBD: Test scripts for replacement Display functions
+-- TBD: Test scripts for command line
+
 -- TBD: Better CLI error handling
 -- TBD: Errors for Display functions
--- TBD: Test scripts for replacment Display functions
--- TBD: Test scripts for command line?
--- TBD: Implement operation (Display functions, using lists, and command line)
--- TBD: Version subcommand
--- TBD: Document CLI in readme
--- TBD: Help and desription text for CLI
+-- TBD: Restore Read EnigmaConfig conformance to readSpec (after providing correct error support)
+
+-- TBD: Test and confirm correspondence with Python
+
+-- TBD: More arguments for displayEnigmaEncoding
+-- TBD: Examples (either at end of help or in own new options; add examples to top level help?
+-- TBD: Complete help text (top level and command descriptions, etc.)
+-- TBD: Fix extra lines at end of cli help
+
+-- TBD: Bash completion: https://github.com/pcapriotti/optparse-applicative/wiki/Bash-Completion
+
+-- TBD: Decide how to handle extra blank line at end of displayEnigmaOperation ... `internal` (OK, should be there)
+-- REV: Should all display... (including displayEnigmaConfig  have a final newline and thus just putStr)?
+-- TBD: Simplify CLI description of display; expand documentation description of display?
+-- TBD: Confim use of step vs stage in documentation (of internal config)
+
+-- TBD: Update test scripts for replacement Display functions and for for command line
