@@ -65,10 +65,15 @@ main = do
 --  (opts :: Options) <- execParser optsParser
     opts <- execParser optsParser
     case subcommand opts of
-        Encode config message -> putStr $ showEnigmaEncoding (read config :: EnigmaConfig) message
-        Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) -> putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig) letter format showenc (decorate highlight)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) -> putStr $ displayEnigmaOperation (read config :: EnigmaConfig) message format showenc (decorate highlight) showstps
-        -- Run config (Just message) (Just format) (Just highlight) (Just showenc) -> putStrLn $ showEnigmaOperation (read config :: EnigmaConfig) message
+        Encode config message ->
+                putStr $ showEnigmaEncoding (read config :: EnigmaConfig)
+                        message
+        Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
+                putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig)
+                        letter format showenc (decorate highlight)
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) ->
+                putStr $ displayEnigmaOperation (read config :: EnigmaConfig)
+                        message format showenc (decorate highlight) showstps
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
