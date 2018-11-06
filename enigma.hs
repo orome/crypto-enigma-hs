@@ -66,13 +66,13 @@ main = do
     opts <- execParser optsParser
     case subcommand opts of
         Encode config message ->
-                putStr $ displayEnigmaEncoding (read config :: EnigmaConfig)
+                putStr $ displayEnigmaEncoding (configEnigmaFromString config)
                         message
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
-                putStrLn $ displayEnigmaConfig (read config :: EnigmaConfig)
+                putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter format showenc (decorate highlight)
         Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) ->
-                putStr $ displayEnigmaOperation (read config :: EnigmaConfig)
+                putStr $ displayEnigmaOperation (configEnigmaFromString config)
                         message format showenc (decorate highlight) showstps
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
@@ -176,9 +176,10 @@ omitArgFoot cmd = unlines [
 --   error, called at ./Crypto/Enigma.hs:371:57 in main:Crypto.Enigma
 
 
+-- ASK: What's going on here: https://travis-ci.org/orome/crypto-enigma-hs/jobs/451103421#L908
 
--- TBD: Implement steps (and doc)
--- TBD: Implement noinitial (and doc)
+-- TBD: Implement steps (and doc) <<<
+-- TBD: Implement noinitial (and doc) <<<
 -- TBD: Update documentation for display functions (consolidate and expand under displayEnigmaConfig; just warning for old wrappers)
 
 -- TBD: Implement overwrite + slower (and doc) for run or remove reference in readme
@@ -186,10 +187,11 @@ omitArgFoot cmd = unlines [
 
 -- TBD: Test scripts for replacement Display functions
 -- TBD: Test scripts for command line
+-- TBD: Add tests for configEnigmaFromString (including correspondence with read)
 
 -- TBD: Better CLI error handling
 -- TBD: Errors for Display functions
--- TBD: Restore Read EnigmaConfig conformance to readSpec (after providing correct error support)
+-- TBD - Centralize redundant structure shared between read and configEnigmaFromString; or find way to keep in sync <<<
 
 -- TBD: Test and confirm correspondence with Python
 
