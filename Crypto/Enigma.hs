@@ -1,4 +1,5 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
+{-# LANGUAGE CPP #-}
 --{-# OPTIONS_GHC -fno-ignore-asserts #-} -- REV - Use to keep asserts for valid 'Message'? <<<
 {-|
 Module      : Crypto.Enigma
@@ -85,8 +86,10 @@ import           Crypto.Enigma.Utils
 -- REV - Explore switch from String to Text throughout (#29)
 -- REV: Conditinally import (<>)? -- https://stackoverflow.com/a/47065610/656912 ; https://stackoverflow.com/q/53024461/656912 <<<
 
-
-
+-- https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:errorWithoutStackTrace
+#if __GLASGOW_HASKELL__ < 800
+errorWithoutStackTrace = error
+#endif
 
 -- Enigma mechanics ==========================================================
 
