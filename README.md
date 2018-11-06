@@ -59,7 +59,7 @@ Simulate [machine operation]:
 
 ## Functionality: command line
 
-A command line executable, `enigma` (accessable if installed on the path or through `stack exec -- enigma` for local
+A command line executable, `enigma` (accessible if installed on the path or through `stack exec -- enigma`) for local
 Haskell installations, provides almost all the functionality of the API.
 
 Encode messages:
