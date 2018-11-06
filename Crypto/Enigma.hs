@@ -319,7 +319,8 @@ configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots wind
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
         unless (and $ (==(length components')) <$> [length winds', length rngs']) (throwError BadNumbers)
-        unless (and $ [(>=1),(<=26)] <*> rngs') (throwError (BadRotors rngs))
+        unless (rngs == (filter (`elem` "0123456789.") rngs)) (throwError (BadRings rngs))
+        unless (and $ [(>=1),(<=26)] <*> rngs') (throwError (BadRings rngs))
         unless (and $ (`elem` letters) <$> winds') (throwError (BadWindows winds))
         unless (plug `elem` ["~",""," "] ||
                        ((and $ (==2).length <$> splitOn "." plug) &&
