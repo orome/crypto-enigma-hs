@@ -3,7 +3,7 @@
 Module      : Crypto.Enigma.Utils
 -}
 
-{-# LANGUAGE Safe #-}
+{-# LANGUAGE Safe, CPP #-}
 module Crypto.Enigma.Utils where
 
 import Data.Char (chr, ord)
@@ -36,3 +36,12 @@ encode m ch = if i `elem` [0..(length m)-1] then (m !! i) else ' ' where i = num
 -- standard simple-substitution cypher encoding
 encode' :: String -> String -> String
 encode' m s = (encode m) <$> s
+
+
+-- REV - Idiomaic approach to general conditional redefinitions? <<<
+-- https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:errorWithoutStackTrace
+#if __GLASGOW_HASKELL__ < 800
+error' = error
+#else
+error' = errorWithoutStackTrace
+#endif

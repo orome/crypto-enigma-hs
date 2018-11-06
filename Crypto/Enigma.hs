@@ -1,5 +1,4 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
-{-# LANGUAGE CPP #-}
 --{-# OPTIONS_GHC -fno-ignore-asserts #-} -- REV - Use to keep asserts for valid 'Message'? <<<
 {-|
 Module      : Crypto.Enigma
@@ -72,6 +71,8 @@ import           Data.Text              (replace, pack, unpack)
 
 import           Crypto.Enigma.Utils
 
+
+
 -- TBD - Use lenses - <http://hackage.haskell.org/package/lens> <http://dev.stephendiehl.com/hask/#lenses>
 -- TBD - Use modular arithmetic package - http://hackage.haskell.org/package/modular-arithmetic
 -- TBD - Use Arrow more?
@@ -86,10 +87,7 @@ import           Crypto.Enigma.Utils
 -- REV - Explore switch from String to Text throughout (#29)
 -- REV: Conditinally import (<>)? -- https://stackoverflow.com/a/47065610/656912 ; https://stackoverflow.com/q/53024461/656912 <<<
 
--- https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:errorWithoutStackTrace
-#if __GLASGOW_HASKELL__ < 800
-errorWithoutStackTrace = error
-#endif
+
 
 -- Enigma mechanics ==========================================================
 
@@ -336,10 +334,10 @@ True
 -}
 configEnigmaFromString :: String -> EnigmaConfig
 configEnigmaFromString i = if ((length $ words i) /= 4)
-                          then errorWithoutStackTrace ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
+                          then error' ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
                           else case runExcept (configEnigmaExcept c w s r) of
                                     Right cfg  -> cfg
-                                    Left err -> errorWithoutStackTrace (show err)
+                                    Left err -> error' (show err)
                                 where [c, w, s, r] = words i
 
 
