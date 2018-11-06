@@ -363,12 +363,13 @@ instance Show EnigmaError where
 --   >>> cfg == cfg'
 --   True
 instance Read EnigmaConfig where
+        -- TBD - Change to readPrec: http://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html#v:readsPrec
+        -- TBD - Add readListPrec = readListPrecDefault
         readsPrec _ i = if ((length $ words i) /= 4)
-                          then error ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
+                          then []
                           else case runExcept (configEnigmaExcept c w s r) of
                                             Right cfg  -> [(cfg, "")]
-                                            -- ASK: Violates specification of 'readsPrec' in 'Read' -- https://stackoverflow.com/q/53104972/656912 <<<
-                                            Left err -> error (show err)
+                                            Left _ -> [] -- Loses error information, but conforms to specification of 'readsPrec' in 'Read'
                                    where [c, w, s, r] = words i
                 --        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
