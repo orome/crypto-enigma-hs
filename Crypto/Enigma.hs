@@ -30,6 +30,7 @@ module Crypto.Enigma (
          -- * Machine configurations and transitions
         EnigmaConfig,
         configEnigma,
+        configEnigmaFromString,
         stages,
         components,
         positions,
@@ -314,6 +315,31 @@ configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots wind
         Right cfg  -> cfg
         Left err -> error (show err)
 
+-- TBD -- Document configEnigmaFromString cfgstr == read cfgstr but with different error reporting <<<
+{-|
+Create an `EnigmaConfig` from a single string specifying its state.
+
+This is just a shortcut for invoking `configEnigma` using a single string:
+
+>>> let cfgstr = "c-β-V-III-II LQVI AM.EU.ZL 16.01.21.11"
+>>> configEnigmaFromString cfgstr == (\[c, w, s, r] -> configEnigma c w s r) (words cfgstr)
+True
+
+Note that the string argument corresponds to the string representation of an EnigmaConfig so that
+
+>>> show ( configEnigmaFromString cfgstr ) == cfgstr
+True
+
+-}
+configEnigmaFromString :: String -> EnigmaConfig
+configEnigmaFromString i = if ((length $ words i) /= 4)
+                          then errorWithoutStackTrace ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
+                          else case runExcept (configEnigmaExcept c w s r) of
+                                    Right cfg  -> cfg
+                                    Left err -> errorWithoutStackTrace (show err)
+                                where [c, w, s, r] = words i
+
+
 -- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes (#12) <<<
 -- A safe (total) constructor; not currently exposed
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
@@ -356,13 +382,16 @@ instance Show EnigmaError where
         show (BadRotors s) = "Bad rotors : " ++ s
         show (MiscError s) = s
 
--- TBD - Some checking, e.g. that four "words" have been provided?
+-- TBD - Centralize redundant structure shared with configEnigmaFromString; or find way to keep in sync <<<
 -- | Read the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
 --
 --   >>> let cfg = configEnigma "b-β-V-VIII-III" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11"
 --   >>> let cfg' = read "b-β-V-VIII-III XQVI UX.MO.KZ.AY.EF.PL 03.17.24.11" :: EnigmaConfig
 --   >>> cfg == cfg'
 --   True
+--
+--  Note that for most uses, `configEnigmaFromString` should be used instead, since `read` cannot report meaningful
+--  error details.
 instance Read EnigmaConfig where
         -- TBD - Change to readPrec: http://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html#v:readsPrec
         -- TBD - Add readListPrec = readListPrecDefault
