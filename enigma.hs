@@ -14,7 +14,7 @@ cliName = "Enigma machine CLI"
 data Subcommand =
         Encode { config :: String, message :: String } |
         Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool }
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
@@ -30,7 +30,7 @@ subcommandO =
                          (helpText "Encode a message" "ENCODE" encodeCmdArgsFoot)) <>
         command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText "Show a machine configuration" "SHOW" showCmdArgsFoot)) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <**> helper)
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <**> helper)
                          (helpText "Run a machine " "Run" runCmdArgsFoot))
    )
   where
@@ -51,8 +51,8 @@ subcommandO =
         showstepOpt =  optional $ switch ( long "showstep" <> short 't' <>
                 help "Show step numbers")
         stepsOpt :: Parser Int
-        stepsOpt = option auto (long "steps" <> short 's' <> metavar "STEPS" <>
-                help "Steps to run" )
+        stepsOpt = option auto (long "steps" <> short 's' <> metavar "STEPS"  <> value (-1) <>
+                help stepsOptHelp)
 
         helpText desc cmd argsFoot = (progDesc desc <>
                 header (cliName ++ ": "++ cmd ++" command") <>
@@ -71,9 +71,9 @@ main = do
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter format showenc (decorate highlight)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) ->
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps->
                 putStr $ displayEnigmaOperation (configEnigmaFromString config)
-                        message format showenc (decorate highlight) showstps
+                        message format showenc (decorate highlight) showstps stps
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
@@ -96,6 +96,11 @@ messageOptHelp = unlines [
          "a message to encode; characters that are not letters" ,
          "will be replaced with standard Naval substitutions or",
          "be removed"]
+
+stepsOptHelp = unlines [
+        "A number of steps to run; if omitted when a message is" ,
+        "provided, will default to the length of the message;" ,
+        "otherwise defaults to 1"]
 
 encodeCmdArgsFoot = init $ unlines [configArgFoot, omitArgFoot "encode"]
 showCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]

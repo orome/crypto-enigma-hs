@@ -228,15 +228,18 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decor
 -- starting configuration and for each character of the message, using the provided configuration display function.
 -- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
 -- this function, which both call, that applies 'message'.
-displayEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> String
-displayEnigmaOperation ec str fmt se mf ss = unlines $ zipWith3 (\n sec scr -> (fmtN ss n) ++ (displayEnigmaConfig sec scr fmt se mf))
-                                                               [0..]
+displayEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> Int -> String
+displayEnigmaOperation ec str fmt se mf ss ns = unlines $ zipWith3 (\n sec scr -> (fmtN ss n) ++ (displayEnigmaConfig sec scr fmt se mf))
+                                                               [0..(if ns < 0 then max (length msg) 1 else ns)]
                                                                (iterate step ec)
-                                                               (' ':(message str))
+                                                               (' ':msg ++ [' ',' '..])
                                                         where
                                                                 fmtN :: Bool -> Int -> String
                                                                 fmtN True n = (printf "%03d  " n) ++ (if elem fmt fmtsInternal then "\n" else "")
                                                                 fmtN False _ = ""
+                                                                msg = message str
+
+
 
 {-# DEPRECATED showEnigmaOperation "This has been replaced by displayEnigmaOperation" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
@@ -254,7 +257,7 @@ displayEnigmaOperation ec str fmt se mf ss = unlines $ zipWith3 (\n sec scr -> (
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = displayEnigmaOperation ec str "single" False decorate' False
+showEnigmaOperation ec str = displayEnigmaOperation ec str "single" False decorate' False (-1)
 -- displayEnigmaOperation
 
 -- REV: Trial alternate doc commenting using block comments <<<
@@ -311,7 +314,7 @@ perform any encoding (as explained in 'step'). Note also that the second block o
 as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 -}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str "internal" False decorate' False
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str "internal" False decorate' False (-1)
 
 
 -- Encoding display ==========================================================
