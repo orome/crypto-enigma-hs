@@ -30,6 +30,7 @@ module Crypto.Enigma (
          -- * Machine configurations and transitions
         EnigmaConfig,
         configEnigma,
+        configEnigmaExcept,
         configEnigmaFromString,
         stages,
         components,
