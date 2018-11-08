@@ -3,6 +3,8 @@ import Options.Applicative.Help.Pretty (string)     -- Necessary to format help 
 --import Data.Maybe
 import Data.Monoid ((<>))       -- For GHC 8.0 through 8.2
 --import Control.Exception (catch)
+--import Data.List.Split (chunksOf)
+import Control.Concurrent (threadDelay)
 
 --import Crypto.Enigma.Utils
 import Crypto.Enigma
@@ -70,10 +72,22 @@ main = do
                         message
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
-                        letter format showenc (decorate highlight)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps->
-                putStr $ displayEnigmaOperation (configEnigmaFromString config)
-                        message format showenc (decorate highlight) showstps stps
+                        letter
+                        (packDisplayOpts format showenc (decorate highlight) Nothing Nothing)
+--         Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps->
+--                 putStr $ displayEnigmaOperation (configEnigmaFromString config)
+--                         message format showenc (decorate highlight) showstps stps
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps->
+                mapM_ printConfig (listEnigmaOperation (configEnigmaFromString config)
+                        message
+                        (packDisplayOpts format showenc (decorate highlight) showstps (Just stps)))
+-- NOT THIS WAY: Instead make listEnigmaOperation
+-- -- concat <$> (chunksOf 3 $ splitOn "\n" "1sdfsdf\n2sdfsd\n3sfsfsdf\n1sdfsdf\n2sdfsd\n3sfsfsdf")
+--        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps->
+--                 mapM_ putStrLn (chunksOf ((+1) $ length $
+--                 (displayEnigmaConfig (configEnigmaFromString config) 'Z' format showenc (decorate highlight))) (displayEnigmaOperation (configEnigmaFromString config)
+--                         message format showenc (decorate highlight) showstps stps))
+
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
@@ -91,6 +105,8 @@ main = do
                             [l, r] -> \c -> [l, c, r]
                             _ -> \c -> [c]
     --decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
+    -- https://hackage.haskell.org/package/ansi-terminal-0.8.0.1/docs/System-Console-ANSI.html#v:clearLine <<<
+    printConfig c = putStrLn c >> (threadDelay 500000) -- >> putStr "\ESC[2K\ESC[0G" >> (threadDelay 500000)
 
 messageOptHelp = unlines [
          "a message to encode; characters that are not letters" ,
