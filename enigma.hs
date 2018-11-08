@@ -16,7 +16,7 @@ cliName = "Enigma machine CLI"
 data Subcommand =
         Encode { config :: String, message :: String } |
         Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int }
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int, speedO :: Int }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
@@ -32,7 +32,7 @@ subcommandO =
                          (helpText "Encode a message" "ENCODE" encodeCmdArgsFoot)) <>
         command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText "Show a machine configuration" "SHOW" showCmdArgsFoot)) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <**> helper)
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <**> helper)
                          (helpText "Run a machine " "Run" runCmdArgsFoot))
    )
   where
@@ -56,6 +56,10 @@ subcommandO =
         stepsOpt = option auto (long "steps" <> short 's' <> metavar "STEPS"  <> value (-1) <>
                 help stepsOptHelp)
 
+        speedOpt :: Parser Int
+        speedOpt = option auto (long "speed" <> short 'S' <> metavar "SPEED"  <> value 0 <>
+                help speedOptHelp)
+
         helpText desc cmd argsFoot = (progDesc desc <>
                 header (cliName ++ ": "++ cmd ++" command") <>
                 footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot])))    )
@@ -74,8 +78,8 @@ main = do
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter
                         (displayOpts format showenc (markerFunc highlight) Nothing Nothing)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps->
-                mapM_ printConfig (listEnigmaOperation (configEnigmaFromString config)
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps speed ->
+                mapM_ (printConfig speed) (listEnigmaOperation (configEnigmaFromString config)
                         message
                         (displayOpts format showenc (markerFunc highlight) showstps (Just stps)))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
@@ -89,7 +93,7 @@ main = do
                 footer "Some footer info")
 
     -- https://hackage.haskell.org/package/ansi-terminal-0.8.0.1/docs/System-Console-ANSI.html#v:clearLine <<<
-    printConfig c = putStrLn c >> (threadDelay 500000) -- >> putStr "\ESC[2K\ESC[0G" >> (threadDelay 500000)
+    printConfig s c = putStrLn c >> (threadDelay (s * 250000)) -- >> putStr "\ESC[2K\ESC[0G" >> (threadDelay 500000)
 
 messageOptHelp = unlines [
          "A message to encode; characters that are not letters" ,
@@ -100,6 +104,9 @@ stepsOptHelp = unlines [
         "A number of steps to run; if omitted when a message is" ,
         "provided, will default to the length of the message;" ,
         "otherwise defaults to 1"]
+
+speedOptHelp = unlines [
+        "TBD"]
 
 encodeCmdArgsFoot = init $ unlines [configArgFoot, omitArgFoot "encode"]
 showCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
