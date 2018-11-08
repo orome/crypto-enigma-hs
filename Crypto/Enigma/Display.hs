@@ -102,6 +102,7 @@ data DisplayOpts = DisplayOpts {
         steps :: !Int
 }
 
+-- Arguments are coerced to valid values
 packDisplayOpts :: String -> Bool -> MarkerFunc -> Maybe Bool -> Maybe Int -> DisplayOpts
 packDisplayOpts fmt se mf ss ns = DisplayOpts {
                                         format = case fmt of
@@ -153,7 +154,8 @@ displayEnigmaConfig ec ch opts =
         x | elem x fmtsConfig -> (show ec) ++ encs
         x | elem x fmtsEncoding -> drop 2 encs
         -- TBD - How to implement debug format?
-        _ -> error ("Not known " ++ (format opts)) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
+        -- This should not happen: all display option arguments are coerced to valid values by packDisplayOpts
+        _ -> error ("Unrecognized format " ++ (format opts)) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
     where
         ech = enigmaChar ch
         enc = enigmaMapping ec
