@@ -73,21 +73,11 @@ main = do
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter
-                        (packDisplayOpts format showenc (decorate highlight) Nothing Nothing)
---         Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps->
---                 putStr $ displayEnigmaOperation (configEnigmaFromString config)
---                         message format showenc (decorate highlight) showstps stps
+                        (packDisplayOpts format showenc (markerFunc highlight) Nothing Nothing)
         Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps->
                 mapM_ printConfig (listEnigmaOperation (configEnigmaFromString config)
                         message
-                        (packDisplayOpts format showenc (decorate highlight) showstps (Just stps)))
--- NOT THIS WAY: Instead make listEnigmaOperation
--- -- concat <$> (chunksOf 3 $ splitOn "\n" "1sdfsdf\n2sdfsd\n3sfsfsdf\n1sdfsdf\n2sdfsd\n3sfsfsdf")
---        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps->
---                 mapM_ putStrLn (chunksOf ((+1) $ length $
---                 (displayEnigmaConfig (configEnigmaFromString config) 'Z' format showenc (decorate highlight))) (displayEnigmaOperation (configEnigmaFromString config)
---                         message format showenc (decorate highlight) showstps stps))
-
+                        (packDisplayOpts format showenc (markerFunc highlight) showstps (Just stps)))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
@@ -97,14 +87,7 @@ main = do
                 progDesc "Command line interface to crypto-enigma package" <>
                 header cliName <>
                 footer "Some footer info")
-    -- TBD -- Rename <<<
-    -- decorate :: String -> (Char -> String)
-    decorate spec = case spec of
-                            "bars" -> \ch -> ch:"\818\773"
-                            -- TBD - Colors
-                            [l, r] -> \c -> [l, c, r]
-                            _ -> \c -> [c]
-    --decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
+
     -- https://hackage.haskell.org/package/ansi-terminal-0.8.0.1/docs/System-Console-ANSI.html#v:clearLine <<<
     printConfig c = putStrLn c >> (threadDelay 500000) -- >> putStr "\ESC[2K\ESC[0G" >> (threadDelay 500000)
 

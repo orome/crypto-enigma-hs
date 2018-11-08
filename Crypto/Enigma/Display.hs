@@ -15,6 +15,7 @@ A module for rich display of the state of and encoding performed by Enigma machi
 module Crypto.Enigma.Display (
         -- * Display options
         packDisplayOpts,
+        markerFunc,
         -- * Configuration display
         displayEnigmaConfig,
         showEnigmaConfig,
@@ -35,7 +36,7 @@ import Data.Monoid              ((<>))          -- For GHC < 8.4.3 - https://sta
 import Data.List
 import Data.List.Split          (chunksOf)
 import Text.Printf              (printf)
-
+import Data.Char                (toLower)
 import Crypto.Enigma.Utils
 import Crypto.Enigma
 
@@ -62,10 +63,6 @@ postproc = unlines . chunksOf 60 . unwords . chunksOf 4
 -- locate the index of the encoding with m of ch, in s
 locCar :: Char -> String -> Mapping -> Maybe Int
 locCar ch s m = elemIndex (encode m ch) s
-
--- TBD - Remove when deprecated showEnigmaConfig and showEnigmaConfigInternal are removed
-decorate' :: Char -> String
-decorate' ch = ch:"\818\773"
 
 markedMapping :: Maybe Int -> Mapping -> (Char -> String) -> String
 markedMapping (Just loc) e mf = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
@@ -120,6 +117,30 @@ packDisplayOpts fmt se mf ss ns = DisplayOpts {
                                                   Just nsv -> nsv
                                         }
 
+-- TBD: Version checks for character compatability w/ substitutions that work; force checks with a type?
+-- decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
+-- https://stackoverflow.com/a/33206814
+-- Ingores unrecognized/invalid values
+markerFunc :: String -> MarkerFunc
+markerFunc spec = case spec of
+                    "*" ->  \_ -> "*"
+                    "lower" ->  \c -> [toLower c]
+                    "omit" ->  \_ -> " "
+                    "bars" -> \ch -> ch:"\818\773"
+                    "legacy" -> \c -> [ '[', c, ']' ]
+                    "red" ->  \c -> "\ESC[31;1m" ++ [c] ++ "\ESC[0m"
+                    "blue" ->  \c -> "\ESC[34;1m" ++ [c] ++ "\ESC[0m"
+                    "green" ->  \c -> "\ESC[32;1m" ++ [c] ++ "\ESC[0m"
+                    "bold" ->  \c -> "\ESC[1m" ++ [c] ++ "\ESC[0m"
+                    "underline" ->  \c -> "\ESC[4m" ++ [c] ++ "\ESC[0m"
+                    "highlight" ->  \c -> "\ESC[7m" ++ [c] ++ "\ESC[0m"
+                    "cyan" ->  \c -> "\ESC[36;1m" ++ [c] ++ "\ESC[0m"
+                    "yellow" ->  \c -> "\ESC[33;1m" ++ [c] ++ "\ESC[0m"
+--                     "51" ->  \c -> "\ESC[51m" ++ [c] ++ "\ESC[0m"
+--                     "52" ->  \c -> "\ESC[52m" ++ [c] ++ "\ESC[0m"
+                    -- TBD - Colors and other escapes
+                    [l, r] -> \c -> [l, c, r]
+                    _ -> \c -> [c]
 
 -- Configuration display -----------------------------------------------------
 
@@ -183,7 +204,7 @@ displayEnigmaConfig ec ch opts =
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = displayEnigmaConfig ec ch (packDisplayOpts "single" True decorate' Nothing Nothing)
+showEnigmaConfig ec ch = displayEnigmaConfig ec ch (packDisplayOpts "single" True (markerFunc "bars") Nothing Nothing)
 
 -- TBD - Improve resolution of figure showing mapping <<<
 {-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
@@ -247,7 +268,7 @@ showEnigmaConfig ec ch = displayEnigmaConfig ec ch (packDisplayOpts "single" Tru
 --
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (packDisplayOpts "internal" True decorate' Nothing Nothing)
+showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (packDisplayOpts "internal" True (markerFunc "bars") Nothing Nothing)
 
 
 -- Operation display ---------------------------------------------------------
@@ -290,7 +311,7 @@ listEnigmaOperation ec str opts = zipWith3 (\n sec scr -> (fmtN  (showsteps opts
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = displayEnigmaOperation ec str (packDisplayOpts "single" True decorate' Nothing Nothing)
+showEnigmaOperation ec str = displayEnigmaOperation ec str (packDisplayOpts "single" True (markerFunc "bars") Nothing Nothing)
 -- displayEnigmaOperation
 
 -- REV: Trial alternate doc commenting using block comments <<<
@@ -347,7 +368,7 @@ perform any encoding (as explained in 'step'). Note also that the second block o
 as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 -}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (packDisplayOpts "internal" True decorate' Nothing Nothing)
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (packDisplayOpts "internal" True (markerFunc "bars") Nothing Nothing)
 
 
 -- Encoding display ==========================================================
