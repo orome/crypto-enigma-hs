@@ -19,6 +19,7 @@ module Crypto.Enigma.Display (
         showEnigmaConfigInternal,
         -- * Operation display
         displayEnigmaOperation,
+        listEnigmaOperation,
         showEnigmaOperation,
         showEnigmaOperationInternal,
         -- * Encoding display
@@ -220,26 +221,26 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decor
 -- Operation display ---------------------------------------------------------
 
 -- REV - Put `(if elem fmt fmtsInternal then init else id) $` in front of `unlines` to remove final new line of internal?
--- REV - Pull out listEnigmaOperation_ (everthing after unlines) from as displayEnigmaOperation convenience? <<<
--- listEnigmaOperation_ :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> [String]
--- listEnigmaOperation_ ec str fmt se mf = zipWith (\sec scr -> displayEnigmaConfig sec scr fmt se mf) (iterate step ec) (' ':(message str))
 
 -- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
 -- starting configuration and for each character of the message, using the provided configuration display function.
 -- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
 -- this function, which both call, that applies 'message'.
 displayEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> Int -> String
-displayEnigmaOperation ec str fmt se mf ss ns = unlines $ zipWith3 (\n sec scr -> (fmtN ss n) ++ (displayEnigmaConfig sec scr fmt se mf))
-                                                               [0..(if ns < 0 then max (length msg) 1 else ns)]
-                                                               (iterate step ec)
-                                                               (' ':msg ++ [' ',' '..])
-                                                        where
-                                                                fmtN :: Bool -> Int -> String
-                                                                fmtN True n = (printf "%03d  " n) ++ (if elem fmt fmtsInternal then "\n" else "")
-                                                                fmtN False _ = ""
-                                                                msg = message str
+displayEnigmaOperation ec str fmt se mf ss ns = unlines $ listEnigmaOperation ec str fmt se mf ss ns
 
-
+-- TBD : Document <<<
+-- Generate a list where each element is a step of displayEnigmaOperation
+listEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> Int -> [String]
+listEnigmaOperation ec str fmt se mf ss ns = zipWith3 (\n sec scr -> (fmtN ss n) ++ (displayEnigmaConfig sec scr fmt se mf))
+                                                      [0..(if ns < 0 then max (length msg) 1 else ns)]
+                                                      (iterate step ec)
+                                                      (' ':msg ++ [' ',' '..])
+                                                where
+                                                    fmtN :: Bool -> Int -> String
+                                                    fmtN True n = (printf "%03d  " n) ++ (if elem fmt fmtsInternal then "\n" else "")
+                                                    fmtN False _ = ""
+                                                    msg = message str
 
 {-# DEPRECATED showEnigmaOperation "This has been replaced by displayEnigmaOperation" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
