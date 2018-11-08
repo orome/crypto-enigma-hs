@@ -73,11 +73,11 @@ main = do
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter
-                        (packDisplayOpts format showenc (markerFunc highlight) Nothing Nothing)
+                        (displayOpts format showenc (markerFunc highlight) Nothing Nothing)
         Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps->
                 mapM_ printConfig (listEnigmaOperation (configEnigmaFromString config)
                         message
-                        (packDisplayOpts format showenc (markerFunc highlight) showstps (Just stps)))
+                        (displayOpts format showenc (markerFunc highlight) showstps (Just stps)))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options

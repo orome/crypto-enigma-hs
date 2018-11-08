@@ -14,7 +14,7 @@ A module for rich display of the state of and encoding performed by Enigma machi
 {-# LANGUAGE Safe #-}
 module Crypto.Enigma.Display (
         -- * Display options
-        packDisplayOpts,
+        displayOpts,
         markerFunc,
         -- * Configuration display
         displayEnigmaConfig,
@@ -102,8 +102,8 @@ data DisplayOpts = DisplayOpts {
 }
 
 -- Arguments are coerced to valid values
-packDisplayOpts :: String -> Bool -> MarkerFunc -> Maybe Bool -> Maybe Int -> DisplayOpts
-packDisplayOpts fmt se mf ss ns = DisplayOpts {
+displayOpts :: String -> Bool -> MarkerFunc -> Maybe Bool -> Maybe Int -> DisplayOpts
+displayOpts fmt se mf ss ns = DisplayOpts {
                                         format = case fmt of
                                                   f | elem f fmts -> f
                                                     | otherwise -> "single",
@@ -153,7 +153,7 @@ displayEnigmaConfig ec ch opts =
         x | elem x fmtsConfig -> (show ec) ++ encs
         x | elem x fmtsEncoding -> drop 2 encs
         -- TBD - How to implement debug format?
-        -- This should not happen: all display option arguments are coerced to valid values by packDisplayOpts
+        -- This should not happen: all display option arguments are coerced to valid values by displayOpts
         _ -> error ("Unrecognized format " ++ (format opts)) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
     where
         ech = enigmaChar ch
@@ -205,7 +205,7 @@ displayEnigmaConfig ec ch opts =
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = displayEnigmaConfig ec ch (packDisplayOpts "single" True (markerFunc "bars") Nothing Nothing)
+showEnigmaConfig ec ch = displayEnigmaConfig ec ch (displayOpts "single" True (markerFunc "bars") Nothing Nothing)
 
 -- TBD - Improve resolution of figure showing mapping <<<
 {-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
@@ -269,7 +269,7 @@ showEnigmaConfig ec ch = displayEnigmaConfig ec ch (packDisplayOpts "single" Tru
 --
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (packDisplayOpts "internal" True (markerFunc "bars") Nothing Nothing)
+showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (displayOpts "internal" True (markerFunc "bars") Nothing Nothing)
 
 
 -- Operation display ---------------------------------------------------------
@@ -312,7 +312,7 @@ listEnigmaOperation ec str opts = zipWith3 (\n sec scr -> (fmtN  (showsteps opts
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = displayEnigmaOperation ec str (packDisplayOpts "single" True (markerFunc "bars") Nothing Nothing)
+showEnigmaOperation ec str = displayEnigmaOperation ec str (displayOpts "single" True (markerFunc "bars") Nothing Nothing)
 -- displayEnigmaOperation
 
 -- REV: Trial alternate doc commenting using block comments <<<
@@ -369,7 +369,7 @@ perform any encoding (as explained in 'step'). Note also that the second block o
 as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 -}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (packDisplayOpts "internal" True (markerFunc "bars") Nothing Nothing)
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (displayOpts "internal" True (markerFunc "bars") Nothing Nothing)
 
 
 -- Encoding display ==========================================================
