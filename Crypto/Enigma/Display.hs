@@ -347,7 +347,7 @@ perform any encoding (as explained in 'step'). Note also that the second block o
 as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 -}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (packDisplayOpts "single" True decorate' Nothing Nothing)
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (packDisplayOpts "internal" True decorate' Nothing Nothing)
 
 
 -- Encoding display ==========================================================

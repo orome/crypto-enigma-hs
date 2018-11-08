@@ -60,12 +60,12 @@ testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processin
 testDisplayConfig :: EnigmaConfig -> Char -> String -> Bool -> (Char -> String) -> String -> Test
 testDisplayConfig cfg ch fmt se mf scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
         scfg
-        (displayEnigmaConfig cfg ch fmt se mf)
+        (displayEnigmaConfig cfg ch (packDisplayOpts "single" False mf Nothing Nothing))
 
 testDisplayConfigInternal :: EnigmaConfig -> Char -> (Char -> String) -> [String] -> Test
 testDisplayConfigInternal cfg ch mf scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
         scfg
-        (lines $displayEnigmaConfig cfg ch "internal" False mf)
+        (lines $ displayEnigmaConfig cfg ch (packDisplayOpts "internal" False mf Nothing Nothing))
 
 testShowConfig :: EnigmaConfig -> Char -> String -> Test
 testShowConfig cfg ch scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
