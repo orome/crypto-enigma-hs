@@ -40,7 +40,6 @@ import Data.Char                (toLower)
 import Crypto.Enigma.Utils
 import Crypto.Enigma
 
--- TBD - Fix name of more detailed display -> ..EnigmConfigSchematic ? <<<
 -- REV - Final newline in show... functions is a bit inconsistent
 
 

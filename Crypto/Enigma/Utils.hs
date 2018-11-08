@@ -38,6 +38,8 @@ encode' :: String -> String -> String
 encode' m s = (encode m) <$> s
 
 
+-- Basic error reporting -----------------------------------------------------
+
 -- REV - Idiomaic approach to general conditional redefinitions? <<<
 -- https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:errorWithoutStackTrace
 #if __GLASGOW_HASKELL__ < 800

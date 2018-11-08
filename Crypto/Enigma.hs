@@ -329,7 +329,7 @@ True
 
 Note that the string argument corresponds to the string representation of an EnigmaConfig so that
 
->>> show ( configEnigmaFromString cfgstr ) == cfgstr
+>>> show (configEnigmaFromString cfgstr) == cfgstr
 True
 
 -}
@@ -343,6 +343,7 @@ configEnigmaFromString i = if ((length $ words i) /= 4)
 
 
 -- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes (#12) <<<
+-- REV - Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
 -- A safe (total) constructor; not currently exposed
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do

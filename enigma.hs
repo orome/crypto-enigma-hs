@@ -92,7 +92,7 @@ main = do
     printConfig c = putStrLn c >> (threadDelay 500000) -- >> putStr "\ESC[2K\ESC[0G" >> (threadDelay 500000)
 
 messageOptHelp = unlines [
-         "a message to encode; characters that are not letters" ,
+         "A message to encode; characters that are not letters" ,
          "will be replaced with standard Naval substitutions or",
          "be removed"]
 
