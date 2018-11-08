@@ -13,6 +13,8 @@ A module for rich display of the state of and encoding performed by Enigma machi
 
 {-# LANGUAGE Safe #-}
 module Crypto.Enigma.Display (
+        -- * Display options
+        packDisplayOpts,
         -- * Configuration display
         displayEnigmaConfig,
         showEnigmaConfig,
@@ -78,38 +80,68 @@ enigmaChar ch = if ch `elem` letters then ch else ' '
 
 
 
--- Machine operation display =================================================
+-- Machine display ===========================================================
 
--- REV - Review positioning and exposure (could be needed for cli help) <<<
+
+-- Display options -----------------------------------------------------------
+
 fmtsInternal = ["internal", "detailed", "schematic"]
 fmtsSingle = ["single", "summary"]
 fmtsWindows = ["windows", "winds"]
 fmtsConfig = ["config", "configuration", "spec", "specification"]
 fmtsEncoding = ["encoding"]
+fmts = fmtsInternal ++ fmtsSingle ++ fmtsWindows ++ fmtsConfig ++ fmtsEncoding
 --     _FMTS_DEBUG = ['debug']
+
+type Format = String
+type MarkerFunc = (Char -> String)
+
+data DisplayOpts = DisplayOpts {
+        format :: !Format,              -- ^ The 'Format' to use to display the 'EnigmaConfig'.
+        showencoding :: !Bool,
+        markerfunction :: !MarkerFunc,
+        --
+        showsteps :: !Bool,
+        steps :: !Int
+}
+
+packDisplayOpts :: String -> Bool -> MarkerFunc -> Maybe Bool -> Maybe Int -> DisplayOpts
+packDisplayOpts fmt se mf ss ns = DisplayOpts {
+                                        format = case fmt of
+                                                  f | elem f fmts -> f
+                                                    | otherwise -> "single",
+                                        showencoding = se,
+                                        markerfunction = mf,
+                                        showsteps = case ss of
+                                                  Nothing -> False
+                                                  Just ssv -> ssv,
+                                        steps = case ns of
+                                                  Nothing -> (-1)
+                                                  Just nsv -> nsv
+                                        }
 
 
 -- Configuration display -----------------------------------------------------
 
-displayEnigmaConfig :: EnigmaConfig -> Char -> String -> Bool -> (Char -> String) -> String
-displayEnigmaConfig ec ch fmt se mf =
-    case fmt of
+displayEnigmaConfig :: EnigmaConfig -> Char -> DisplayOpts -> String
+displayEnigmaConfig ec ch opts =
+    case (format opts) of
         x | elem x fmtsSingle -> showEnigmaConfig_
         x | elem x fmtsInternal -> showEnigmaConfigInternal_
         x | elem x fmtsWindows -> (windows ec) ++ encs
         x | elem x fmtsConfig -> (show ec) ++ encs
         x | elem x fmtsEncoding -> drop 2 encs
         -- TBD - How to implement debug format?
-        _ -> error ("Not known " ++ fmt) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
+        _ -> error ("Not known " ++ (format opts)) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
     where
         ech = enigmaChar ch
         enc = enigmaMapping ec
 
-        encs = if (elem ech letters) && (se || elem fmt fmtsEncoding)
+        encs = if (elem ech letters) && (( showencoding opts) || elem (format opts) fmtsEncoding)
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
                 else ""
 
-        showEnigmaConfig_ = fmt ech (markedMapping (locCar ech enc enc) enc mf)
+        showEnigmaConfig_ = fmt ech (markedMapping (locCar ech enc enc) enc (markerfunction opts))
                                      (windows ec)
                                      (reverse $ tail.init $ positions ec)
                 where
@@ -119,15 +151,15 @@ displayEnigmaConfig ec ch fmt se mf =
                             ps' = unwords $ (printf "%02d") <$> ps
 
         showEnigmaConfigInternal_ =
-                unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters mf) ' ' 0 ""] ++
+                unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters (markerfunction opts)) ' ' 0 ""] ++
                           (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500 mf)) -- TBD -- Fix replication! <<<
+                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500  (markerfunction opts))) -- TBD -- Fix replication! <<<
                                         (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                         ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                         (components ec ++ (tail $ reverse $ components ec))
                           ) ++
                           [fmt (if ech == ' ' then "" else (encode (enigmaMapping ec) ech):" <")
-                               (markedMapping (last charLocs) (enigmaMapping ec) mf) ' ' 0 ""]
+                               (markedMapping (last charLocs) (enigmaMapping ec) (markerfunction opts)) ' ' 0 ""]
                 where
                     -- ech = enigmaChar ch
                     charLocs = zipWith (locCar ech)
@@ -151,7 +183,7 @@ displayEnigmaConfig ec ch fmt se mf =
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = displayEnigmaConfig ec ch "single" True decorate'
+showEnigmaConfig ec ch = displayEnigmaConfig ec ch (packDisplayOpts "single" True decorate' Nothing Nothing)
 
 -- TBD - Improve resolution of figure showing mapping <<<
 {-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
@@ -215,7 +247,7 @@ showEnigmaConfig ec ch = displayEnigmaConfig ec ch "single" True decorate'
 --
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decorate'
+showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (packDisplayOpts "internal" True decorate' Nothing Nothing)
 
 
 -- Operation display ---------------------------------------------------------
@@ -226,19 +258,19 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch "internal" True decor
 -- starting configuration and for each character of the message, using the provided configuration display function.
 -- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
 -- this function, which both call, that applies 'message'.
-displayEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> Int -> String
-displayEnigmaOperation ec str fmt se mf ss ns = unlines $ listEnigmaOperation ec str fmt se mf ss ns
+displayEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> String
+displayEnigmaOperation ec str opts = unlines $ listEnigmaOperation ec str opts
 
 -- TBD : Document <<<
 -- Generate a list where each element is a step of displayEnigmaOperation
-listEnigmaOperation :: EnigmaConfig -> Message -> String -> Bool -> (Char -> String) -> Bool -> Int -> [String]
-listEnigmaOperation ec str fmt se mf ss ns = zipWith3 (\n sec scr -> (fmtN ss n) ++ (displayEnigmaConfig sec scr fmt se mf))
-                                                      [0..(if ns < 0 then max (length msg) 1 else ns)]
+listEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> [String]
+listEnigmaOperation ec str opts = zipWith3 (\n sec scr -> (fmtN  (showsteps opts) n) ++ (displayEnigmaConfig sec scr opts))
+                                                      [0..(if (steps opts) < 0 then max (length msg) 1 else (steps opts))]
                                                       (iterate step ec)
                                                       (' ':msg ++ [' ',' '..])
                                                 where
                                                     fmtN :: Bool -> Int -> String
-                                                    fmtN True n = (printf "%03d  " n) ++ (if elem fmt fmtsInternal then "\n" else "")
+                                                    fmtN True n = (printf "%03d  " n) ++ (if elem (format opts) fmtsInternal then "\n" else "")
                                                     fmtN False _ = ""
                                                     msg = message str
 
@@ -258,7 +290,7 @@ listEnigmaOperation ec str fmt se mf ss ns = zipWith3 (\n sec scr -> (fmtN ss n)
 --   perform any encoding (as explained in 'step').
 --   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
 showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = displayEnigmaOperation ec str "single" False decorate' False (-1)
+showEnigmaOperation ec str = displayEnigmaOperation ec str (packDisplayOpts "single" True decorate' Nothing Nothing)
 -- displayEnigmaOperation
 
 -- REV: Trial alternate doc commenting using block comments <<<
@@ -315,7 +347,7 @@ perform any encoding (as explained in 'step'). Note also that the second block o
 as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
 -}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str "internal" False decorate' False (-1)
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (packDisplayOpts "single" True decorate' Nothing Nothing)
 
 
 -- Encoding display ==========================================================
