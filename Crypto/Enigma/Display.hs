@@ -63,8 +63,8 @@ postproc = unlines . chunksOf 60 . unwords . chunksOf 4
 locCar :: Char -> String -> Mapping -> Maybe Int
 locCar ch s m = elemIndex (encode m ch) s
 
-markedMapping :: Maybe Int -> Mapping -> (Char -> String) -> String
-markedMapping (Just loc) e mf = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
+markedMapping :: Maybe Int -> Mapping -> MarkerFunc -> String
+markedMapping (Just loc) e (MarkerFunc mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
 markedMapping Nothing e _    = e
 
 
@@ -90,7 +90,7 @@ fmts = fmtsInternal ++ fmtsSingle ++ fmtsWindows ++ fmtsConfig ++ fmtsEncoding
 --     _FMTS_DEBUG = ['debug']
 
 type Format = String
-type MarkerFunc = (Char -> String)
+data MarkerFunc = MarkerFunc (Char -> String)
 
 data DisplayOpts = DisplayOpts {
         format :: !Format,              -- ^ The 'Format' to use to display the 'EnigmaConfig'.
@@ -122,7 +122,7 @@ displayOpts fmt se mf ss ns = DisplayOpts {
 -- https://stackoverflow.com/a/33206814
 -- Ingores unrecognized/invalid values
 markerFunc :: String -> MarkerFunc
-markerFunc spec = case spec of
+markerFunc spec = MarkerFunc (case spec of
                     "*" ->  \_ -> "*"
                     "lower" ->  \c -> [toLower c]
                     "omit" ->  \_ -> " "
@@ -140,7 +140,7 @@ markerFunc spec = case spec of
 --                     "52" ->  \c -> "\ESC[52m" ++ [c] ++ "\ESC[0m"
                     -- TBD - Colors and other escapes
                     [l, r] -> \c -> [l, c, r]
-                    _ -> \c -> [c]
+                    _ -> \c -> [c])
 
 -- Configuration display -----------------------------------------------------
 

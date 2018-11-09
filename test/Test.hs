@@ -57,15 +57,15 @@ testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processin
         (enigmaEncoding cfg msg)
 
 -- TBD - More argument values in test reporting
-testDisplayConfig :: EnigmaConfig -> Char -> String -> Bool -> (Char -> String) -> String -> Test
-testDisplayConfig cfg ch fmt se mf scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
+testDisplayConfig :: EnigmaConfig -> Char -> String -> Bool -> String -> String -> Test
+testDisplayConfig cfg ch fmt se hl scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
         scfg
-        (displayEnigmaConfig cfg ch (displayOpts "single" False mf Nothing Nothing))
+        (displayEnigmaConfig cfg ch (displayOpts "single" False (markerFunc hl) Nothing Nothing))
 
-testDisplayConfigInternal :: EnigmaConfig -> Char -> (Char -> String) -> [String] -> Test
-testDisplayConfigInternal cfg ch mf scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
+testDisplayConfigInternal :: EnigmaConfig -> Char -> String -> [String] -> Test
+testDisplayConfigInternal cfg ch hl scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
         scfg
-        (lines $ displayEnigmaConfig cfg ch (displayOpts "internal" False mf Nothing Nothing))
+        (lines $ displayEnigmaConfig cfg ch (displayOpts "internal" False (markerFunc hl) Nothing Nothing))
 
 testShowConfig :: EnigmaConfig -> Char -> String -> Test
 testShowConfig cfg ch scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
@@ -146,7 +146,7 @@ main = do
                         (configEnigma "c-β-V-VI-VIII" (enigmaEncoding (configEnigma "c-β-V-VI-VIII" "NAEM" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12") "QEOB") "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12")
                         "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHHABEFOLGELNBEBEFEHLERHALTENXXJANSTERLEDESBISHERIGXNREICHSMARSCHALLSJGOERINGJSETZTDERFUEHRERSIEYHVRRGRZSSADMIRALYALSSEINENNACHFOLGEREINXSCHRIFTLSCHEVOLLMACHTUNTERWEGSXABSOFORTSOLLENSIESAEMTLICHEMASSNAHMENVERFUEGENYDIESICHAUSDERGEGENWAERTIGENLAGEERGEBENXGEZXREICHSLEITEIKKTULPEKKJBORMANNJXXOBXDXMMMDURNHFKSTXKOMXADMXUUUBOOIEXKP"
                         "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXTGPJJAVTOCKZFSLPPQIHZFXOEBWIIEKFZLCLOAQJULJOYHSSMBBGWHZANVOIIPYRBRTDJQDJJOQKCXWDNBBTYVXLYTAPGVEATXSONPNYNQFUDBBHHVWEPYEYDOHNLXKZDNWRHDUWUJUMWWVIIWZXIVIUQDRHYMNCYEFUAPNHOTKHKGDNPSAKNUAGHJZSMJBMHVTREQEDGXHLZWIFUSKDQVELNMIMITHBHDBWVHDFYHJOQIHORTDJDBWXEMEAYXGYQXOHFDMYUXXNOJAZRSGHPLWMLRECWWUTLRTTVLBHYOORGLGOWUXNXHMHYFAACQEKTHSJW",
-                testDisplayConfig (configEnigma "C-III-II-I" "XYZ" "MJ.NH.RF.PL.ZS.DC" "09.25.19") 'E' "single" False (\c -> c:"\818\773")
+                testDisplayConfig (configEnigma "C-III-II-I" "XYZ" "MJ.NH.RF.PL.ZS.DC" "09.25.19") 'E' "single" False "bars"
                         "E > HEMVB\818\773GFAKZIWCQSXNTORYDLPUJ  XYZ  16 01 08",
                 testShowConfig (configEnigma "C-III-II-I" "XYZ" "MJ.NH.RF.PL.ZS.DC" "09.25.19") 'E'
                         "E > HEMVB\818\773GFAKZIWCQSXNTORYDLPUJ  XYZ  16 01 08",
@@ -155,7 +155,7 @@ main = do
 
 --                 testDisplayConfigInternal (configEnigma "C-III-II-I" "XYZ" "MJ.NH.RF.PL.ZS.DC" "09.25.19") 'E' "single" False (\c -> c:"\818\773")
 
-                testDisplayConfigInternal (configEnigma "b-γ-V-VIII-II" "LFAQ" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") 'K' (\c -> c:"\818\773")
+                testDisplayConfigInternal (configEnigma "b-γ-V-VIII-II" "LFAQ" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") 'K' "bars"
                         ["K > ABCDEFGHIJK\818\773LMNOPQRSTUVWXYZ         ","  P YBCDFEGHIJZ\818\773PONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL","  1 LORVFBQNGWKATHJSZPIYUDXEMC\818\773  Q  07  II","  2 BJY\818\773INTKWOARFEMVSGCUDPHZQLX  A  24  VIII","  3 ILHXUBZQPNVGKMCRTEJFADOYS\818\773W  F  16  V","  4 YDSKZPTNCHGQOMXAUWJ\818\773FBRELVI  L  10  \947","  R ENKQAUYWJI\818\773COPBLMDXZVFTHRGS         b","  4 PUIBWTKJZ\818\773SDXNHMFLVCGQYROAE         \947","  3 UFOVRTLCASMBNJWIHPYQEKZDXG\818\773         V","  2 JARTMLQ\818\773VDBGYNEIUXKPFSOHZCW         VIII","  1 LFZVXEINSOKAYHBRG\818\773CPMUDJWTQ         II","  P YBCDFEG\818\773HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL","G < CMAWFEKLNVG\818\773HBIUYTXZQOJDRPS         "],
 
 
