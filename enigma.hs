@@ -13,7 +13,7 @@ import Crypto.Enigma
 import Crypto.Enigma.Display
 
 
-cliName = "Enigma machine CLI"
+cliName_ = "Enigma Machine (Haskell crypto-enigma) CLI"
 
 stepInterval_ = 250000
 
@@ -32,27 +32,34 @@ commandO = Options <$> subcommandO
 subcommandO :: Parser Subcommand
 subcommandO =
   subparser (
-        command "encode" (info (Encode <$> configArg <*> messageArg <**> helper)
-                         (helpText "Encode a message" "ENCODE" encodeCmdArgsFoot)) <>
-        command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
-                         (helpText "Show a machine configuration" "SHOW" showCmdArgsFoot)) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <*> noinitialOpt <**> helper)
-                         (helpText "Run a machine " "Run" runCmdArgsFoot))
+        command "encode" (info (Encode <$> configArg "encode" <*> messageArg <**> helper)
+                         (helpText
+                         "Show the encoding of a message."
+                         "ENCODE" encodeCmdArgsFoot)) <>
+        command "show"   (info (Show <$> configArg "show" <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
+                         (helpText
+                         "Show an Enigma machine configuration in the specified format, optionally indicating the encoding of a specified character."
+                         "SHOW" showCmdArgsFoot)) <>
+        command "run"    (info (Run <$> configArg "run" <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <*> noinitialOpt <**> helper)
+                         (helpText
+                         "Show the operation of the Enigma machine as a series of configurations, as it encodes a message and/or for a specified number of steps. "
+                         "RUN" runCmdArgsFoot))
    )
   where
-        configArg = strArgument $ metavar "CONFIG" <>
-                help "Config of machine"
-        messageArg = strArgument $ metavar "MESSAGE" <> help "The message"
+        configArg cmd = strArgument $ metavar "CONFIG" <>
+                help (configArgHelp cmd)
+        messageArg = strArgument $ metavar "MESSAGE" <>
+                help messageArgHelp
         messageOpt = optional $ strOption ( long "message" <> short 'm' <> metavar "MESSAGE" <> value " " <>
                 help messageOptHelp)
         letterOpt =  optional $ strOption ( long "letter" <> short 'l' <> metavar "LETTER" <> value " " <>
-                help "Letter to highlight")
+                help letterOptHelp)
         formatOpt =  optional $ strOption ( long "format" <> short 'f' <> metavar "FORMAT" <> value "single" <>
-                help "The format")
-        highlightOpt =  optional $ strOption ( long "highlight" <> short 'H' <> metavar "HH" <> value "bars" <>
-                help "The highlight")
-        encodingOpt =  optional $ switch ( long "showencoding" <> short 'e' <>
-                help "Show encoding")
+                help formatOptHelp)
+        highlightOpt =  optional $ strOption ( long "highlight" <> short 'H' <> metavar "HH|SPEC" <> value "bars" <>
+                help highlightOptHelp)
+        encodingOpt = optional $ switch ( long "showencoding" <> short 'e' <>
+                help showencodingOptHelp)
 
         showstepOpt =  optional $ switch ( long "showstep" <> short 't' <>
                 help "Show step numbers")
@@ -70,7 +77,7 @@ subcommandO =
                 help noinitialOptHelp)
 
         helpText desc cmd argsFoot = (progDesc desc <>
-                header (cliName ++ ": "++ cmd ++" command") <>
+                header (cliName_ ++ ": "++ cmd ++" command") <>
                 footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot])))    )
                 -- footer (unlines ["Shared footer. ", foot]))
 
@@ -98,9 +105,9 @@ main = do
     optsParser =
         info (helper <*> commandO)
              (  fullDesc <>
-                progDesc "Command line interface to crypto-enigma package" <>
-                header cliName <>
-                footer "Some footer info")
+                progDesc "A simple Enigma machine simulator with rich display of machine configurations." <>
+                header cliName_ <>
+                footer "This command line interface is part of the Haskell crypto-enigma package.")
 
     printConfig s True c = printConfig s False c >>
                                 replicateM_ (length $ lines c) (clearLine >> cursorUpLine 1)
@@ -108,10 +115,36 @@ main = do
                                 (threadDelay (s * stepInterval_))
 
 
+
+
+configArgHelp cmd = case cmd of
+                        "encode" -> unlines ["The machine configuration at the start of encoding (see below)"]
+                        "show" -> unlines ["The machine configuration to show (see below)"]
+                        "run" -> unlines ["The machine setup at the start of operation (see below)"]
+
+messageArgHelp = messageOptHelp
+
 messageOptHelp = unlines [
          "A message to encode; characters that are not letters" ,
          "will be replaced with standard Naval substitutions or",
          "be removed"]
+
+letterOptHelp = unlines [
+         "An optional input letter to highlight as it is" ,
+         "processed by the configuration; defaults to nothing"]
+
+formatOptHelp = unlines [
+         "The format used to display machine configuration(s)" ,
+         "(see below)"]
+
+highlightOptHelp = unlines [
+         "Either a pair or characters to use to highlight encoded" ,
+         "characters in a machine configuration's encoding or a" ,
+         "specification of a color or style (see below)"]
+
+showencodingOptHelp = unlines [
+         "Show the encoding if not normally shown for the" ,
+         "specified FORMAT"]
 
 stepsOptHelp = unlines [
         "A number of steps to run; if omitted when a message is" ,
@@ -128,7 +161,7 @@ overwriteOptHelp = unlines [
         "garbled output on some systems)"]
 
 noinitialOptHelp = unlines [
-        "don't show the initial starting step"]
+        "Don't show the initial starting step"]
 
 encodeCmdArgsFoot = init $ unlines [configArgFoot, omitArgFoot "encode"]
 showCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
@@ -187,7 +220,8 @@ highlightArgFoot = unlines [
         "this highlighting is done with combining Unicode characters, which may not",
         "work on all systems, and as an alternative, any two characters provided as",
         "HH will be used to 'bracket' the highlighted character. To avoid errors,",
-        "these characters should be enclosed in quotes."]
+        "these characters should be enclosed in quotes. Additionally certain",
+        "predefined SPEC values, such as 'red' or 'highlight' are also supported."]
 
 
 omitArgFoot cmd = unlines [
@@ -208,36 +242,3 @@ omitArgFoot cmd = unlines [
 -- CallStack (from HasCallStack):
 --   error, called at ./Crypto/Enigma.hs:371:57 in main:Crypto.Enigma
 
-
--- ASK: What's going on here: https://travis-ci.org/orome/crypto-enigma-hs/jobs/451103421#L908
-
--- TBD: Implement steps (and doc) <<<
--- TBD: Implement noinitial (and doc) <<<
--- TBD: Update documentation for display functions (consolidate and expand under displayEnigmaConfig; just warning for old wrappers)
-
--- TBD: Implement overwrite + slower (and doc) for run or remove reference in readme
--- TBD: Implement verbose (and doc)
-
--- TBD: Test scripts for replacement Display functions
--- TBD: Test scripts for command line
--- TBD: Add tests for configEnigmaFromString (including correspondence with read)
-
--- TBD: Better CLI error handling
--- TBD: Errors for Display functions
--- TBD - Centralize redundant structure shared between read and configEnigmaFromString; or find way to keep in sync <<<
-
--- TBD: Test and confirm correspondence with Python
-
--- TBD: More arguments for displayEnigmaEncoding
--- TBD: Examples (either at end of help or in own new options; add examples to top level help?
--- TBD: Complete help text (top level and command descriptions, etc.)
--- TBD: Fix extra lines at end of cli help
-
--- TBD: Bash completion: https://github.com/pcapriotti/optparse-applicative/wiki/Bash-Completion
-
--- TBD: Decide how to handle extra blank line at end of displayEnigmaOperation ... `internal` (OK, should be there)
--- REV: Should all display... (including displayEnigmaConfig  have a final newline and thus just putStr)?
--- TBD: Simplify CLI description of display; expand documentation description of display?
--- TBD: Confim use of step vs stage in documentation (of internal config)
-
--- TBD: Update test scripts for replacement Display functions and for for command line
