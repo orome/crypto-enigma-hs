@@ -116,7 +116,9 @@ stepsOptHelp = unlines [
         "otherwise defaults to 1"]
 
 speedOptHelp = unlines [
-        "TBD"]
+        "Pause between display of each step for SPEED*" ++ show ((fromIntegral stepInterval_) / 1000000) ++ "s;",
+         "1 is the minimum speed with --overwrite; defaults to 0" ,
+         "otherwise"]
 
 overwriteOptHelp = unlines [
         "Overwrite each step after a pause (may result in" ,
