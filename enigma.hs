@@ -5,6 +5,8 @@ import Data.Monoid ((<>))       -- For GHC 8.0 through 8.2
 --import Control.Exception (catch)
 --import Data.List.Split (chunksOf)
 import Control.Concurrent (threadDelay)
+import Control.Monad (replicateM_)
+import System.Console.ANSI
 
 --import Crypto.Enigma.Utils
 import Crypto.Enigma
@@ -13,10 +15,12 @@ import Crypto.Enigma.Display
 
 cliName = "Enigma machine CLI"
 
+stepInterval_ = 250000
+
 data Subcommand =
         Encode { config :: String, message :: String } |
         Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int, speedO :: Int }
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int, speedO :: Int, overwriteO :: Maybe Bool }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
@@ -32,7 +36,7 @@ subcommandO =
                          (helpText "Encode a message" "ENCODE" encodeCmdArgsFoot)) <>
         command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText "Show a machine configuration" "SHOW" showCmdArgsFoot)) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <**> helper)
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <**> helper)
                          (helpText "Run a machine " "Run" runCmdArgsFoot))
    )
   where
@@ -59,6 +63,8 @@ subcommandO =
         speedOpt :: Parser Int
         speedOpt = option auto (long "speed" <> short 'S' <> metavar "SPEED"  <> value 0 <>
                 help speedOptHelp)
+        overwriteOpt = optional $ switch ( long "overwrite" <> short 'o' <>
+                help overwriteOptHelp)
 
         helpText desc cmd argsFoot = (progDesc desc <>
                 header (cliName ++ ": "++ cmd ++" command") <>
@@ -78,10 +84,11 @@ main = do
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter
                         (displayOpts format showenc (markerFunc highlight) Nothing Nothing)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps speed ->
-                mapM_ (printConfig speed) (listEnigmaOperation (configEnigmaFromString config)
-                        message
-                        (displayOpts format showenc (markerFunc highlight) showstps (Just stps)))
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps speed (Just overwrite) ->
+                mapM_ (printConfig (max speed (if overwrite then 1 else 0)) overwrite)
+                                   (listEnigmaOperation (configEnigmaFromString config)
+                                   message
+                                   (displayOpts format showenc (markerFunc highlight) showstps (Just stps)))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
@@ -92,8 +99,11 @@ main = do
                 header cliName <>
                 footer "Some footer info")
 
-    -- https://hackage.haskell.org/package/ansi-terminal-0.8.0.1/docs/System-Console-ANSI.html#v:clearLine <<<
-    printConfig s c = putStrLn c >> (threadDelay (s * 250000)) -- >> putStr "\ESC[2K\ESC[0G" >> (threadDelay 500000)
+    printConfig s True c = printConfig s False c >>
+                                replicateM_ (length $ lines c) (clearLine >> cursorUpLine 1)
+    printConfig s False c = (if (length $ lines c) > 1 then putStr else putStrLn) c >>
+                                (threadDelay (s * stepInterval_))
+
 
 messageOptHelp = unlines [
          "A message to encode; characters that are not letters" ,
@@ -107,6 +117,10 @@ stepsOptHelp = unlines [
 
 speedOptHelp = unlines [
         "TBD"]
+
+overwriteOptHelp = unlines [
+        "Overwrite each step after a pause (may result in" ,
+        "garbled output on some systems)"]
 
 encodeCmdArgsFoot = init $ unlines [configArgFoot, omitArgFoot "encode"]
 showCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
