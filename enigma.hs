@@ -20,7 +20,7 @@ stepInterval_ = 250000
 data Subcommand =
         Encode { config :: String, message :: String } |
         Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int, speedO :: Int, overwriteO :: Maybe Bool }
+        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int, speedO :: Int, overwriteO :: Maybe Bool, noinitialO :: Maybe Bool }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
@@ -36,7 +36,7 @@ subcommandO =
                          (helpText "Encode a message" "ENCODE" encodeCmdArgsFoot)) <>
         command "show"   (info (Show <$> configArg <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText "Show a machine configuration" "SHOW" showCmdArgsFoot)) <>
-        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <**> helper)
+        command "run"    (info (Run <$> configArg <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <*> noinitialOpt <**> helper)
                          (helpText "Run a machine " "Run" runCmdArgsFoot))
    )
   where
@@ -66,6 +66,9 @@ subcommandO =
         overwriteOpt = optional $ switch ( long "overwrite" <> short 'o' <>
                 help overwriteOptHelp)
 
+        noinitialOpt =  optional $ switch ( long "noinitial" <> short 'n' <>
+                help noinitialOptHelp)
+
         helpText desc cmd argsFoot = (progDesc desc <>
                 header (cliName ++ ": "++ cmd ++" command") <>
                 footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot])))    )
@@ -84,9 +87,9 @@ main = do
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter
                         (displayOpts format showenc (markerFunc highlight) Nothing Nothing)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps speed (Just overwrite) ->
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps speed (Just overwrite) (Just noinitial) ->
                 mapM_ (printConfig (max speed (if overwrite then 1 else 0)) overwrite)
-                                   (listEnigmaOperation (configEnigmaFromString config)
+                                   ((if noinitial then tail else id) $ listEnigmaOperation (configEnigmaFromString config)
                                    message
                                    (displayOpts format showenc (markerFunc highlight) showstps (Just stps)))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
@@ -123,6 +126,9 @@ speedOptHelp = unlines [
 overwriteOptHelp = unlines [
         "Overwrite each step after a pause (may result in" ,
         "garbled output on some systems)"]
+
+noinitialOptHelp = unlines [
+        "don't show the initial starting step"]
 
 encodeCmdArgsFoot = init $ unlines [configArgFoot, omitArgFoot "encode"]
 showCmdArgsFoot = init $ unlines [configArgFoot, formatArgFoot "show", highlightArgFoot, omitArgFoot "show"]
