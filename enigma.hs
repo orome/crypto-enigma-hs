@@ -15,7 +15,7 @@ import Crypto.Enigma.Display
 
 cliName_ = "Enigma Machine (Haskell crypto-enigma) CLI"
 
-stepInterval_ = 250000
+stepInterval_ = 125000
 
 data Subcommand =
         Encode { config :: String, message :: String } |
