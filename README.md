@@ -99,7 +99,7 @@ Simulate machine operation (explained in more detail command line help):
 
 Watch the machine as it runs for 500 steps:
 
-    $ enigma run  "c-β-VIII-VII-VI QMLI 'UX.MO.AY 01.13.04.11" -s 500 -t -f internal -o
+    $ enigma run "c-β-VIII-VII-VI QMLI UX.MO.AY 01.13.04.11" -s 500 -t -f internal -o
 
 ### Limitations
 
