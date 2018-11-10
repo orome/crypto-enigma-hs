@@ -4,7 +4,7 @@ name:                   crypto-enigma
 --                      | | +----- non-breaking API additions
 --                      | | | +--- code changes with no API change
 version:                0.0.3.1
-synopsis:               An Enigma machine simulator with display.
+synopsis:               An Enigma machine simulator with display. 
 description:            The crypto-enigma package is an Enigma machine simulator
                         with rich display and machine state details.
                         .
