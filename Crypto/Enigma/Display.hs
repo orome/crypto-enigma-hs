@@ -81,13 +81,6 @@ enigmaChar ch = if ch `elem` letters then ch else ' '
 
 -- Display options -----------------------------------------------------------
 
-fmtsInternal = ["internal", "detailed", "schematic"]
-fmtsSingle = ["single", "summary"]
-fmtsWindows = ["windows", "winds"]
-fmtsConfig = ["config", "configuration", "spec", "specification"]
-fmtsEncoding = ["encoding"]
-fmts = fmtsInternal ++ fmtsSingle ++ fmtsWindows ++ fmtsConfig ++ fmtsEncoding
---     _FMTS_DEBUG = ['debug']
 
 type Format = String
 data MarkerFunc = MarkerFunc (Char -> String)
@@ -116,6 +109,14 @@ displayOpts fmt se mf ss ns = DisplayOpts {
                                                   Nothing -> (-1)
                                                   Just nsv -> nsv
                                         }
+-- The various possible formats
+fmtsSingle_ = ["single", "summary"]
+fmtsInternal_ = ["internal", "detailed", "schematic"]
+fmtsWindows_ = ["windows", "winds"]
+fmtsConfig_ = ["config", "configuration", "spec", "specification"]
+fmtsEncoding_ = ["encoding"]
+fmts_ = fmtsInternal_ ++ fmtsSingle_ ++ fmtsWindows_ ++ fmtsConfig_ ++ fmtsEncoding_
+-- TBD: Debug
 
 -- TBD: Version checks for character compatability w/ substitutions that work; force checks with a type?
 -- decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
@@ -145,13 +146,13 @@ markerFunc spec = MarkerFunc (case spec of
 -- Configuration display -----------------------------------------------------
 
 displayEnigmaConfig :: EnigmaConfig -> Char -> DisplayOpts -> String
-displayEnigmaConfig ec ch opts =
-    case (format opts) of
-        x | elem x fmtsSingle -> showEnigmaConfig_
-        x | elem x fmtsInternal -> showEnigmaConfigInternal_
-        x | elem x fmtsWindows -> (windows ec) ++ encs
-        x | elem x fmtsConfig -> (show ec) ++ encs
-        x | elem x fmtsEncoding -> drop 2 encs
+displayEnigmaConfig ec ch optsin =
+    case (format optsin) of
+        x | elem x fmtsSingle_ -> showEnigmaConfig_
+        x | elem x fmtsInternal_ -> showEnigmaConfigInternal_
+        x | elem x fmtsWindows_ -> (windows ec) ++ encs
+        x | elem x fmtsConfig_ -> (show ec) ++ encs
+        x | elem x fmtsEncoding_ -> drop 2 encs
         -- TBD - How to implement debug format?
         -- This should not happen: all display option arguments are coerced to valid values by displayOpts
         _ -> error ("Unrecognized format " ++ (format opts)) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
@@ -159,7 +160,7 @@ displayEnigmaConfig ec ch opts =
         ech = enigmaChar ch
         enc = enigmaMapping ec
 
-        encs = if (elem ech letters) && (( showencoding opts) || elem (format opts) fmtsEncoding)
+        encs = if (elem ech letters) && (( showencoding opts) || elem (format opts) fmtsEncoding_)
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
                 else ""
 
