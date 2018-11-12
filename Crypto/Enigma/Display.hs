@@ -14,8 +14,9 @@ A module for rich display of the state of and encoding performed by Enigma machi
 {-# LANGUAGE Safe #-}
 module Crypto.Enigma.Display (
         -- * Display options
+        DisplayOpts,
         displayOpts,
-        markerFunc,
+        format, showencoding, markerspec, showsteps, steps,
         -- * Configuration display
         displayEnigmaConfig,
         showEnigmaConfig,
@@ -82,33 +83,13 @@ enigmaChar ch = if ch `elem` letters then ch else ' '
 -- Display options -----------------------------------------------------------
 
 
+-- REV: Unused; move details here of used and expose
+-- REV: See how 'Message' is handled in Crypto.Enigma: used to show that strng will be converted
+{-|
+A string describing the format used to display an 'EnigmaConfig', provided as an argument to 'displayOpts'.
+-}
 type Format = String
-data MarkerFunc = MarkerFunc (Char -> String)
 
-data DisplayOpts = DisplayOpts {
-        format :: !Format,              -- ^ The 'Format' to use to display the 'EnigmaConfig'.
-        showencoding :: !Bool,
-        markerfunction :: !MarkerFunc,
-        --
-        showsteps :: !Bool,
-        steps :: !Int
-}
-
--- Arguments are coerced to valid values
-displayOpts :: String -> Bool -> MarkerFunc -> Maybe Bool -> Maybe Int -> DisplayOpts
-displayOpts fmt se mf ss ns = DisplayOpts {
-                                        format = case fmt of
-                                                  f | elem f fmts -> f
-                                                    | otherwise -> "single",
-                                        showencoding = se,
-                                        markerfunction = mf,
-                                        showsteps = case ss of
-                                                  Nothing -> False
-                                                  Just ssv -> ssv,
-                                        steps = case ns of
-                                                  Nothing -> (-1)
-                                                  Just nsv -> nsv
-                                        }
 -- The various possible formats
 fmtsSingle_ = ["single", "summary"]
 fmtsInternal_ = ["internal", "detailed", "schematic"]
@@ -118,10 +99,16 @@ fmtsEncoding_ = ["encoding"]
 fmts_ = fmtsInternal_ ++ fmtsSingle_ ++ fmtsWindows_ ++ fmtsConfig_ ++ fmtsEncoding_
 -- TBD: Debug
 
--- TBD: Version checks for character compatability w/ substitutions that work; force checks with a type?
--- decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
--- https://stackoverflow.com/a/33206814
--- Ingores unrecognized/invalid values
+-- REV: Expose with markerFunc?
+-- A function specifying how to highlight an encoded character in an 'EnigmaConfig', created using 'markerFunc'.
+data MarkerFunc = MarkerFunc (Char -> String)
+
+-- REV: Expose to support arbitrary user-defined functions?
+-- REV: Version checks for character compatability w/ substitutions that work; force checks with a type? eg:
+--      decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
+--      https://stackoverflow.com/a/33206814
+-- Create a 'MarkerFunc' from a string specification.
+-- Ignores unrecognized/invalid values
 markerFunc :: String -> MarkerFunc
 markerFunc spec = MarkerFunc (case spec of
                     "*" ->  \_ -> "*"
@@ -143,6 +130,87 @@ markerFunc spec = MarkerFunc (case spec of
                     [l, r] -> \c -> [l, c, r]
                     _ -> \c -> [c])
 
+-- TBD: Add catalog of examples for choices here (not in display functions) showing choices; refer to display functions for details of presentation (as now) <<<
+{-|
+Options for 'displayEnigmaConfig', 'displayEnigmaOperation', and 'listEnigmaOperation', created using 'displayOpts'.
+All fields are coerced to valid values by display functions.
+-}
+data DisplayOpts = DisplayOpts {
+        {-|
+        The 'Format' to use to display the 'EnigmaConfig': a 'String' specifying the format used to display machine
+        configuration(s) that is one of @"single"@, @"internal"@, @"windows"@, @"config"@, and @"encoding"@.
+        Display functions are forgiving about the supplied format and will accept a range of reasonable substitutes
+        (e.g., @"detailed"@ or @"schematic"@ for @"internal"@), and will treat unrecognized formats as the default, @"single"@.
+        -}
+        format :: !Format,
+        {-|
+        A 'Bool' indicating whether to show encoding if not normally shown for the specified format.
+        -}
+        showencoding :: !Bool,
+        {-|
+        A 'String' that is either a pair or characters (e.g. @"[]"@) to use to highlight encoded characters encoding,
+        or a specification of a color (e.g, @"red"@) or style (@"bars"@).
+        Invalid or unrecognized higlight specifications are treated as the @"bars"@.
+        -}
+        markerspec :: !String,
+        markerfunction :: !MarkerFunc,  -- REV: Internal only; expose for custom marker functions?
+        {-|
+        A 'Bool' indicating whether to show step numbers, defaults to @False@.
+        Only relevant for <#v:displayEnigmaOperation operation display> functions.
+        -}
+        showsteps :: !Bool,
+        {-|
+        An 'Int' indicating the number of steps to display, which if omitted when a message is provided will default
+        to the length of the message, and to @1@ otherwise. Values less than @1@ are treated as the default.
+        Only relevant for <#v:displayEnigmaOperation operation display> functions.
+        -}
+        steps :: !Int
+}
+
+allSteps_ = (-1)
+
+{-|
+Default 'DisplayOpts' equivalent to @DisplayOpts{format = "single", showencoding  = False, markerspec = "bars",...}@.
+See individual options below for defaults values. This is the sole method for providing and setting options for
+display functions. E.g. to supply specify a 'format' of @"windows"@ which shows encoding (see 'showencoding') provide
+
+@
+displayOpts{format="windows",showencoding=True}
+@
+
+as the @DisplayOpts@ argument to a display finction.
+-}
+displayOpts = DisplayOpts {
+        format = "single",
+        showencoding  = False,
+        markerspec = "bars",
+        markerfunction = markerFunc "bars",
+        --
+        showsteps = False,
+        steps = allSteps_
+}
+
+-- TBD: Confirm defaults here and above are same as command line / match docs <<<
+-- Internal function used by all display functions to coerce all display options to valid values.
+validOpts_ :: DisplayOpts -> DisplayOpts
+validOpts_ opts = DisplayOpts {
+                                        format = case fmt of
+                                                  f | elem f fmts_ -> f
+                                                    | otherwise -> fmtsSingle_!!0,
+                                        showencoding = se,
+                                        markerspec = ms,
+                                        markerfunction = markerFunc ms,
+                                        showsteps = ss,
+                                        steps = if ns > 0 then ns else allSteps_
+                                        }
+                                        where
+                                                fmt = (format opts)
+                                                se = (showencoding opts)
+                                                ms = (markerspec opts)
+                                                ss = (showsteps opts)
+                                                ns = (steps opts)
+
+
 -- Configuration display -----------------------------------------------------
 
 displayEnigmaConfig :: EnigmaConfig -> Char -> DisplayOpts -> String
@@ -159,6 +227,7 @@ displayEnigmaConfig ec ch optsin =
     where
         ech = enigmaChar ch
         enc = enigmaMapping ec
+        opts = validOpts_ optsin
 
         encs = if (elem ech letters) && (( showencoding opts) || elem (format opts) fmtsEncoding_)
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
@@ -192,7 +261,7 @@ displayEnigmaConfig ec ch optsin =
                        where
                             p' = if p == 0 then "  " else printf "%02d" (p::Int)
 
-{-# DEPRECATED showEnigmaConfig "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
+{-# DEPRECATED showEnigmaConfig "This has been replaced by 'displayEnigmaConfig'" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Display a summary of the Enigma machine configuration as its encoding (see 'Mapping'),
 --   the letters at the windows (see 'windows'), and the 'Position's of the rotors (see 'positions').
 --
@@ -206,10 +275,10 @@ displayEnigmaConfig ec ch optsin =
 --
 --   shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
 showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = displayEnigmaConfig ec ch (displayOpts "single" True (markerFunc "bars") Nothing Nothing)
+showEnigmaConfig ec ch = displayEnigmaConfig ec ch displayOpts
 
 -- TBD - Improve resolution of figure showing mapping <<<
-{-# DEPRECATED showEnigmaConfigInternal "This has been replaced by displayEnigmaConfig" #-} -- TBD - Replace doc with deprecation note and supply args <<<
+{-# DEPRECATED showEnigmaConfigInternal "This has been replaced by 'displayEnigmaConfig'" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Display a summary of the Enigma machine configuration as a schematic showing the encoding (see 'Mapping')
 --   performed by each stage (see 'stageMappingList'), along with an indication of the stage
 --   (rotor number, @\"P\"@ for plugboard, or @\"R\"@ for reflector), window letter (see 'windows'),
@@ -270,7 +339,7 @@ showEnigmaConfig ec ch = displayEnigmaConfig ec ch (displayOpts "single" True (m
 --
 --   <<figs/configinternal.jpg>>
 showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (displayOpts "internal" True (markerFunc "bars") Nothing Nothing)
+showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch displayOpts{format="internal"}
 
 
 -- Operation display ---------------------------------------------------------
@@ -281,48 +350,49 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch (displayOpts "interna
 -- starting configuration and for each character of the message, using the provided configuration display function.
 -- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
 -- this function, which both call, that applies 'message'.
-displayEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> String
-displayEnigmaOperation ec str opts = unlines $ listEnigmaOperation ec str opts
-
--- TBD : Document <<<
--- Generate a list where each element is a step of displayEnigmaOperation
-listEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> [String]
-listEnigmaOperation ec str opts = zipWith3 (\n sec scr -> (fmtN  (showsteps opts) n) ++ (displayEnigmaConfig sec scr opts))
-                                                      [0..(if (steps opts) < 0 then max (length msg) 1 else (steps opts))]
-                                                      (iterate step ec)
-                                                      (' ':msg ++ [' ',' '..])
-                                                where
-                                                    fmtN :: Bool -> Int -> String
-                                                    fmtN True n = (printf "%03d  " n) ++ (if elem (format opts) fmtsInternal then "\n" else "")
-                                                    fmtN False _ = ""
-                                                    msg = message str
-
-{-# DEPRECATED showEnigmaOperation "This has been replaced by displayEnigmaOperation" #-} -- TBD - Replace doc with deprecation note and supply args <<<
--- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
---   and for each subsequent configuration as it processes each letter of a 'Message'. #showEnigmaOperationEG#
---
---   >>> putStr $ showEnigmaOperation (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KRIEG"
---       OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
---   K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
---   R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
---   I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
---   E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
---   G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
---
---   Note that the first line of the display represents the initial configuration of the machine, but does not
---   perform any encoding (as explained in 'step').
---   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
-showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = displayEnigmaOperation ec str (displayOpts "single" True (markerFunc "bars") Nothing Nothing)
--- displayEnigmaOperation
-
--- REV: Trial alternate doc commenting using block comments <<<
-{-# DEPRECATED showEnigmaOperationInternal "This has been replaced by displayEnigmaOperation" #-} -- TBD - Replace doc with deprication note and supply args <<<
+-- TBD: Add single and others: before: show use of the two additional operation flags using some simeper simpler formats <<<
+--      Internal showing steps nubers, no step numbers, and limited numbers of steps
+--      Show encoding for a format that doesn't use it
 {-|
-Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
+Produce a 'String' representation of an Enigma machine's internal configuration (see 'displayEnigmaConfig' for details)
 and for each subsequent configuration as it processes each letter of a 'Message'.
 
->>> putStr $ showEnigmaOperationInternal (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KR"
+In addition to the options that apply to the representation of each individual configuration, 'DisplayOpts' for this
+function include options for specifying whether to run for a specific number of steps and whether to include a step
+number in the representations.
+
+>>> let cfg = configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11"
+>>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts
+    OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
+K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
+I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
+E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
+G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
+>>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=True}
+000      OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
+001  K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+002  R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
+003  I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
+004  E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
+005  G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
+>>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=False,steps=2}
+    OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
+K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
+>>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=False,steps=10}
+    OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
+K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
+I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
+E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
+G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
+    IKOEDUXWAMBPJYCLSZQVFTHGNR  LFAV  10 16 24 12
+    RSWOUZNXTQLKPGDMJABIEYCHVF  LFAW  10 16 24 13
+    CUAMOTILGNWHDJERSPQFBZKYXV  LFAX  10 16 24 14
+    HXPVYZKAOTGSRWICUMLJQDNBEF  LFAY  10 16 24 15
+    QSXTPJNRUFMVKGZEAHBDILYCWO  LFAZ  10 16 24 16
+>>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=False,steps=2,format="internal"}
     ABCDEFGHIJKLMNOPQRSTUVWXYZ
   P YBCDFEGHIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
   1 DMPSWGCROHXLBUIKTAQJZVEYFN  P  06  II
@@ -367,10 +437,52 @@ O < HXETCUMASQNZGKRYJO̲̅IDFWVBPL
 
 Note that the first block of the display represents the initial configuration of the machine, but does not
 perform any encoding (as explained in 'step'). Note also that the second block of this display is the same
-as one displayed in the example for 'showEnigmaConfigInternal', where it is explained in more detail.
+as one displayed in the example for 'displayEnigmaConfig', where it is explained in more detail.
+-}
+displayEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> String
+displayEnigmaOperation ec str opts = unlines $ listEnigmaOperation ec str opts
+
+-- TBD : Document <<<
+-- Generate a list where each element is a step of displayEnigmaOperation
+listEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> [String]
+listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps opts) n) ++ (displayEnigmaConfig sec scr opts))
+                                                      [0..(if (steps opts) < 0 then max (length msg) 1 else (steps opts))]
+                                                      (iterate step ec)
+                                                      (' ':msg ++ [' ',' '..])
+                                                where
+                                                    opts = validOpts_ optsin
+                                                    fmtN :: Bool -> Int -> String
+                                                    fmtN True n = (printf "%03d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
+                                                    fmtN False _ = ""
+                                                    msg = message str
+
+{-# DEPRECATED showEnigmaOperation "This has been replaced by 'displayEnigmaOperation'" #-} -- TBD - Replace doc with deprecation note and supply args <<<
+-- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
+--   and for each subsequent configuration as it processes each letter of a 'Message'. #showEnigmaOperationEG#
+--
+--   >>> putStr $ showEnigmaOperation (configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11") "KRIEG"
+--       OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
+--   K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+--   R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
+--   I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
+--   E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
+--   G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
+--
+--   Note that the first line of the display represents the initial configuration of the machine, but does not
+--   perform any encoding (as explained in 'step').
+--   Note also that the second line of this display is the same as one displayed in the example for 'showEnigmaConfig'.
+showEnigmaOperation :: EnigmaConfig -> Message -> String
+showEnigmaOperation ec str = displayEnigmaOperation ec str displayOpts{format="single"}
+-- displayEnigmaOperation
+
+-- REV: Trial alternate doc commenting using block comments <<<
+{-# DEPRECATED showEnigmaOperationInternal "This has been replaced by 'displayEnigmaOperation'" #-} -- TBD - Replace doc with deprication note and supply args <<<
+{-|
+Show a schematic of an Enigma machine's internal configuration (see 'showEnigmaConfigInternal' for details)
+and for each subsequent configuration as it processes each letter of a 'Message'.
 -}
 showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (displayOpts "internal" True (markerFunc "bars") Nothing Nothing)
+showEnigmaOperationInternal ec str = displayEnigmaOperation ec str displayOpts{format="internal"}
 
 
 -- Encoding display ==========================================================
@@ -380,7 +492,7 @@ showEnigmaOperationInternal ec str = displayEnigmaOperation ec str (displayOpts 
 displayEnigmaEncoding :: EnigmaConfig -> Message -> String
 displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
 
-{-# DEPRECATED showEnigmaEncoding "This has been replaced by displayEnigmaEncoding" #-} -- TBD - Replace doc with deprication note and supply args <<<
+{-# DEPRECATED showEnigmaEncoding "This has been replaced by 'displayEnigmaEncoding'" #-} -- TBD - Replace doc with deprication note and supply args <<<
 -- | Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma machine configuration.
 --
 --   >>> let cfg = configEnigma "c-β-V-VI-VIII" "CDTJ" "AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW" "05.16.05.12"

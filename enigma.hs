@@ -93,12 +93,12 @@ main = do
         Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
                 putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
                         letter
-                        (displayOpts format showenc (markerFunc highlight) Nothing Nothing)
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) showstps stps speed (Just overwrite) (Just noinitial) ->
+                        (displayOpts{format=format,showencoding=showenc,markerspec=highlight})
+        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps speed (Just overwrite) (Just noinitial) ->
                 mapM_ (printConfig (max speed (if overwrite then 1 else 0)) overwrite)
                                    ((if noinitial then tail else id) $ listEnigmaOperation (configEnigmaFromString config)
                                    message
-                                   (displayOpts format showenc (markerFunc highlight) showstps (Just stps)))
+                                   (displayOpts{format=format,showencoding=showenc,markerspec=highlight,showsteps=showstps,steps=stps}))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options

@@ -60,12 +60,12 @@ testHistoricalMessage hmn cfg msg enc = TestCase $ assertEqual ("Error processin
 testDisplayConfig :: EnigmaConfig -> Char -> String -> Bool -> String -> String -> Test
 testDisplayConfig cfg ch fmt se hl scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
         scfg
-        (displayEnigmaConfig cfg ch (displayOpts "single" False (markerFunc hl) Nothing Nothing))
+        (displayEnigmaConfig cfg ch displayOpts{format="single",markerspec=hl})
 
 testDisplayConfigInternal :: EnigmaConfig -> Char -> String -> [String] -> Test
 testDisplayConfigInternal cfg ch hl scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
         scfg
-        (lines $ displayEnigmaConfig cfg ch (displayOpts "internal" False (markerFunc hl) Nothing Nothing))
+        (lines $ displayEnigmaConfig cfg ch displayOpts{format="internal",markerspec=hl})
 
 testShowConfig :: EnigmaConfig -> Char -> String -> Test
 testShowConfig cfg ch scfg = TestCase $ assertEqual ("Incorrect config display for " ++ show cfg)
@@ -80,7 +80,7 @@ testShowConfigIntenral cfg ch scfg = TestCase $ assertEqual ("Incorrect internal
 testDisplayOperation :: EnigmaConfig -> String -> String -> [String] -> Test
 testDisplayOperation cfg msg hl scfg = TestCase $ assertEqual ("Incorrect operation internal display for " ++ show cfg)
         scfg
-        (lines $ displayEnigmaOperation cfg msg (displayOpts "single" False (markerFunc hl) Nothing Nothing))
+        (lines $ displayEnigmaOperation cfg msg displayOpts{format="single",markerspec=hl})
 
 
 testShowOperation :: EnigmaConfig -> String -> [String] -> Test
@@ -91,7 +91,7 @@ testShowOperation cfg msg sop = TestCase $ assertEqual ("Incorrect operation dis
 testDisplayOperationInternal :: EnigmaConfig -> String -> String -> [String] -> Test
 testDisplayOperationInternal cfg msg hl scfg = TestCase $ assertEqual ("Incorrect operation internal display for " ++ show cfg)
         scfg
-        (lines $ displayEnigmaOperation cfg msg (displayOpts "internal" False (markerFunc hl) Nothing Nothing))
+        (lines $ displayEnigmaOperation cfg msg displayOpts{format="internal",markerspec=hl})
 
 testShowOperationInternal :: EnigmaConfig -> String -> [String] -> Test
 testShowOperationInternal cfg msg sop = TestCase $ assertEqual ("Incorrect operation internal display for " ++ show cfg)
