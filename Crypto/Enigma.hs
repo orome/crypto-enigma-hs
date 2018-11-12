@@ -109,7 +109,7 @@ type Wiring = Mapping
 
 -- | The list of letters on the rotor's ring that appear at the window when a 'Component''s ring is in the turnover
 --   position.
---   Not applicable (and empty) for the plugboard and for reflectors.  See 'turnovers'.
+--   Not applicable (and empty) for the plugboard and for reflectors. See 'turnovers'.
 type Turnovers = String
 
 -- | A component used to construct an Enigma machine (embodied in an 'EnigmaConfig') identified by its 'name', and
@@ -564,6 +564,7 @@ enigmaEncoding ec str =
 
 -- Message entry -------------------------------------------------------------
 
+-- REV: This is inconsistent; change to descirbe as "a 'String' to which 'message' has been applied" and make other 'Message' ocurrances to 'String'? <<<
 -- | A (<https://wiki.haskell.org/Type_synonym synonym> for) 'String', indicating that 'message' will be applied
 --   to the corresponding argument.
 type Message = String
@@ -571,7 +572,7 @@ type Message = String
 -- REV - Awkward pack/unpack patch to remove dependency on MissingH (#29)
 -- | Convert a 'String' to valid Enigma machine input: replace any symbols for which there are standard Kriegsmarine
 --   substitutions, remove any remaining non-letter characters, and convert to uppercase. This function is applied
---   automatically to 'Message' arguments for functions defined here.
+--   automatically to 'String's suppied as 'Message' arguments to functions in this package.
 message :: String -> Message
 message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace' <$> subs) $ toUpper <$> s
     where
