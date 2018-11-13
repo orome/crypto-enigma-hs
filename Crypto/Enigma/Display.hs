@@ -16,7 +16,11 @@ module Crypto.Enigma.Display (
         -- * Display options
         DisplayOpts,
         displayOpts,
-        format, showencoding, markerspec, showsteps, steps,
+        format,
+        showencoding,
+        markerspec,
+        showsteps,
+        steps,
         -- * Configuration display
         displayEnigmaConfig,
         showEnigmaConfig,
@@ -153,7 +157,7 @@ data DisplayOpts = DisplayOpts {
         Invalid or unrecognized higlight specifications are treated as the @"bars"@.
         -}
         markerspec :: !String,
-        markerfunction :: !MarkerFunc,  -- REV: Internal only; expose for custom marker functions?
+        markerfunction_ :: !MarkerFunc,  -- REV: Internal only; expose for custom marker functions?
         {-|
         A 'Bool' indicating whether to show step numbers, defaults to @False@.
         Only relevant for <#v:displayEnigmaOperation operation display> functions.
@@ -184,8 +188,7 @@ displayOpts = DisplayOpts {
         format = "single",
         showencoding  = False,
         markerspec = "bars",
-        markerfunction = markerFunc "bars",
-        --
+        markerfunction_ = markerFunc "bars",
         showsteps = False,
         steps = allSteps_
 }
@@ -194,21 +197,21 @@ displayOpts = DisplayOpts {
 -- Internal function used by all display functions to coerce all display options to valid values.
 validOpts_ :: DisplayOpts -> DisplayOpts
 validOpts_ opts = DisplayOpts {
-                                        format = case fmt of
-                                                  f | elem f fmts_ -> f
-                                                    | otherwise -> fmtsSingle_!!0,
-                                        showencoding = se,
-                                        markerspec = ms,
-                                        markerfunction = markerFunc ms,
-                                        showsteps = ss,
-                                        steps = if ns > 0 then ns else allSteps_
-                                        }
-                                        where
-                                                fmt = (format opts)
-                                                se = (showencoding opts)
-                                                ms = (markerspec opts)
-                                                ss = (showsteps opts)
-                                                ns = (steps opts)
+                        format = case fmt of
+                                  f | elem f fmts_ -> f
+                                    | otherwise -> fmtsSingle_!!0,
+                        showencoding = se,
+                        markerspec = ms,
+                        markerfunction_ = markerFunc ms,
+                        showsteps = ss,
+                        steps = if ns > 0 then ns else allSteps_
+                        }
+                        where
+                                fmt = (format opts)
+                                se = (showencoding opts)
+                                ms = (markerspec opts)
+                                ss = (showsteps opts)
+                                ns = (steps opts)
 
 
 -- Configuration display -----------------------------------------------------
@@ -225,15 +228,16 @@ displayEnigmaConfig ec ch optsin =
         -- This should not happen: all display option arguments are coerced to valid values by displayOpts
         _ -> error ("Unrecognized format " ++ (format opts)) -- TBD -- Error handling EnigmaDisplayError('Bad argument - Unrecognized format, {0}'.format(format)) <<<
     where
-        ech = enigmaChar ch
+        -- Ensure valid arguments
         enc = enigmaMapping ec
+        ech = enigmaChar ch
         opts = validOpts_ optsin
 
         encs = if (elem ech letters) && (( showencoding opts) || elem (format opts) fmtsEncoding_)
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
                 else ""
 
-        showEnigmaConfig_ = fmt ech (markedMapping (locCar ech enc enc) enc (markerfunction opts))
+        showEnigmaConfig_ = fmt ech (markedMapping (locCar ech enc enc) enc (markerfunction_ opts))
                                      (windows ec)
                                      (reverse $ tail.init $ positions ec)
                 where
@@ -243,17 +247,16 @@ displayEnigmaConfig ec ch optsin =
                             ps' = unwords $ (printf "%02d") <$> ps
 
         showEnigmaConfigInternal_ =
-                unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters (markerfunction opts)) ' ' 0 ""] ++
+                unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters (markerfunction_ opts)) ' ' 0 ""] ++
                           (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500  (markerfunction opts))) -- TBD -- Fix replication! <<<
+                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500  (markerfunction_ opts))) -- TBD -- Fix replication! <<<
                                         (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                         ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                         (components ec ++ (tail $ reverse $ components ec))
                           ) ++
                           [fmt (if ech == ' ' then "" else (encode (enigmaMapping ec) ech):" <")
-                               (markedMapping (last charLocs) (enigmaMapping ec) (markerfunction opts)) ' ' 0 ""]
+                               (markedMapping (last charLocs) (enigmaMapping ec) (markerfunction_ opts)) ' ' 0 ""]
                 where
-                    -- ech = enigmaChar ch
                     charLocs = zipWith (locCar ech)
                                    ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
                                    ([letters] ++ enigmaMappingList ec ++ [enigmaMapping ec])
@@ -450,11 +453,13 @@ listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps op
                                                       (iterate step ec)
                                                       (' ':msg ++ [' ',' '..])
                                                 where
+                                                    -- Ensure valid arguments
+                                                    msg = message str
                                                     opts = validOpts_ optsin
+
                                                     fmtN :: Bool -> Int -> String
                                                     fmtN True n = (printf "%03d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
                                                     fmtN False _ = ""
-                                                    msg = message str
 
 {-# DEPRECATED showEnigmaOperation "This has been replaced by 'displayEnigmaOperation'" #-} -- TBD - Replace doc with deprecation note and supply args <<<
 -- | Show a summary of an Enigma machine configuration (see 'showEnigmaConfig')
