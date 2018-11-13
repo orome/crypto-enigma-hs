@@ -21,6 +21,9 @@ module Crypto.Enigma.Display (
         markerspec,
         showsteps,
         steps,
+        Format,
+        MarkerSpec,
+        DisplaySteps,
         -- * Configuration display
         displayEnigmaConfig,
         showEnigmaConfig,
@@ -86,11 +89,9 @@ enigmaChar ch = if ch `elem` letters then ch else ' '
 
 -- Display options -----------------------------------------------------------
 
-
--- REV: Unused; move details here of used and expose
--- REV: See how 'Message' is handled in Crypto.Enigma: used to show that strng will be converted
 {-|
-A string describing the format used to display an 'EnigmaConfig', provided as an argument to 'displayOpts'.
+A (<https://wiki.haskell.org/Type_synonym synonym> for) 'String', indicating that this option will be coerced to a valid
+valid 'format' when used by display functions.
 -}
 type Format = String
 
@@ -102,6 +103,13 @@ fmtsConfig_ = ["config", "configuration", "spec", "specification"]
 fmtsEncoding_ = ["encoding"]
 fmts_ = fmtsInternal_ ++ fmtsSingle_ ++ fmtsWindows_ ++ fmtsConfig_ ++ fmtsEncoding_
 -- TBD: Debug
+
+
+{-|
+A (<https://wiki.haskell.org/Type_synonym synonym> for) 'String', indicating that this option will be coerced to a valid
+valid 'markerspec' when used by display functions.
+-}
+type MarkerSpec = String
 
 -- REV: Expose with markerFunc?
 -- A function specifying how to highlight an encoded character in an 'EnigmaConfig', created using 'markerFunc'.
@@ -133,6 +141,12 @@ markerFunc spec = MarkerFunc (case spec of
                     -- TBD - Colors and other escapes
                     [l, r] -> \c -> [l, c, r]
                     _ -> \c -> [c])
+
+{-|
+A (<https://wiki.haskell.org/Type_synonym synonym> for) 'Int', indicating that this option will be coerced to a valid
+valid 'steps' value when used by display functions.
+-}
+type DisplaySteps = Int
 
 -- TBD: Add catalog of examples for choices here (not in display functions) showing choices; refer to display functions for details of presentation (as now) <<<
 {-|
@@ -168,7 +182,7 @@ data DisplayOpts = DisplayOpts {
         to the length of the message, and to @1@ otherwise. Values less than @1@ are treated as the default.
         Only relevant for <#v:displayEnigmaOperation operation display> functions.
         -}
-        steps :: !Int
+        steps :: !DisplaySteps
 }
 
 allSteps_ = (-1)
