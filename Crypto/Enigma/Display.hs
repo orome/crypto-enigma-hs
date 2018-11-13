@@ -155,20 +155,124 @@ All fields are coerced to valid values by display functions.
 -}
 data DisplayOpts = DisplayOpts {
         {-|
-        The 'Format' to use to display the 'EnigmaConfig': a 'String' specifying the format used to display machine
-        configuration(s) that is one of @"single"@, @"internal"@, @"windows"@, @"config"@, and @"encoding"@.
+        A 'Format' specifying the format used to display 'EnigmaConfig' machine configuration(s) that should be one of
+        @"single"@, @"internal"@, @"windows"@, @"config"@, and @"encoding"@:
+
+            [@"single"@] A summary of the Enigma machine configuration as its encoding (see 'Mapping'),
+            the letters at the windows (see 'windows'), and the 'Position's of the rotors (see 'positions').
+
+                Any letter being encoded (see 'showencoding') by the configuration is indicated as input,
+                and the encoded letter is marked (see 'markerspec').
+
+                For example,
+
+                > K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+
+                shows the process of encoding of the letter __@\'K\'@__ to __@\'G\'@__.
+
+            [@"internal"@] An expaned schematic of the configuration showing the encoding (see 'Mapping')
+            performed by each stage (see 'stageMappingList'), along with an indication of the stage (rotor number,
+            @\"P\"@ for plugboard, or @\"R\"@ for reflector), window letter (see 'windows'), 'Position'
+            (see 'positions') and 'Name', followed by the encoding for the machine as a whole, and preceded by
+            a (trivial, no-op) keyboard \"encoding\" for reference.
+
+                Any letter being encoded (see 'showencoding') by the configuration is indicated as input,
+                and its encoding at each stage is marked (see 'markerspec').
+
+                For example, #showEnigmaConfigInternalEG#
+
+                @
+                K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ
+                  P YBCDFEGHIJZ̲̅PONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+                  1 LORVFBQNGWKATHJSZPIYUDXEMC̲̅  Q  07  II
+                  2 BJY̲̅INTKWOARFEMVSGCUDPHZQLX  A  24  VIII
+                  3 ILHXUBZQPNVGKMCRTEJFADOYS̲̅W  F  16  V
+                  4 YDSKZPTNCHGQOMXAUWJ̲̅FBRELVI  L  10  γ
+                  R ENKQAUYWJI̲̅COPBLMDXZVFTHRGS         b
+                  4 PUIBWTKJZ̲̅SDXNHMFLVCGQYROAE         γ
+                  3 UFOVRTLCASMBNJWIHPYQEKZDXG̲̅         V
+                  2 JARTMLQ̲̅VDBGYNEIUXKPFSOHZCW         VIII
+                  1 LFZVXEINSOKAYHBRG̲̅CPMUDJWTQ         II
+                  P YBCDFEG̲̅HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
+                G < CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS
+                @
+
+                shows the "internals" of the same proccess as avove using the same machine configuration:
+                the encoding of the letter __@\'K\'@__ to __@\'G\'@__:
+
+                * __@\'K\'@__ is entered at the keyboard, which is then
+                * encoded by the plugboard (@\'P\'@), which includes  @\"KZ\"@ in its specification (see 'Name'),
+                to __@\'Z\'@__, which is then
+                * encoded by the first rotor (@\'1\'@), a @\"II\"@ rotor in the @07@ position (and @\'Q\'@ at the window),
+                to __@\'C\'@__, which is then
+                * encoded by the second rotor (@\'2\'@), a @\"VIII\"@ rotor in the @24@ position (and @\'A\'@ at the window),
+                to __@\'Y\'@__, which is then
+                * encoded by the third rotor (@\'3\'@), a @\"V\"@ rotor in the @16@ position (and @\'F\'@ at the window),
+                to __@\'S\'@__, which is then
+                * encoded by the fourth rotor (@\'4\'@), a @\"γ\"@ rotor in the @10@ position (and @\'L\'@ at the window),
+                to __@\'J\'@__, which is then
+                * encoded by the reflector rotor (@\'U\'@), a @\"b\"@ reflector,
+                to __@\'I\'@__, which reverses the signal sending it back through the rotors, where it is then
+                * encoded in reverse by the fourth rotor (@\'4\'@),
+                to __@\'Z\'@__, which is then
+                * encoded in reverse by the third rotor (@\'3\'@), to __@\'G\'@__, which is then
+                * encoded in reverse by the second rotor (@\'2\'@), to __@\'Q\'@__, which is then
+                * encoded in reverse by the first rotor (@\'1\'@), to __@\'G\'@__, which is then
+                * left unchanged by the plugboard (@\'P\'@), and finally
+                * displayed as __@\'G\'@__
+
+                Note that (as follows from 'Mapping') the position of the marked letter at each stage is the
+                alphabetic position of the marked letter at the previous stage.
+
+                This can be represented schematically (with input arriving and output exiting on the left) as #showEnigmaConfigInternalFIG#
+
+                <<figs/configinternal.jpg>>
+
+            [@"windows"@] The letters at the window (see 'windows'):
+
+                > LFAQ
+
+            [@"config"@] The specification of the configuration (see 'configEnigma') in the same format used by 'configEnigmaFromString' :
+
+                > b-γ-V-VIII-II LFAQ UX.MO.KZ.AY.EF.PL 03.17.04.11
+
+            [@"encoding"@] The encoding of any letter being encoded (see 'showencoding'):
+
+                > K > G
+
+
+        Note the "windows" and config" effectively display the same format as 'windows' and @show@, and are most
+        useful in conjunction with other options (e.g. 'showencoding' and 'showsteps', respectively) and for showing
+        operation with 'displayEnigmaOperation'.
+
+        See 'displayEnigmaConfig' for further examples.
+
         Display functions are forgiving about the supplied format and will accept a range of reasonable substitutes
-        (e.g., @"detailed"@ or @"schematic"@ for @"internal"@), and will treat unrecognized formats as the default, @"single"@.
+        (e.g., @"detailed"@ or @"schematic"@ for @"internal"@), and will treat unrecognized formats as the default,
+        @"single"@.
         -}
         format :: !Format,
         {-|
         A 'Bool' indicating whether to show encoding if not normally shown for the specified format.
+
+        If a letter is being encoded (one is either provided as an argument to 'displayEnigmaConfig', or there
+        is a message provided as an argument to 'displayEnigmaOperation' with a letter at the displayed step) the letter
+        and encoding are indicated.
+
+        This setting applies only to @"windows"@ and @"config"@. For example, where "windows" normally shows just
+
+        > LFAQ
+
+        setting @showencoding@ to @True@ produces
+
+        > LFAQ  K > G
         -}
         showencoding :: !Bool,
         {-|
-        A 'String' that is either a pair or characters (e.g. @"[]"@) to use to highlight encoded characters encoding,
-        or a specification of a color (e.g, @"red"@) or style (@"bars"@).
-        Invalid or unrecognized higlight specifications are treated as the @"bars"@.
+        A 'MarkerSpec' that should be either a pair or characters (e.g. @"[]"@) to use to highlight encoded characters
+        encoding, or a specification of a color (e.g, @"red"@) or style (@"bars"@).
+
+        Invalid or unrecognized highlight specifications are treated as the @"bars"@.
         -}
         markerspec :: !MarkerSpec,
         markerfunction_ :: !MarkerFunc_,  -- REV: Internal only; expose for custom marker functions?
@@ -178,8 +282,8 @@ data DisplayOpts = DisplayOpts {
         -}
         showsteps :: !Bool,
         {-|
-        An 'Int' indicating the number of steps to display, which if omitted when a message is provided will default
-        to the length of the message, and to @1@ otherwise. Values less than @1@ are treated as the default.
+        An 'Int' indicating the number of steps to display, which defaults to the length of a message if one is
+        being displayed, and to @1@ otherwise. Values less than @1@ are treated as the default.
         Only relevant for <#v:displayEnigmaOperation operation display> functions.
         -}
         steps :: !DisplaySteps
