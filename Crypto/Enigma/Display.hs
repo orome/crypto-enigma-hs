@@ -71,8 +71,8 @@ postproc = unlines . chunksOf 60 . unwords . chunksOf 4
 locCar :: Char -> String -> Mapping -> Maybe Int
 locCar ch s m = elemIndex (encode m ch) s
 
-markedMapping :: Maybe Int -> Mapping -> MarkerFunc -> String
-markedMapping (Just loc) e (MarkerFunc mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
+markedMapping :: Maybe Int -> Mapping -> MarkerFunc_ -> String
+markedMapping (Just loc) e (MarkerFunc_ mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
 markedMapping Nothing e _    = e
 
 
@@ -113,16 +113,16 @@ type MarkerSpec = String
 
 -- REV: Expose with markerFunc?
 -- A function specifying how to highlight an encoded character in an 'EnigmaConfig', created using 'markerFunc'.
-data MarkerFunc = MarkerFunc (Char -> String)
+data MarkerFunc_ = MarkerFunc_ (Char -> String)
 
--- REV: Expose to support arbitrary user-defined functions?
+-- REV: Export to support arbitrary user-defined functions?
 -- REV: Version checks for character compatability w/ substitutions that work; force checks with a type? eg:
 --      decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
 --      https://stackoverflow.com/a/33206814
--- Create a 'MarkerFunc' from a string specification.
+-- Create a 'MarkerFunc_' from a string specification.
 -- Ignores unrecognized/invalid values
-markerFunc :: String -> MarkerFunc
-markerFunc spec = MarkerFunc (case spec of
+markerFunc_ :: MarkerSpec -> MarkerFunc_
+markerFunc_ spec = MarkerFunc_ (case spec of
                     "*" ->  \_ -> "*"
                     "lower" ->  \c -> [toLower c]
                     "omit" ->  \_ -> " "
@@ -170,8 +170,8 @@ data DisplayOpts = DisplayOpts {
         or a specification of a color (e.g, @"red"@) or style (@"bars"@).
         Invalid or unrecognized higlight specifications are treated as the @"bars"@.
         -}
-        markerspec :: !String,
-        markerfunction_ :: !MarkerFunc,  -- REV: Internal only; expose for custom marker functions?
+        markerspec :: !MarkerSpec,
+        markerfunction_ :: !MarkerFunc_,  -- REV: Internal only; expose for custom marker functions?
         {-|
         A 'Bool' indicating whether to show step numbers, defaults to @False@.
         Only relevant for <#v:displayEnigmaOperation operation display> functions.
@@ -202,7 +202,7 @@ displayOpts = DisplayOpts {
         format = "single",
         showencoding  = False,
         markerspec = "bars",
-        markerfunction_ = markerFunc "bars",
+        markerfunction_ = markerFunc_ "bars",
         showsteps = False,
         steps = allSteps_
 }
@@ -216,7 +216,7 @@ validOpts_ opts = DisplayOpts {
                                     | otherwise -> fmtsSingle_!!0,
                         showencoding = se,
                         markerspec = ms,
-                        markerfunction_ = markerFunc ms,
+                        markerfunction_ = markerFunc_ ms,
                         showsteps = ss,
                         steps = if ns > 0 then ns else allSteps_
                         }
