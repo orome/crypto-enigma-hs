@@ -505,7 +505,7 @@ componentMapping d c p = case d of
 --   prop> length (stageMappingList cfg) == 2 * length (stages cfg) - 1
 --
 --   A richer example of how this list is used, and how it can be interpreted,
---   can be found in "Crypto.Enigma.Display#showEnigmaConfigInternalEG".
+--   can be found in "Crypto.Enigma.Display#displayEnigmaConfigInternalEG".
 stageMappingList:: EnigmaConfig -> [Mapping]
 stageMappingList ec = ((stageMapping Fwd) <$>) <> ((stageMapping Rev) <$>).tail.reverse $ stages ec
     where
@@ -539,7 +539,7 @@ enigmaMappingList ec = scanl1 (flip encode') (stageMappingList ec)
 --   >>> enigmaMapping (configEnigma "b-γ-V-VIII-II" "LFAQ" "UX.MO.KZ.AY.EF.PL" "03.17.04.11")
 --   "CMAWFEKLNVGHBIUYTXZQOJDRPS"
 --
---   A example of a richer display of this information can be found in "Crypto.Enigma.Display#showEnigmaConfigEG".
+--   A example of a richer display of this information can be found in "Crypto.Enigma.Display#displayEnigmaSingleEG".
 enigmaMapping :: EnigmaConfig -> Mapping
 enigmaMapping ec = last $ enigmaMappingList ec  -- The final stage's progressive encoding
 
@@ -552,7 +552,7 @@ enigmaMapping ec = last $ enigmaMappingList ec  -- The final stage's progressive
 --   "GOWNW"
 --
 --   The details of this encoding and its relationship to stepping from one configuration to another are
---   illustrated in "Crypto.Enigma.Display#showEnigmaOperationEG".
+--   illustrated in "Crypto.Enigma.Display#displayEnigmaOperationEG".
 --
 --   Note that because of the way the Enigma machine is designed, it is always the case (provided that 'msg' is
 --   all uppercase letters) that

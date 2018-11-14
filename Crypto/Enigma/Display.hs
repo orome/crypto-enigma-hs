@@ -163,7 +163,7 @@ data DisplayOpts = DisplayOpts {
                 Any valid letter being encoded (see 'showencoding') by the configuration is indicated as input,
                 and the encoding of the letter is marked (see 'markerspec').
 
-                For example,
+                For example, #displayEnigmaSingleEG#
 
                 > K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
 
@@ -178,7 +178,7 @@ data DisplayOpts = DisplayOpts {
                 Any valid letter being encoded (see 'showencoding') by the configuration is indicated as input,
                 and its encoding at each stage is marked (see 'markerspec').
 
-                For example, #showEnigmaConfigInternalEG#
+                For example, #displayEnigmaConfigInternalEG#
 
                 @
                 K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ
@@ -464,7 +464,7 @@ In addition to the options that apply to the representation of each individual c
 function include options for specifying whether to run for a specific number of steps and whether to include a step
 number in the representations.
 
-For example, these options applied to the default @"single"@ 'format'
+For example, these options applied to the default @"single"@ 'format' #displayEnigmaOperationEG#
 
 >>> let cfg = configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11"
 >>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts
