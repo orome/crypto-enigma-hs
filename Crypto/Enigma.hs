@@ -327,7 +327,7 @@ This is just a shortcut for invoking `configEnigma` using a single string:
 >>> configEnigmaFromString cfgstr == (\[c, w, s, r] -> configEnigma c w s r) (words cfgstr)
 True
 
-Note that the string argument corresponds to the string representation of an EnigmaConfig so that
+Note that the string argument corresponds to the string representation of an @EnigmaConfig@ so that
 
 >>> show (configEnigmaFromString cfgstr) == cfgstr
 True
@@ -345,6 +345,9 @@ configEnigmaFromString i = if ((length $ words i) /= 4)
 -- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes (#12) <<<
 -- REV - Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
 -- A safe (total) constructor; not currently exposed
+{-|
+TBD
+-}
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
         unless (and $ (==(length components')) <$> [length winds', length rngs']) (throwError BadNumbers)
@@ -564,7 +567,6 @@ enigmaEncoding ec str =
 
 -- Message entry -------------------------------------------------------------
 
--- REV: This is inconsistent; change to descirbe as "a 'String' to which 'message' has been applied" and make other 'Message' ocurrances to 'String'? <<<
 -- | A (<https://wiki.haskell.org/Type_synonym synonym> for) 'String', indicating that 'message' will be applied
 --   to the corresponding argument.
 type Message = String
