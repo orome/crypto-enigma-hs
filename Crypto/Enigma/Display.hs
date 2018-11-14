@@ -370,10 +370,13 @@ K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ
   1 LFZVXEINSOKAYHBRG̲̅CPMUDJWTQ         II
   P YBCDFEG̲̅HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
 G < CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS
+
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts{format="windows"}
 LFAQ
+
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts{format="config"}
 b-γ-V-VIII-II LFAQ UX.MO.KZ.AY.EF.PL 03.17.04.11
+
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts{format="encoding"}
 K > G
 
@@ -381,8 +384,10 @@ and other options can be freely combined (or omitted), for example
 
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts{format="single",markerspec="()"}
 K > CMAWFEKLNV(G)HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
+
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts{format="config",showencoding=True}
 b-γ-V-VIII-II LFAQ UX.MO.KZ.AY.EF.PL 03.17.04.11  K > G
+
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts
 K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
 -}
@@ -474,6 +479,7 @@ R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
 I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
 E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
 G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
+
 >>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=True}
 000      OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
 001  K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
@@ -481,10 +487,12 @@ G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
 003  I > FGRJUABYW̲̅DZSXVQTOCLPENIMHK  LFAS  10 16 24 09
 004  E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
 005  G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
+
 >>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=False,steps=2}
     OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
 K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
 R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
+
 >>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts{showsteps=False,steps=10}
     OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
 K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
