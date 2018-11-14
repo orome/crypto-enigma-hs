@@ -128,16 +128,16 @@ markerFunc_ spec = MarkerFunc_ (case spec of
                     "omit" ->  \_ -> " "
                     "bars" -> \ch -> ch:"\818\773"
                     "legacy" -> \c -> [ '[', c, ']' ]
-                    "red" ->  \c -> "\ESC[31;1m" ++ [c] ++ "\ESC[0m"
-                    "blue" ->  \c -> "\ESC[34;1m" ++ [c] ++ "\ESC[0m"
-                    "green" ->  \c -> "\ESC[32;1m" ++ [c] ++ "\ESC[0m"
-                    "bold" ->  \c -> "\ESC[1m" ++ [c] ++ "\ESC[0m"
-                    "underline" ->  \c -> "\ESC[4m" ++ [c] ++ "\ESC[0m"
-                    "highlight" ->  \c -> "\ESC[7m" ++ [c] ++ "\ESC[0m"
-                    "cyan" ->  \c -> "\ESC[36;1m" ++ [c] ++ "\ESC[0m"
-                    "yellow" ->  \c -> "\ESC[33;1m" ++ [c] ++ "\ESC[0m"
---                     "51" ->  \c -> "\ESC[51m" ++ [c] ++ "\ESC[0m"
---                     "52" ->  \c -> "\ESC[52m" ++ [c] ++ "\ESC[0m"
+                    "red" ->  \c -> "\\ESC[31;1m" ++ [c] ++ "\\ESC[0m"
+                    "blue" ->  \c -> "\\ESC[34;1m" ++ [c] ++ "\\ESC[0m"
+                    "green" ->  \c -> "\\ESC[32;1m" ++ [c] ++ "\\ESC[0m"
+                    "bold" ->  \c -> "\\ESC[1m" ++ [c] ++ "\\ESC[0m"
+                    "underline" ->  \c -> "\\ESC[4m" ++ [c] ++ "\\ESC[0m"
+                    "highlight" ->  \c -> "\\ESC[7m" ++ [c] ++ "\\ESC[0m"
+                    "cyan" ->  \c -> "\\ESC[36;1m" ++ [c] ++ "\\ESC[0m"
+                    "yellow" ->  \c -> "\\ESC[33;1m" ++ [c] ++ "\\ESC[0m"
+--                     "51" ->  \c -> "\\ESC[51m" ++ [c] ++ "\\ESC[0m"
+--                     "52" ->  \c -> "\\ESC[52m" ++ [c] ++ "\\ESC[0m"
                     -- TBD - Colors and other escapes
                     [l, r] -> \c -> [l, c, r]
                     _ -> \c -> [c])
