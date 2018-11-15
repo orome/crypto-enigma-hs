@@ -231,7 +231,8 @@ data DisplayOpts = DisplayOpts {
 
                 > LFAQ
 
-            [@"config"@] The specification of the configuration (see 'configEnigma') in the same format used by 'configEnigmaFromString' :
+            [@"config"@] The specification of the configuration (see 'configEnigmaExcept') in the same format used by
+            @configEnigma@ and @configEnigmaExcept@, as a single string:
 
                 > b-γ-V-VIII-II LFAQ UX.MO.KZ.AY.EF.PL 03.17.04.11
 

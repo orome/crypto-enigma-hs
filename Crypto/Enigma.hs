@@ -29,9 +29,8 @@ module Crypto.Enigma (
         reflectors,
          -- * Machine configurations and transitions
         EnigmaConfig,
-        configEnigma,
         configEnigmaExcept,
-        configEnigmaFromString,
+        configEnigma,
         stages,
         components,
         positions,
@@ -71,22 +70,6 @@ import           Data.Char              (toUpper)
 import           Data.Text              (replace, pack, unpack)
 
 import           Crypto.Enigma.Utils
-
-
-
--- TBD - Use lenses - <http://hackage.haskell.org/package/lens> <http://dev.stephendiehl.com/hask/#lenses>
--- TBD - Use modular arithmetic package - http://hackage.haskell.org/package/modular-arithmetic
--- TBD - Use Arrow more?
--- TBD - EnigmaMachine as Monad instance?
--- TBD - Add more walkthroughs to documentation (either README or Haddock)?
--- REV - Move plugboard last (it's 'optional'?)?
--- TBD - Note how this implementation differs by preserving all letters and full mappings so they can be examined. <<<
--- REV - Have lists and display omit plugboard stage if not used or present; distinguishing non-use and absence?
--- REV - Show degenerate case in list and display examples?
--- REV - Add and use _make_valid... and _is_valid... from Python version? <<<
--- ASK - Retina figures? <<<
--- REV - Explore switch from String to Text throughout (#29)
--- REV: Conditinally import (<>)? -- https://stackoverflow.com/a/47065610/656912 ; https://stackoverflow.com/q/53024461/656912 <<<
 
 
 
@@ -181,7 +164,13 @@ type Stage = Int
 --   'Wiring' to produce its current 'Mapping' (see 'componentMapping').
 type Position = Int
 
--- | The complete description of the state of an Enigma machine, consisting of 'components', 'positions', and 'rings'.
+{-|
+The complete description of the state of an Enigma machine, consisting of 'components', 'positions', and 'rings'.
+
+Two functions ('configEnigmaExcept' and 'configEnigma') are provided for creating 'EnigmaConfig', which differ in
+their handling of errors in the provided arguments specifying the configuration (the only potential source of errors,
+since all other arguments throught the package are coerced to valid values).
+-}
 data EnigmaConfig = EnigmaConfig {
         -- | The 'Name' of each 'Component' in an 'EnigmaConfig', in processing order.
         --   Unchanged by 'step'.
@@ -297,56 +286,28 @@ windows ec = reverse $ tail.init $ windowLetter ec <$> (stages ec)
 
 -- REV - Add check that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
 -- REV - Add checks for historical combinations of machine elements?
--- | A (safe public, <https://wiki.haskell.org/Smart_constructors "smart">) constructor that does validation and takes
---   a conventional specification as input, in the form of four strings:
---
---   * The rotor 'Name's, separated by dashes (e.g. @\"C-V-I-II\"@); see 'Name'.
---   * The letters visible at the windows (e.g. @\"MQR\"@); see 'windows'.
---   * The plugboard specification (which may be omitted with  @\"~\"@); see 'Name'.
---   * The position of the letter ring on each rotor, separated by periods (e.g. @\"22.11.16\"@); see 'rings'.
---
---   Following convention, the elements of these strings are in physical machine order as the operator sees
---   them, which is the reverse of the order in which they are encountered in processing (see 'stages').
---
---   Validation is permissive, allowing for ahistorical collections and numbers of rotors (including reflectors
---   at the rotor stage, and trivial degenerate machines;
---   e.g., @configEnigma "-" \"A\" "" "01"@), and any number of (non-contradictory) plugboard wirings (including none).
---   Invalid arguments result in an error.
-configEnigma :: String -> String -> String -> String -> EnigmaConfig
-configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots winds plug rngs) of
-        Right cfg  -> cfg
-        Left err -> error (show err)
-
--- TBD -- Document configEnigmaFromString cfgstr == read cfgstr but with different error reporting <<<
-{-|
-Create an `EnigmaConfig` from a single string specifying its state.
-
-This is just a shortcut for invoking `configEnigma` using a single string:
-
->>> let cfgstr = "c-β-V-III-II LQVI AM.EU.ZL 16.01.21.11"
->>> configEnigmaFromString cfgstr == (\[c, w, s, r] -> configEnigma c w s r) (words cfgstr)
-True
-
-Note that the string argument corresponds to the string representation of an @EnigmaConfig@ so that
-
->>> show (configEnigmaFromString cfgstr) == cfgstr
-True
-
--}
-configEnigmaFromString :: String -> EnigmaConfig
-configEnigmaFromString i = if ((length $ words i) /= 4)
-                          then error' ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
-                          else case runExcept (configEnigmaExcept c w s r) of
-                                    Right cfg  -> cfg
-                                    Left err -> error' (show err)
-                                where [c, w, s, r] = words i
-
-
--- REV - Enable, possibly passing errors from EnigmaConfig where checks could happen using classes (#12) <<<
 -- REV - Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
--- A safe (total) constructor; not currently exposed
 {-|
-TBD
+Create an 'EnigmaConfig' from a conventional specification.
+
+A (safe public, <https://wiki.haskell.org/Smart_constructors "smart">, total) constructor intended
+for use in pure code that does validation and takes a conventional specification as input, in the form of four strings:
+
+* The rotor 'Name's, separated by dashes (e.g. @\"C-V-I-II\"@); see 'Name'.
+* The letters visible at the windows (e.g. @\"MQR\"@); see 'windows'.
+* The plugboard specification (which may be omitted with  @\"~\"@); see 'Name'.
+* The position of the letter ring on each rotor, separated by periods (e.g. @\"22.11.16\"@); see 'rings'.
+
+Following convention, the elements of these strings are in physical machine order as the operator sees
+them, which is the reverse of the order in which they are encountered in processing (see 'stages').
+
+Validation is permissive, allowing for ahistorical collections and numbers of rotors (including reflectors
+at the rotor stage, and trivial degenerate machines;
+e.g., @configEnigma "-" \"A\" "" "01"@), and any number of (non-contradictory) plugboard wirings (including none).
+Invalid arguments return an 'EnigmaError':
+
+>>> configEnigmaExcept "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
+ExceptT (Identity (Left Bad plugboard : AM.EU.ZiL))
 -}
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
@@ -388,16 +349,36 @@ instance Show EnigmaError where
         show (BadRotors s) = "Bad rotors : " ++ s
         show (MiscError s) = s
 
--- TBD - Centralize redundant structure shared with configEnigmaFromString; or find way to keep in sync <<<
--- | Read the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
---
---   >>> let cfg = configEnigma "b-β-V-VIII-III" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11"
---   >>> let cfg' = read "b-β-V-VIII-III XQVI UX.MO.KZ.AY.EF.PL 03.17.24.11" :: EnigmaConfig
---   >>> cfg == cfg'
---   True
---
---  Note that for most uses, `configEnigmaFromString` should be used instead, since `read` cannot report meaningful
---  error details.
+-- REV: Remove stack trace (use error')? <<<
+{-|
+Create an 'EnigmaConfig' from a conventional specification.
+
+A thin convenience wrapper on @configEnigmaExcept@ intended for most uses (e.g., interactive) that takes the same
+arguments but errors with an informative message and a stack trace:
+
+>>> configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
+*** Exception: Bad plugboard : AM.EU.ZiL
+CallStack (from HasCallStack):
+  error, called at crypto-enigma/Crypto/Enigma.hs:317:21 in main:Crypto.Enigma
+
+This should be used instead of @read@, which cannot report error details:
+
+>>> read "c-β-V-III-II LQVI AM.EU.ZiL 16.01.21.11" :: EnigmaConfig
+*** Exception: Prelude.read: no parse
+-}
+configEnigma :: String -> String -> String -> String -> EnigmaConfig
+configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots winds plug rngs) of
+        Right cfg  -> cfg
+        Left err -> error (show err)
+
+-- REV: Remove?
+{-|
+Read the elements of a conventional specification (see 'configEnigma') as a single string.
+
+>>> let cfgstr = "c-β-V-III-II LQVI AM.EU.ZL 16.01.21.11"
+>>> read cfgstr == (\[c, w, s, r] -> configEnigma c w s r) (words cfgstr)
+True
+-}
 instance Read EnigmaConfig where
         -- TBD - Change to readPrec: http://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html#v:readsPrec
         -- TBD - Add readListPrec = readListPrecDefault
@@ -409,7 +390,7 @@ instance Read EnigmaConfig where
                                    where [c, w, s, r] = words i
                 --        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
--- | Show the elements of a conventional specification (see 'configEnigma') joined by spaces into a single string.
+-- | Show the elements of a conventional specification (see 'configEnigmaExcept') joined by spaces into a single string.
 --
 --   >>> configEnigma "b-β-V-VIII-II" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11"
 --   "b-β-V-VIII-III XQVI UX.MO.KZ.AY.EF.PL 03.17.24.11"
@@ -427,7 +408,7 @@ instance Show Component where
 
 -- Mapping ==================================================================
 
--- REV - Enforce as a calss (in encoding functions too)' (#12) <<<
+-- REV - Enforce as a class (in encoding functions too)' (#12) <<<
 -- | The mapping used by a component (see 'wiring' and 'componentMapping')
 --   or by the machine (see 'enigmaMapping') to perform a
 --   <https://en.wikipedia.org/wiki/Substitution_cipher#Simple_substitution simple substitution encoding>.

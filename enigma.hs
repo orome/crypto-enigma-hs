@@ -5,10 +5,11 @@ import Data.Monoid ((<>))       -- For GHC 8.0 through 8.2
 --import Control.Exception (catch)
 --import Data.List.Split (chunksOf)
 import Control.Concurrent (threadDelay)
+import Control.Monad.Except (runExcept)
 import Control.Monad (replicateM_)
 import System.Console.ANSI
 
---import Crypto.Enigma.Utils
+import Crypto.Enigma.Utils (error')
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
@@ -108,6 +109,15 @@ main = do
                 progDesc "A simple Enigma machine simulator with rich display of machine configurations." <>
                 header cliName_ <>
                 footer "This command line interface is part of the Haskell crypto-enigma package.")
+
+    -- Like 'configEnigma' but without stack trace and with check for 4 words in a single string
+    configEnigmaFromString :: String -> EnigmaConfig
+    configEnigmaFromString i = if ((length $ words i) /= 4)
+                          then error' ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
+                          else case runExcept (configEnigmaExcept c w s r) of
+                                    Right cfg  -> cfg
+                                    Left err -> error' (show err)
+                                where [c, w, s, r] = words i
 
     -- BUG: Omitted final extra line from non-overwritten internal config <<<
 --     printConfig s True c = printConfig s False c >>
