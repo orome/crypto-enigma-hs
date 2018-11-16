@@ -345,7 +345,6 @@ validOpts_ opts = DisplayOpts {
 
 -- Configuration display -----------------------------------------------------
 
-
 {-|
 A @String@ representation of an 'EnigmaConfig' using the specified 'DisplayOpts'.
 
@@ -457,11 +456,6 @@ showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch displayOpts{format="i
 
 -- Operation display ---------------------------------------------------------
 
--- REV - Put `(if elem fmt fmtsInternal then init else id) $` in front of `unlines` to remove final new line of internal?
--- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
--- starting configuration and for each character of the message, using the provided configuration display function.
--- Note that while 'showEnigmaOperation' and 'showEnigmaOperationInternal' indicate a 'Message' argument, it is
--- this function, which both call, that applies 'message'.
 {-|
 A 'String' representation of an Enigma machine's internal configuration (see 'displayEnigmaConfig' for details)
 and for each subsequent configuration as it processes each letter of a 'Message', subject to the provided 'DisplayOpts'.
@@ -590,6 +584,7 @@ but does not perform any encoding (as explained in 'step').
 Also also that the second block of the @"internal"@ display example is the same as one illustrated for
 the @"internal"@ 'format', where it is explained in detail.
 -}
+-- REV - Put `(if elem fmt fmtsInternal then init else id) $` in front of `unlines` to remove final new line of internal?
 displayEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> String
 displayEnigmaOperation ec str opts = unlines $ listEnigmaOperation ec str opts
 
@@ -598,6 +593,9 @@ A list representation of the operation of an enigma machine, equivalent to
 
 > lines $ displayEnigmaOperation
 -}
+-- Preprocess a string into a 'Message' (using 'message') and produce a configuration display for the
+-- starting configuration and for each character of the message, using the provided configuration display function.
+-- Note that while 'displayEnigmaOperation' indicate a 'Message' argument, it is this function that applies 'message'.
 listEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> [String]
 listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps opts) n) ++ (displayEnigmaConfig sec scr opts))
                                                       [0..(if (steps opts) < 0 then max (length msg) 1 else (steps opts))]
@@ -631,7 +629,7 @@ showEnigmaOperationInternal ec str = displayEnigmaOperation ec str displayOpts{f
 -- Encoding display ==========================================================
 
 -- REV - Move postproc here
--- TBD - Add new arguments for formatting (and use in cli)
+
 {-|
 Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma machine configuration.
 
@@ -639,6 +637,7 @@ Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma
 >>> putStr $ displayEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 -}
+-- TBD - Add new arguments for formatting (and use in cli)
 displayEnigmaEncoding :: EnigmaConfig -> Message -> String
 displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
 
