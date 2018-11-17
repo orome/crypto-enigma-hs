@@ -1,3 +1,4 @@
+{-# LANGUAGE Safe, CPP #-}
 import Options.Applicative      -- http://hackage.haskell.org/package/optparse-applicative
 import Options.Applicative.Help.Pretty (string)     -- Necessary to format help text -- https://github.com/pcapriotti/optparse-applicative/issues/90#issuecomment-49868254
 --import Data.Maybe
@@ -9,12 +10,20 @@ import Control.Monad.Except (runExcept)
 import Control.Monad (replicateM_)
 import System.Console.ANSI
 
-import Crypto.Enigma.Utils (error')
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
 
 cliName_ = "Enigma Machine (Haskell crypto-enigma) CLI"
+
+-- REV - Idiomaic approach to general conditional redefinitions? <<<
+-- REV - Move to CLI script (and incorporate note to see help).
+-- https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:errorWithoutStackTrace
+#if __GLASGOW_HASKELL__ < 800
+cliError e = error (e ++ " (see help)")
+#else
+cliError e = errorWithoutStackTrace (e ++ " (see help)")
+#endif
 
 stepInterval_ = 125000
 
@@ -115,10 +124,10 @@ main = do
     -- Like 'configEnigma' but without stack trace and with check for 4 words in a single string
     configEnigmaFromString :: String -> EnigmaConfig
     configEnigmaFromString i = if ((length $ words i) /= 4)
-                          then error' ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
+                          then cliError ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
                           else case runExcept (configEnigmaExcept c w s r) of
                                     Right cfg  -> cfg
-                                    Left err -> error' (show err)
+                                    Left err -> cliError (show err)
                                 where [c, w, s, r] = words i
 
     -- BUG: Omitted final extra line from non-overwritten internal config <<<
