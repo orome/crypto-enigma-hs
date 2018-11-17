@@ -36,15 +36,15 @@ subcommandO =
         command "encode" (info (Encode <$> configArg "encode" <*> messageArg <**> helper)
                          (helpText
                          "Show the encoding of a message."
-                         "ENCODE" encodeCmdArgsFoot)) <>
+                         "ENCODE" encodeCmdArgsFoot encodeCmdExamples)) <>
         command "show"   (info (Show <$> configArg "show" <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText
                          "Show an Enigma machine configuration in the specified format, optionally indicating the encoding of a specified character."
-                         "SHOW" showCmdArgsFoot)) <>
+                         "SHOW" showCmdArgsFoot showCmdExamples)) <>
         command "run"    (info (Run <$> configArg "run" <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <*> noinitialOpt <**> helper)
                          (helpText
                          "Show the operation of the Enigma machine as a series of configurations, as it encodes a message and/or for a specified number of steps. "
-                         "RUN" runCmdArgsFoot))
+                         "RUN" runCmdArgsFoot runCmdExamples))
    )
   where
         configArg cmd = strArgument $ metavar "CONFIG" <>
@@ -77,9 +77,11 @@ subcommandO =
         noinitialOpt =  optional $ switch ( long "noinitial" <> short 'n' <>
                 help noinitialOptHelp)
 
-        helpText desc cmd argsFoot = (progDesc desc <>
+        helpText desc cmd argsFoot examplesFoot = (progDesc desc <>
                 header (cliName_ ++ ": "++ cmd ++" command") <>
-                footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot])))    )
+                -- REV: Too many parens <<<
+                -- REV: Move "" to argsFoot (if examples are included) <<<
+                footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot, "Examples:\n", examplesFoot])))    )
                 -- footer (unlines ["Shared footer. ", foot]))
 
 
@@ -108,7 +110,7 @@ main = do
              (  fullDesc <>
                 progDesc "A simple Enigma machine simulator with rich display of machine configurations." <>
                 header cliName_ <>
-                footer "This command line interface is part of the Haskell crypto-enigma package.")
+                footerDoc (Just (string ("Examples:\n" ++ topExamples ++ "\nThis command line interface is part of the Haskell crypto-enigma package."))))
 
     -- Like 'configEnigma' but without stack trace and with check for 4 words in a single string
     configEnigmaFromString :: String -> EnigmaConfig
@@ -243,6 +245,130 @@ omitArgFoot cmd = unlines [
         "characters for " ++ omittedArg ++ " is the same as omitting it."]
                 where omittedArg | cmd == "show" = "LETTER"
                                  | otherwise = "MESSAGE"
+
+topExamples = unlines [
+        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\"",
+        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\" -f",
+        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTING! testing?\" -f",
+        "    $ enigma show \"B-I-III-I EMO UX.MO.AY 13.04.11\" -l 'X'",
+        "    $ enigma show \"B-I-III-I EMO UX.MO.AY 13.04.11\" -l 'X' -H '()'",
+        "    $ enigma show \"B-I-III-I EMO UX.MO.AY 13.04.11\" -l 'X' -H '()' -f internal",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -s 10 -t",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -H '()'",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -H '()' -f internal",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -H '()' -f internal -o -SS",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -f config -e",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -f internal -e",
+        "    $ enigma run \"c-β-VIII-VII-VI QMLI UX.MO.AY 01.13.04.11\" -s 500 -t -f internal -o",
+        "",
+        "More information about each of these examples is available in the help for the respective",
+        "commands."]
+
+encodeCmdExamples = init $ unlines ["TBD"]
+
+showCmdExamples = init $ unlines ["TBD"]
+
+runCmdExamples = init $ unlines [
+        "(For details on differences among formats used for displaying each step, see the",
+        "examples in the examples for the 'show' command.)",
+        "",
+        "  Show the operation of a machine for 10 steps, indicating step numbers (see",
+        "  'single' in the note on FORMAT):",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -s 10 -t",
+        "    0000      CNAUJVQSLEMIKBZRGPHXDFYTWO  EMO  19 10 05",
+        "    0001      UNXKGVERLYDIQBTWMHZOAFPCJS  EMP  19 10 06",
+        "    0002      QTYJZXUPKDIMLSWHAVNBGROFCE  EMQ  19 10 07",
+        "    0003      DMXAPTRWKYINBLUESGQFOZHCJV  ENR  19 11 08",
+        "    0004      IUSMHRPEAQTVDYWGJFCKBLOZNX  ENS  19 11 09",
+        "    0005      WMVXQRLSPYOGBTKIEFHNZCADJU  ENT  19 11 10",
+        "    0006      WKIQXNRSCVBOYFLUDGHZPJAEMT  ENU  19 11 11",
+        "    0007      RVPTWSLKYXHGNMQCOAFDZBEJIU  ENV  19 11 12",
+        "    0008      IYTKRVSMALDJHZWXUEGCQFOPBN  ENW  19 11 13",
+        "    0009      PSWGMODULZVIERFAXNBYHKCQTJ  ENX  19 11 14",
+        "    0010      IVOWZKHGARFSPUCMXJLYNBDQTE  ENY  19 11 15",
+        "",
+        "  Show the operation of a machine as it encodes a message, with step numbers:",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -H \'()\'",
+        "    0000       CNAUJVQSLEMIKBZRGPHXDFYTWO   EMO  19 10 05",
+        "    0001  T > UNXKGVERLYDIQBTWMHZ(O)AFPCJS  EMP  19 10 06",
+        "    0002  E > QTYJ(Z)XUPKDIMLSWHAVNBGROFCE  EMQ  19 10 07",
+        "    0003  S > DMXAPTRWKYINBLUESG(Q)FOZHCJV  ENR  19 11 08",
+        "    0004  T > IUSMHRPEAQTVDYWGJFC(K)BLOZNX  ENS  19 11 09",
+        "    0005  I > WMVXQRLS(P)YOGBTKIEFHNZCADJU  ENT  19 11 10",
+        "    0006  N > WKIQXNRSCVBOY(F)LUDGHZPJAEMT  ENU  19 11 11",
+        "    0007  G > RVPTWS(L)KYXHGNMQCOAFDZBEJIU  ENV  19 11 12",
+        "",
+        "  Show the operation of a machine as it encodes a message in more detail (see",
+        "  'internal' in the note on FORMAT), with step numbers (only some",
+        "  steps shown here):",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -H \'()\' -f internal",
+        "    0000",
+        "    ...",
+        "    0001",
+        "    T > ABCDEFGHIJKLMNOPQRS(T)UVWXYZ",
+        "      P YBCDEFGHIJKLONMPQRS(T)XVWUAZ         UX.MO.AY",
+        "      1 BYLQUIOJRTCSPNKVDWM(X)EZFHAG  P  06  I",
+        "      2 KOMQEPVZNXRBDLJHFSUWYAC(T)GI  M  10  III",
+        "      3 AXIQJZKRMSUNTOLYDHV(B)WEGPFC  E  19  I",
+        "      R Y(R)UHQSLDPXNGOKMIEBFZCWVJAT         B",
+        "      3 ATZQVYWRCEGOILNXD(H)JMKSUBPF         I",
+        "      2 VLWMEQY(P)ZOANCIBFDKRXSGTJUH         III",
+        "      1 YAKQUWZXFHOCSNG(M)DILJEPRTBV         I",
+        "      P YBCDEFGHIJKL(O)NMPQRSTXVWUAZ         UX.MO.AY",
+        "    O < UNXKGVERLYDIQBTWMHZ(O)AFPCJS",
+        "    ...",
+        "    0007",
+        "    G > ABCDEF(G)HIJKLMNOPQRSTUVWXYZ",
+        "      P YBCDEF(G)HIJKLONMPQRSTXVWUAZ         UX.MO.AY",
+        "      1 IDLNWM(J)HEPXQGRYTZBUAVSFKOC  V  12  I",
+        "      2 NLPDOUYMW(Q)ACKIGERTVXZBSFHJ  N  11  III",
+        "      3 AXIQJZKRMSUNTOLY(D)HVBWEGPFC  E  19  I",
+        "      R YRU(H)QSLDPXNGOKMIEBFZCWVJAT         B",
+        "      3 ATZQVYW(R)CEGOILNXDHJMKSUBPF         I",
+        "      2 KVLDPXOYNZMBHAECJ(Q)WRFSITGU         III",
+        "      1 TRZBIWMHAGXCFDYJ(L)NVPSUEKOQ         I",
+        "      P YBCDEFGHIJK(L)ONMPQRSTXVWUAZ         UX.MO.AY",
+        "    L < RVPTWS(L)KYXHGNMQCOAFDZBEJIU",
+        "",
+        "  Show the steps as above, but (slowly) in place (if the platform supports it)",
+        "  rather than on a new line for each; only the last step is visible on",
+        "  completion (as shown here):",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -H \'()\' -f internal -o -SS",
+        "    0007",
+        "    G > ABCDEF(G)HIJKLMNOPQRSTUVWXYZ",
+        "      P YBCDEF(G)HIJKLONMPQRSTXVWUAZ         UX.MO.AY",
+        "      1 IDLNWM(J)HEPXQGRYTZBUAVSFKOC  V  12  I",
+        "      2 NLPDOUYMW(Q)ACKIGERTVXZBSFHJ  N  11  III",
+        "      3 AXIQJZKRMSUNTOLY(D)HVBWEGPFC  E  19  I",
+        "      R YRU(H)QSLDPXNGOKMIEBFZCWVJAT         B",
+        "      3 ATZQVYW(R)CEGOILNXDHJMKSUBPF         I",
+        "      2 KVLDPXOYNZMBHAECJ(Q)WRFSITGU         III",
+        "      1 TRZBIWMHAGXCFDYJ(L)NVPSUEKOQ         I",
+        "      P YBCDEFGHIJK(L)ONMPQRSTXVWUAZ         UX.MO.AY",
+        "    L < RVPTWS(L)KYXHGNMQCOAFDZBEJIU",
+        "",
+        "  Stepping a configuration only changes the window letters:",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -f config -e",
+        "    0000  B-I-III-I EMO UX.MO.AY 13.04.11",
+        "    0001  B-I-III-I EMP UX.MO.AY 13.04.11  T > O",
+        "    0002  B-I-III-I EMQ UX.MO.AY 13.04.11  E > Z",
+        "    0003  B-I-III-I ENR UX.MO.AY 13.04.11  S > Q",
+        "    0004  B-I-III-I ENS UX.MO.AY 13.04.11  T > K",
+        "    0005  B-I-III-I ENT UX.MO.AY 13.04.11  I > P",
+        "    0006  B-I-III-I ENU UX.MO.AY 13.04.11  N > F",
+        "    0007  B-I-III-I ENV UX.MO.AY 13.04.11  G > L",
+        "    $ enigma run \"B-I-III-I EMO UX.MO.AY 13.04.11\" -m \"TESTING\" -t -f windows -e",
+        "    0000  EMO",
+        "    0001  EMP  T > O",
+        "    0002  EMQ  E > Z",
+        "    0003  ENR  S > Q",
+        "    0004  ENS  T > K",
+        "    0005  ENT  I > P",
+        "    0006  ENU  N > F",
+        "    0007  ENV  G > L",
+        "",
+        "   Watch the machine run for 500 steps:",
+        "    $ enigma run \"c-β-VIII-VII-VI QMLI UX.MO.AY 01.13.04.11\" -s 500 -t -f internal -o"]
 
 
 -- stack exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
