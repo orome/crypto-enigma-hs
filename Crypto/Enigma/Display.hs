@@ -607,7 +607,7 @@ listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps op
                                                     opts = validOpts_ optsin
 
                                                     fmtN :: Bool -> Int -> String
-                                                    fmtN True n = (printf "%03d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
+                                                    fmtN True n = (printf "%04d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
                                                     fmtN False _ = ""
 
 {-# DEPRECATED showEnigmaOperation "This has been replaced by 'displayEnigmaOperation'" #-}
