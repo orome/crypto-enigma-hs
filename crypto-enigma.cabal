@@ -62,8 +62,8 @@ library
     default-language:   Haskell2010
 
 executable enigma
-    main-is:            enigma.hs
-    --hs-source-dirs:     test
+    main-is:            CLI.hs
+    hs-source-dirs:     ., cli
     other-modules:      Crypto.Enigma,
                         Crypto.Enigma.Display,
                         Crypto.Enigma.Utils

@@ -1,4 +1,6 @@
 {-# LANGUAGE Safe, CPP #-}
+module Main where
+
 import Options.Applicative      -- http://hackage.haskell.org/package/optparse-applicative
 import Options.Applicative.Help.Pretty (string)     -- Necessary to format help text -- https://github.com/pcapriotti/optparse-applicative/issues/90#issuecomment-49868254
 --import Data.Maybe
