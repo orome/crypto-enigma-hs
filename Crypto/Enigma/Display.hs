@@ -48,7 +48,7 @@ import Data.Char                (toLower)
 import Crypto.Enigma.Utils
 import Crypto.Enigma
 
--- REV - Final newline in show... functions is a bit inconsistent
+-- REV: Final newline in show... functions is a bit inconsistent
 
 
 
@@ -82,13 +82,9 @@ type MarkerSpec = String
 -- REV: Expose with markerFunc?
 -- A function specifying how to highlight an encoded character in an 'EnigmaConfig', created using 'markerFunc'.
 data MarkerFunc_ = MarkerFunc_ (Char -> String)
-
+        
 -- REV: Export to support arbitrary user-defined functions?
--- REV: Version checks for character compatability w/ substitutions that work; force checks with a type? eg:
---      decorate ch = ['[',ch,']'] -- version that works when Unicode fails to display properly (e.g. IHaskell as of 0.7.1.0)
---      https://stackoverflow.com/a/33206814
--- Create a 'MarkerFunc_' from a string specification.
--- Ignores unrecognized/invalid values
+-- Create a 'MarkerFunc_' from a string specification. Ignores unrecognized/invalid values
 markerFunc_ :: MarkerSpec -> MarkerFunc_
 markerFunc_ spec = MarkerFunc_ (case spec of
                     "*" ->  \_ -> "*"
@@ -106,7 +102,7 @@ markerFunc_ spec = MarkerFunc_ (case spec of
                     "yellow" ->  \c -> escape_ "33;1m" c
 --                     "51" ->  \c -> esc ++ "51m" ++ [c] ++ esc ++ "0m"
 --                     "52" ->  \c -> esc ++ "52m" ++ [c] ++ esc ++ "0m"
-                    -- TBD - Colors and other escapes
+                    -- TBD: More colors and other escapes
                     [l, r] -> \c -> [l, c, r]
                     _ -> \c -> [c])
 
@@ -359,7 +355,6 @@ b-γ-V-VIII-II LFAQ UX.MO.KZ.AY.EF.PL 03.17.04.11  K > G
 >>> putStrLn $ displayEnigmaConfig cfg 'K' displayOpts
 K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
 -}
--- TBD: Further examples here? <<<
 displayEnigmaConfig :: EnigmaConfig -> Char -> DisplayOpts -> String
 displayEnigmaConfig ec ch optsin =
     case (format optsin) of
@@ -368,7 +363,6 @@ displayEnigmaConfig ec ch optsin =
         x | elem x fmtsWindows_ -> (windows ec) ++ encs
         x | elem x fmtsConfig_ -> (show ec) ++ encs
         x | elem x fmtsEncoding_ -> drop 2 encs
-        -- TBD - How to implement debug format?
         _ -> showEnigmaConfig_          -- Should not happen: all display option arguments are coerced by validOpts_
     where
         -- Ensure valid arguments
@@ -380,8 +374,8 @@ displayEnigmaConfig ec ch optsin =
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
                 else ""
 
-        -- TBD - Can't use below unless encode handles ch == ' '
-        -- locate the index of the encoding with m of ch, in s
+        -- TBD: Can't use below unless encode handles ch == ' '
+        -- Locate the index of the encoding with m of ch, in s
         --locCar :: Char -> String -> Mapping -> Maybe Int
         locCar ch s m = elemIndex (encode m ch) s
 
@@ -405,7 +399,8 @@ displayEnigmaConfig ec ch optsin =
         showEnigmaConfigInternal_ =
                 unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters (markerfunction_ opts)) ' ' 0 ""] ++
                           (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500  (markerfunction_ opts))) -- TBD -- Fix replication! <<<
+                                        -- TBD: Fix replication! <<<
+                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500  (markerfunction_ opts)))
                                         (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                         ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                         (components ec ++ (tail $ reverse $ components ec))
@@ -565,7 +560,6 @@ but does not perform any encoding (as explained in 'step').
 Also also that the second block of the @"internal"@ display example is the same as one illustrated for
 the @"internal"@ 'format', where it is explained in detail.
 -}
--- REV - Put `(if elem fmt fmtsInternal then init else id) $` in front of `unlines` to remove final new line of internal?
 displayEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> String
 displayEnigmaOperation ec str opts = unlines $ listEnigmaOperation ec str opts
 
@@ -609,8 +603,6 @@ showEnigmaOperationInternal ec str = displayEnigmaOperation ec str displayOpts{f
 
 -- Encoding display ==========================================================
 
--- REV - Move postproc here
-
 {-|
 Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma machine configuration.
 
@@ -618,11 +610,10 @@ Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma
 >>> putStr $ displayEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 -}
--- TBD - Add new arguments for formatting (and use in cli)
+-- TBD: Add new arguments for formatting (and use in cli)
 displayEnigmaEncoding :: EnigmaConfig -> Message -> String
 displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
         where
-                -- TBD - Don't remove spaces (at least in showEnigmaOperation and instead put a blank line?)
                 -- Standard formatting of encoded messages
                 --postproc :: String -> String
                 postproc = unlines . chunksOf 60 . unwords . chunksOf 4

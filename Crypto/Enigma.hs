@@ -1,5 +1,5 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
---{-# OPTIONS_GHC -fno-ignore-asserts #-} -- REV - Use to keep asserts for valid 'Message'? <<<
+--{-# OPTIONS_GHC -fno-ignore-asserts #-} --REV: Use to keep asserts for valid 'Message'? <<<
 {-|
 Module      : Crypto.Enigma
 Description : Enigma machine simulator
@@ -85,7 +85,7 @@ For rotors (including the reflector) this is one of the conventional letter or R
 indicating letters wired together by plugging (e.g., @\"AU.ZM.ZL.RQ\"@).
 Absence or non-use of a plugboard can be indicated with a lone "~". See 'name'.
 -}
--- REV - Actually any string that does not contain periods will be taken as no plugboard; see 'component'.
+--REV: Actually any string that does not contain periods will be taken as no plugboard; see 'component'.
 type Name = String
 
 
@@ -113,7 +113,7 @@ data Component = Component {
         turnovers :: !Turnovers     -- ^ The component's 'Turnovers'.
 }
 
--- REV - \c -> (name c, c) instead of (name &&& id) ?
+--REV: \c -> (name c, c) instead of (name &&& id) ?
 -- Definitions of rotor Components; people died for this information
 rots :: M.Map Name Component
 rots = M.fromList $ (name &&& id) <$> [
@@ -249,12 +249,12 @@ prop> components cfg == ((components cfg !!) <$> stages cfg)
 The term \'stage\' (lowercase) is also used here to encompass subsequent reverse processing order stages
 (see, for example, 'stageMappingList').
 -}
--- REV - Is this needed anywhere but in display functions? The Python version can avoid it.
+-- REV: Is this needed anywhere but in display functions? The Python version can avoid it.
 stages :: EnigmaConfig -> [Stage]
 stages ec = [0..(length $ components ec)-1]
 
--- REV - Could take a ring and a position and dispense with st
--- TBD - Some properties showing only 'position' changes?
+-- REV: Could take a ring and a position and dispense with st
+-- TBD: Some properties showing only 'position' changes?
 -- The letter at the window for a given stage.
 -- Used in 'windows', and in 'step' to identify when a rotor ring is in the turnover position
 windowLetter :: EnigmaConfig -> Stage -> Char
@@ -336,9 +336,9 @@ Invalid arguments return an 'EnigmaError':
 >>> configEnigmaExcept "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
 ExceptT (Identity (Left Bad plugboard : AM.EU.ZiL))
 -}
--- REV - Add check that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
--- REV - Add checks for historical combinations of machine elements?
--- REV - Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
+-- REV: Add check that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
+-- REV: Add checks for historical combinations of machine elements?
+-- REV: Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
         unless (and $ (==(length components')) <$> [length winds', length rngs']) (throwError BadNumbers)
@@ -395,7 +395,6 @@ This should be used instead of @read@, which cannot report error details:
 >>> read "c-β-V-III-II LQVI AM.EU.ZiL 16.01.21.11" :: EnigmaConfig
 *** Exception: Prelude.read: no parse
 -}
--- REV: Remove stack trace (use error')? <<<
 configEnigma :: String -> String -> String -> String -> EnigmaConfig
 configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots winds plug rngs) of
         Right cfg  -> cfg
@@ -408,17 +407,13 @@ Read the elements of a conventional specification (see 'configEnigma') as a sing
 >>> read cfgstr == (\[c, w, s, r] -> configEnigma c w s r) (words cfgstr)
 True
 -}
--- REV: Remove?
 instance Read EnigmaConfig where
-        -- TBD - Change to readPrec: http://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html#v:readsPrec
-        -- TBD - Add readListPrec = readListPrecDefault
         readsPrec _ i = if ((length $ words i) /= 4)
                           then []
                           else case runExcept (configEnigmaExcept c w s r) of
                                             Right cfg  -> [(cfg, "")]
-                                            Left _ -> [] -- Loses error information, but conforms to specification of 'readsPrec' in 'Read'
+                                            Left _ -> []
                                    where [c, w, s, r] = words i
-                --        readsPrec _ i = [(configEnigma c w s r, "")] where [c, w, s, r] = words i
 
 {-|
 Show the elements of a conventional specification (see 'configEnigmaExcept') joined by spaces into a single string.
@@ -452,7 +447,7 @@ for the letter at that position in the alphabet — i.e., as a permutation of t
 For example, the mapping @EKMFLGDQVZNTOWYHXUSPAIBRCJ@ encodes @A@ to @E@, @B@ to @K@, @C@ to @M@, ...
 @Y@ to @C@, and @Z@ to @J@.
 -}
--- REV - Enforce as a class (in encoding functions too)' (#12) <<
+--REV: Enforce as a class (in encoding functions too)' (#12) <<
 type Mapping = String
 
 
@@ -466,7 +461,7 @@ in reverse ('Rev').
 
 This direction affects the encoding performed by the component (see 'componentMapping').
 -}
--- REV - These only need to be exposed to allow componentMapping to be exposed; necessary? <<<
+--REV: These only need to be exposed to allow componentMapping to be exposed; necessary? <<<
 data Direction = Fwd | Rev
 
 {-|
@@ -489,7 +484,7 @@ of the plugboard):
 >>> and $ tst <$> ["A","B","C","b","c"] <*> [1..26]
 True
 -}
--- REV - Add assertion to make sure plugboard is not rotated ; assert not in keys?
+--REV: Add assertion to make sure plugboard is not rotated ; assert not in keys?
 componentMapping:: Direction -> Component -> Position -> Mapping
 componentMapping d c p = case d of
         Fwd -> map (\ch -> rotMap (1-p) letters !! (numA0 ch)) (rotMap (p-1) (wiring c))
@@ -609,7 +604,7 @@ Convert a 'String' to valid Enigma machine input: replace any symbols for which 
 substitutions, remove any remaining non-letter characters, and convert to uppercase. This function is applied
 automatically to 'String's suppied as 'Message' arguments to functions in this package.
 -}
--- REV - Awkward pack/unpack patch to remove dependency on MissingH (#29)
+-- REV: Awkward pack/unpack patch to remove dependency on MissingH (#29)
 message :: String -> Message
 message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace' <$> subs) $ toUpper <$> s
     where
@@ -619,7 +614,7 @@ message s = filter (`elem` letters) $ foldl1 fmap (uncurry replace' <$> subs) $ 
                 ("6","YZ"),("7","YU"),("8","YI"),("9","YO"),("0","YP")]
         replace' a b c = unpack $ replace (pack a) (pack b) (pack c)
 
--- REV - Rejected (#12) alternate version in which 'Message' is at class (and caller is responsible for making Message).
+-- REV: Rejected (#12) alternate version in which 'Message' is at class (and caller is responsible for making Message).
 -- data Message = Message String deriving Show
 --
 -- message :: String -> Message

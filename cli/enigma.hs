@@ -18,9 +18,6 @@ import Crypto.Enigma.Display
 
 cliName_ = "Enigma Machine (Haskell crypto-enigma) CLI"
 
--- REV - Idiomaic approach to general conditional redefinitions? <<<
--- REV - Move to CLI script (and incorporate note to see help).
--- https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:errorWithoutStackTrace
 #if __GLASGOW_HASKELL__ < 800
 cliError e = error (e ++ " (see help)")
 #else
@@ -31,8 +28,12 @@ stepInterval_ = 125000
 
 data Subcommand =
         Encode { config :: String, message :: String } |
-        Show { config :: String, letterO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
-        Run { config :: String, messageO :: Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool, showstepsO :: Maybe Bool, numstepsO :: Int, speedO :: Int, overwriteO :: Maybe Bool, noinitialO :: Maybe Bool }
+        Show { config :: String, letterO ::
+                Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool } |
+        Run { config :: String, messageO ::
+                Maybe String, formatO :: Maybe String, highlightO :: Maybe String, encodingO :: Maybe Bool,
+                showstepsO :: Maybe Bool, numstepsO :: Int,
+                speedO :: Int, overwriteO :: Maybe Bool, noinitialO :: Maybe Bool }
         deriving Show
 
 data Options = Options { subcommand :: Subcommand } deriving Show
@@ -44,18 +45,19 @@ commandO = Options <$> subcommandO
 subcommandO :: Parser Subcommand
 subcommandO =
   subparser (
-        command "encode" (info (Encode <$> configArg "encode" <*> messageArg <**> helper)
-                         (helpText
-                         encodeCmdDesc
-                         "ENCODE" encodeCmdArgsFoot encodeCmdExamples)) <>
-        command "show"   (info (Show <$> configArg "show" <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
-                         (helpText
-                         showCmdDesc
-                         "SHOW" showCmdArgsFoot showCmdExamples)) <>
-        command "run"    (info (Run <$> configArg "run" <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <*> noinitialOpt <**> helper)
-                         (helpText
-                         runCmdDesc
-                         "RUN" runCmdArgsFoot runCmdExamples))
+        command "encode" (info (Encode <$> configArg "encode" <*> messageArg
+                                <**> helper)
+                         (helpText encodeCmdDesc "ENCODE" encodeCmdArgsFoot encodeCmdExamples)) <>
+        command "show"   (info (Show <$> configArg "show" <*> letterOpt <*>
+                                formatOpt <*> highlightOpt <*> encodingOpt
+                                <**> helper)
+                         (helpText showCmdDesc "SHOW" showCmdArgsFoot showCmdExamples)) <>
+        command "run"    (info (Run <$> configArg "run" <*> messageOpt <*>
+                                formatOpt <*> highlightOpt <*> encodingOpt <*>
+                                showstepOpt <*> stepsOpt <*>
+                                speedOpt <*> overwriteOpt <*> noinitialOpt
+                                <**> helper)
+                         (helpText runCmdDesc "RUN" runCmdArgsFoot runCmdExamples))
    )
   where
         configArg cmd = strArgument $ metavar "CONFIG" <>
@@ -91,7 +93,6 @@ subcommandO =
         helpText desc cmd argsFoot examplesFoot = (progDesc desc <>
                 header (cliName_ ++ ": "++ cmd ++" command") <>
                 -- REV: Too many parens <<<
-                -- REV: Move "" to argsFoot (if examples are included) <<<
                 footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot, "Examples:\n", examplesFoot])))    )
                 -- footer (unlines ["Shared footer. ", foot]))
 
@@ -102,14 +103,18 @@ main = do
     opts <- execParser optsParser
     case subcommand opts of
         Encode config message ->
-                putStr $ displayEnigmaEncoding (configEnigmaFromString config)
-                        message
-        Show config (Just (letter:_)) (Just format) (Just highlight) (Just showenc) ->
-                putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
-                        letter
-                        (displayOpts{format=format,showencoding=showenc,markerspec=highlight})
-        Run config (Just message) (Just format) (Just highlight) (Just showenc) (Just showstps) stps speed (Just overwrite) (Just noinitial) ->
-                mapM_ (printConfig (max speed (if overwrite then 1 else 0)) overwrite)
+                        putStr $ displayEnigmaEncoding (configEnigmaFromString config)
+                                message
+        Show config (Just (letter:_))
+                (Just format) (Just highlight) (Just showenc) ->
+                        putStrLn $ displayEnigmaConfig (configEnigmaFromString config)
+                                letter
+                                (displayOpts{format=format,showencoding=showenc,markerspec=highlight})
+        Run config (Just message)
+                (Just format) (Just highlight) (Just showenc)
+                (Just showstps) stps
+                speed (Just overwrite) (Just noinitial) ->
+                        mapM_ (printConfig (max speed (if overwrite then 1 else 0)) overwrite)
                                    ((if noinitial then tail else id) $ listEnigmaOperation (configEnigmaFromString config)
                                    message
                                    (displayOpts{format=format,showencoding=showenc,markerspec=highlight,showsteps=showstps,steps=stps}))
@@ -208,7 +213,6 @@ configArgFoot = unlines [
         " + the locations of ring letter A on the rotor for each rotor",
         "   (in physical order)"]
 
--- REV - Use of LETTER here isn't quite right for 'run' + stage vs step!
 formatArgFoot cmd = unlines $ [
         "FORMAT will determine how a configuration is represented; possible values",
         "include:",
