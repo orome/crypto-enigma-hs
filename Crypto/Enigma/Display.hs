@@ -52,38 +52,6 @@ import Crypto.Enigma
 
 
 
--- Helpers ===================================================================
-
-
--- Message display -----------------------------------------------------------
-
--- TBD - Don't remove spaces (at least in showEnigmaOperation and instead put a blank line?)
--- Standard formatting of encoded messages
-postproc :: String -> String
-postproc = unlines . chunksOf 60 . unwords . chunksOf 4
-
-
--- Mapping markup -----------------------------------------------------------
-
--- TBD Move up (closer to encoding?)
--- TBD - Can't use below unless encode handles ch == ' '
--- locate the index of the encoding with m of ch, in s
-locCar :: Char -> String -> Mapping -> Maybe Int
-locCar ch s m = elemIndex (encode m ch) s
-
-markedMapping :: Maybe Int -> Mapping -> MarkerFunc_ -> String
-markedMapping (Just loc) e (MarkerFunc_ mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
-markedMapping Nothing e _    = e
-
-
--- Character restriction ----------------------------------------------------
-
--- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
-enigmaChar :: Char -> Char
-enigmaChar ch = if ch `elem` letters then ch else ' '
-
-
-
 -- Machine display ===========================================================
 
 
@@ -412,6 +380,19 @@ displayEnigmaConfig ec ch optsin =
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
                 else ""
 
+        -- TBD - Can't use below unless encode handles ch == ' '
+        -- locate the index of the encoding with m of ch, in s
+        --locCar :: Char -> String -> Mapping -> Maybe Int
+        locCar ch s m = elemIndex (encode m ch) s
+
+        --markedMapping :: Maybe Int -> Mapping -> MarkerFunc_ -> String
+        markedMapping (Just loc) e (MarkerFunc_ mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
+        markedMapping Nothing e _    = e
+
+        -- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
+        --enigmaChar :: Char -> Char
+        enigmaChar ch = if ch `elem` letters then ch else ' '
+
         showEnigmaConfig_ = fmt ech (markedMapping (locCar ech enc enc) enc (markerfunction_ opts))
                                      (windows ec)
                                      (reverse $ tail.init $ positions ec)
@@ -606,7 +587,7 @@ listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps op
                                                     msg = message str
                                                     opts = validOpts_ optsin
 
-                                                    fmtN :: Bool -> Int -> String
+                                                    --fmtN :: Bool -> Int -> String
                                                     fmtN True n = (printf "%04d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
                                                     fmtN False _ = ""
 
@@ -640,6 +621,11 @@ RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 -- TBD - Add new arguments for formatting (and use in cli)
 displayEnigmaEncoding :: EnigmaConfig -> Message -> String
 displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
+        where
+                -- TBD - Don't remove spaces (at least in showEnigmaOperation and instead put a blank line?)
+                -- Standard formatting of encoded messages
+                --postproc :: String -> String
+                postproc = unlines . chunksOf 60 . unwords . chunksOf 4
 
 {-# DEPRECATED showEnigmaEncoding "This has been replaced by 'displayEnigmaEncoding'" #-}
 {-|
