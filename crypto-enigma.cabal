@@ -48,7 +48,7 @@ source-repository head
 --        tag:            0.0.3.1
 
 library
-    default-extensions: Safe
+    -- default-extensions: Safe
     exposed-modules:    Crypto.Enigma,
                         Crypto.Enigma.Display
     other-modules:      Crypto.Enigma.Utils
@@ -62,7 +62,7 @@ library
     default-language:   Haskell2010
 
 executable enigma
-    main-is:            CLI.hs
+    main-is:            enigma.hs
     hs-source-dirs:     ., cli
     other-modules:      Crypto.Enigma,
                         Crypto.Enigma.Display,

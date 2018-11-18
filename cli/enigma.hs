@@ -46,15 +46,15 @@ subcommandO =
   subparser (
         command "encode" (info (Encode <$> configArg "encode" <*> messageArg <**> helper)
                          (helpText
-                         "Show the encoding of a message."
+                         encodeCmdDesc
                          "ENCODE" encodeCmdArgsFoot encodeCmdExamples)) <>
         command "show"   (info (Show <$> configArg "show" <*> letterOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <**> helper)
                          (helpText
-                         "Show an Enigma machine configuration in the specified format, optionally indicating the encoding of a specified character."
+                         showCmdDesc
                          "SHOW" showCmdArgsFoot showCmdExamples)) <>
         command "run"    (info (Run <$> configArg "run" <*> messageOpt <*> formatOpt <*> highlightOpt <*> encodingOpt <*> showstepOpt <*> stepsOpt <*> speedOpt <*> overwriteOpt <*> noinitialOpt <**> helper)
                          (helpText
-                         "Show the operation of the Enigma machine as a series of configurations, as it encodes a message and/or for a specified number of steps. "
+                         runCmdDesc
                          "RUN" runCmdArgsFoot runCmdExamples))
    )
   where
@@ -143,6 +143,9 @@ main = do
                                 (threadDelay (s * stepInterval_))
 
 
+encodeCmdDesc = "Show the encoding of a message."
+showCmdDesc = "Show an Enigma machine configuration in the specified format, optionally indicating the encoding of a specified character."
+runCmdDesc = "Show the operation of the Enigma machine as a series of configurations, as it encodes a message and/or for a specified number of steps. "
 
 configArgHelp cmd = case cmd of
                         "encode" -> unlines ["The machine configuration at the start of encoding (see below)"]
