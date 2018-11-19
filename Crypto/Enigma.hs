@@ -349,9 +349,12 @@ configEnigmaExcept rots winds plug rngs = do
                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
                         ((\s -> s == nub s) $ filter (/='.') plug))
                ) (throwError (BadPlugs plug))
-        unless (and $ (`M.member` comps) <$> tail components') (throwError (BadComponents rots))
-        unless (and $ (`elem` rotors) <$> init (tail components')) (throwError (BadRotors rots))
-        unless ((last $ components') `elem` reflectors) (throwError (BadReflector (last $ components')))
+        unless (and $ (`M.member` comps) <$> tail components')
+                (throwError (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
+        unless (and $ (`elem` rotors) <$> init (tail components'))
+                (throwError (BadRotors rots $ unwords $ filter (`notElem` rotors) (init (tail components'))))
+        unless ((last $ components') `elem` reflectors)
+                (throwError (BadReflector rots (last $ components')))
         return EnigmaConfig {
                 components = components',
                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
@@ -369,9 +372,9 @@ data EnigmaError = BadNumbers
                  | BadRings String
                  | BadWindows String
                  | BadPlugs String
-                 | BadComponents String
-                 | BadRotors String
-                 | BadReflector String
+                 | BadComponents String String
+                 | BadRotors String String
+                 | BadReflector String String
                  | MiscError String
 
 instance Show EnigmaError where
@@ -379,9 +382,9 @@ instance Show EnigmaError where
         show (BadRings s) = "Bad ring settings: " ++ s
         show (BadWindows s) = "Bad windows: " ++ s
         show (BadPlugs s) = "Bad plugboard : " ++ s
-        show (BadComponents s) = "Bad components : " ++ s
-        show (BadRotors s) = "Bad rotors : " ++ s
-        show (BadReflector s) = "Bad reflector : " ++ s
+        show (BadComponents arg s) = "Bad components : " ++ s ++ " in " ++ arg
+        show (BadRotors arg s) = "Bad rotors: " ++ s ++ " in " ++ arg
+        show (BadReflector arg s) = "Bad reflector: " ++ s ++ " in " ++ arg
         show (MiscError s) = s
 
 {-|
