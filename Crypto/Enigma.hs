@@ -115,8 +115,8 @@ data Component = Component {
 
 --REV: \c -> (name c, c) instead of (name &&& id) ?
 -- Definitions of rotor Components; people died for this information
-rots :: M.Map Name Component
-rots = M.fromList $ (name &&& id) <$> [
+rots_ :: M.Map Name Component
+rots_ = M.fromList $ (name &&& id) <$> [
         -- rotors
         Component "I"    "EKMFLGDQVZNTOWYHXUSPAIBRCJ" "Q",
         Component "II"   "AJDKSIRUXBLHWTMCQGZNPYFVOE" "E",
@@ -128,8 +128,8 @@ rots = M.fromList $ (name &&& id) <$> [
         Component "VIII" "FKQHTLXOCBJSPDZRAMEWNIUYGV" "ZM",
         Component "β"    "LEYJVCNIXWPBQMDRTAKZGFUHOS" "",
         Component "γ"    "FSOKANUERHMBTIYCWLQPZXVGJD" ""]
-refs ::  M.Map Name Component
-refs = M.fromList $ (name &&& id) <$> [
+refs_ ::  M.Map Name Component
+refs_ = M.fromList $ (name &&& id) <$> [
         -- reflectors
         Component "A"    "EJMZALYXVBWFCRQUONTSPIKHGD" "",
         Component "B"    "YRUHQSLDPXNGOKMIEBFZCWVJAT" "",
@@ -137,28 +137,28 @@ refs = M.fromList $ (name &&& id) <$> [
         Component "b"    "ENKQAUYWJICOPBLMDXZVFTHRGS" "",
         Component "c"    "RDOBJNTKVEHMLFCWZAXGYIPSUQ" ""]
         -- base case (e.g. for "unplugged" plugboard, or the keyboard)
-kbd = M.fromList [("",Component ""     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "")]
+kbd_ = M.fromList [("",Component ""     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "")]
 
-comps :: M.Map Name Component
-comps = rots `M.union` refs `M.union` kbd
+comps_ :: M.Map Name Component
+comps_ = rots_ `M.union` refs_ `M.union` kbd_
 
 {-|
 The list of valid 'Component' 'Name's for rotors.
 -}
 rotors :: [Name]
-rotors = M.keys rots
+rotors = M.keys rots_
 
 {-|
 The list of valid 'Component' 'Name's for reflectors.
 -}
 reflectors :: [Name]
-reflectors = M.keys refs
+reflectors = M.keys refs_
 
 {-|
 The 'Component' with the specified 'Name'.
 -}
 component :: Name -> Component
-component n = fromMaybe (Component n (foldr plug letters (splitOn "." n)) "") (M.lookup n comps)
+component n = fromMaybe (Component n (foldr plug letters (splitOn "." n)) "") (M.lookup n comps_)
         -- Either lookup the rotor or reflector by name, or use the plugboard spec to
         -- generate a component with wiring in which the specified letter pairs are exchanged.
     where
