@@ -403,8 +403,7 @@ displayEnigmaConfig ec ch optsin =
         showEnigmaConfigInternal_ =
                 unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters (markerfunction_ opts)) ' ' 0 ""] ++
                           (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                        -- TBD: Fix replication! <<<
-                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (replicate 500  (markerfunction_ opts)))
+                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (cycle [markerfunction_ opts]))
                                         (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                         ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                         (components ec ++ (tail $ reverse $ components ec))
