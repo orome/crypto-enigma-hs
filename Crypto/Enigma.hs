@@ -349,12 +349,15 @@ configEnigmaExcept rots winds plug rngs = do
                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
                         ((\s -> s == nub s) $ filter (/='.') plug))
                ) (throwError (BadPlugs plug))
-        unless (and $ (`M.member` comps) <$> tail components')
+        unless (and $ (`M.member` comps_) <$> tail components')
                 (throwError (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
-        unless (and $ (`elem` rotors) <$> init (tail components'))
-                (throwError (BadRotors rots $ unwords $ filter (`notElem` rotors) (init (tail components'))))
-        unless ((last $ components') `elem` reflectors)
-                (throwError (BadReflector rots (last $ components')))
+        -- REV: Disallow no-op "keyboard" as component; disallow rotors as reflectors and vice versa <<<
+--         unless (and $ (`M.member` (rots_ `M.union` refs_)) <$> tail components')
+--                 (throwError (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
+--         unless (and $ (`M.member` rots_) <$> init (tail components'))
+--                 (throwError (BadRotors rots $ unwords $ filter (`notElem` rotors) (init (tail components'))))
+--         unless ((last $ components') `M.member` refs_)
+--                 (throwError (BadReflector rots (last $ components')))
         return EnigmaConfig {
                 components = components',
                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
