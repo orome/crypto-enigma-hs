@@ -336,7 +336,6 @@ Invalid arguments return an 'EnigmaError':
 >>> configEnigmaExcept "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
 ExceptT (Identity (Left Bad plugboard : AM.EU.ZiL))
 -}
--- REV: Add check that last components' is in reflectors; all of head.tail components' are in rotors?  <<<
 -- REV: Add checks for historical combinations of machine elements?
 -- REV: Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
@@ -350,7 +349,9 @@ configEnigmaExcept rots winds plug rngs = do
                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
                         ((\s -> s == nub s) $ filter (/='.') plug))
                ) (throwError (BadPlugs plug))
-        unless (and $ (`M.member` comps) <$> tail components') (throwError (BadRotors rots))
+        unless (and $ (`M.member` comps) <$> tail components') (throwError (BadComponents rots))
+        unless (and $ (`elem` rotors) <$> init (tail components')) (throwError (BadRotors rots))
+        unless ((last $ components') `elem` reflectors) (throwError (BadReflector (last $ components')))
         return EnigmaConfig {
                 components = components',
                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
@@ -368,7 +369,9 @@ data EnigmaError = BadNumbers
                  | BadRings String
                  | BadWindows String
                  | BadPlugs String
+                 | BadComponents String
                  | BadRotors String
+                 | BadReflector String
                  | MiscError String
 
 instance Show EnigmaError where
@@ -376,7 +379,9 @@ instance Show EnigmaError where
         show (BadRings s) = "Bad ring settings: " ++ s
         show (BadWindows s) = "Bad windows: " ++ s
         show (BadPlugs s) = "Bad plugboard : " ++ s
+        show (BadComponents s) = "Bad components : " ++ s
         show (BadRotors s) = "Bad rotors : " ++ s
+        show (BadReflector s) = "Bad reflector : " ++ s
         show (MiscError s) = s
 
 {-|
