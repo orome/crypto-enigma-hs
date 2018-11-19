@@ -44,7 +44,7 @@ import Data.Monoid              ((<>))          -- For GHC < 8.4.3 - https://sta
 import Data.List
 import Data.List.Split          (chunksOf)
 import Text.Printf              (printf)
-import Data.Char                (toLower)
+import Data.Char                (toLower, isAscii)
 import Crypto.Enigma.Utils
 import Crypto.Enigma
 
@@ -381,7 +381,11 @@ displayEnigmaConfig ec ch optsin =
 
         --markedMapping :: Maybe Int -> Mapping -> MarkerFunc_ -> String
         markedMapping (Just loc) e (MarkerFunc_ mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
-        markedMapping Nothing e _    = e
+        markedMapping Nothing e (MarkerFunc_ mf)
+                -- Pad to align unmarked encoding if visible length is changed by marking
+                -- !!! - Assumes that MarkerFuncs that change visible length always add exactly two characters
+                | (length $ filter isAscii (mf 'X')) == 3 = " " ++ e ++ " "
+                | otherwise = e
 
         -- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
         --enigmaChar :: Char -> Char
