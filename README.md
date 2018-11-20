@@ -130,7 +130,8 @@ For other Haskell Enigma machines see:
 * [enigma.lhs](https://gist.github.com/erantapaa/f071bc3f58d017f9280a)
 * [henigma](https://github.com/erantapaa/henigma)
 
-This package served as the basis for a [Python version], with essentially the same API.
+This package served as the basis for a [Python version], with essentially the same API, though more active maintenance
+of this verson has resulted in some minor divergence.
 
 ### Development status
 
@@ -138,9 +139,13 @@ This package served as the basis for a [Python version], with essentially the sa
 
 I'm currently learning and experimenting with some Haskell language features and can't promise the [development version]
 will work. More detail about planned releases and activities can be found the list of scheduled [milestones] and in the
-list of [open issues]. I may also be working on new major features on branches seperate from the development branch
-(for example I've completed the [addition of a command line interface](https://github.com/orome/crypto-enigma-hs/issues/13)
-on its [own branch](https://github.com/orome/crypto-enigma-hs/compare/develop...new/cli).)
+list of [open issues]. Some recent activity includes:
+
+* [changes since](https://github.com/orome/crypto-enigma-hs/compare/hackage...develop#files_bucket) the latest Hackage
+  release version; and
+* the [addition of a command line interface](https://github.com/orome/crypto-enigma-hs/issues/13)
+  which incorporates [extensive changes](https://github.com/orome/crypto-enigma-hs/compare/1d303d3d...eb249974)
+  [including](https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0031) refactoring of display functions.
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
 [documentation]: https://hackage.haskell.org/package/crypto-enigma

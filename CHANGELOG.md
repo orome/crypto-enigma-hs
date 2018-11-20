@@ -17,28 +17,32 @@ See also:
 
 ### (0.0.3.1)
 
-Version with [new CLI features]
+Current [development version] with new CLI with significant
+[refactoring and additional features](https://github.com/orome/crypto-enigma-hs/compare/0.0.2.14...0.0.3.1):
 
-Includes additions to (and deprecations of) display functionality using optparse-applicative;
-exposure of total constructor for EnigmaConfig; better error handling from EnigmaConfig constructors
-(restoring readSpec copliance in read); encapsulate EnigmaConfig display options and encoded letter highlight
-in types with total constructors (coercing any bad values to defaults).
-
-### (0.0.2.15)
-
-Current [development version]
+* [Add](https://github.com/orome/crypto-enigma-hs/issues/13)
+  [command line interface](https://github.com/orome/crypto-enigma-hs#functionality-command-line),
+  using [optparse-applicative](http://hackage.haskell.org/package/optparse-applicative).
+* Refactor display functions, deprecating `show...` functions and adding new display options.
+* Encapsulate `EnigmaConfig` display options in
+  [`DisplayOpts`](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma-Display.html#DisplayOptsA)
+  with a total constructor (coercing any bad values to defaults).
+* More consistent and robust error handling in `EnigmaConfig` constructors
+  (including restoring `readSpec` compliance in `read`).
+* Add (export existing) [total constructor](https://hackage.haskell.org/package/crypto-enigma/docs/Crypto-Enigma.html#v:configEnigmaExcept)
+  for `EnigmaConfig`.
 
 ### [0.0.2.14]
 
 Latest [release version]
 
-* Update for GHC 8.6.1
-* Travis CI infrastructure and resolver updates
+* Update for GHC 8.6.1.
+* Travis CI infrastructure and resolver updates.
 
 ### [0.0.2.13]
 
-* Update for GHC 8.4.3
-* Travis CI infrastructure and resolver updates
+* Update for GHC 8.4.3.
+* Travis CI infrastructure and resolver updates.
 
 ### [0.0.2.12]
 
@@ -125,7 +129,7 @@ Latest [release version]
 ### [0.0.1.3]
 
 Initial Hackage version. First upload of package to Hackage, without
-([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/reports/1)) Hacakge-built documentation.
+([successful](https://hackage.haskell.org/package/crypto-enigma-0.0.1.3/reports/1)) Hackage-built documentation.
 Stable enough for use, but not reviewed.
 
 [Hackage releases]: https://hackage.haskell.org/package/crypto-enigma

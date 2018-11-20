@@ -122,7 +122,7 @@ type DisplaySteps = Int
 
 {-|
 Options for 'displayEnigmaConfig', 'displayEnigmaOperation', and 'listEnigmaOperation', created using 'displayOpts'.
-All fields are coerced to valid values by display functions.
+All fields are coerced to valid values by display functions. #DisplayOptsA#
 -}
 data DisplayOpts = DisplayOpts {
         {-|
