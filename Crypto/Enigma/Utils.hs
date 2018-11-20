@@ -3,7 +3,6 @@
 Module      : Crypto.Enigma.Utils
 -}
 
-{-# LANGUAGE Safe #-}
 module Crypto.Enigma.Utils where
 
 import Data.Char (chr, ord)
@@ -36,3 +35,9 @@ encode m ch = if i `elem` [0..(length m)-1] then (m !! i) else ' ' where i = num
 -- standard simple-substitution cypher encoding
 encode' :: String -> String -> String
 encode' m s = (encode m) <$> s
+
+
+-- Patch ANSI escapes --------------------------------------------------------
+
+--  REV: Remove/review patch of escaping: https://github.com/carymrobbins/intellij-haskforce/issues/372 <<<
+escape_ mu ch = ("\ESC[") ++ mu ++ [ch] ++ ("\ESC[") ++ "0m"

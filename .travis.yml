@@ -43,7 +43,7 @@ jobs:
   - name: "Haskell for Mac (test LTS used by Haskell for Mac on macOS)"
     env: RESOLVER=lts-9.6     STACK_YAML=travis-stacks/resolver-only.yaml
     os: osx
-    osx_image: xcode10
+    osx_image: xcode10.1
 
 # lts-0.7 - Fails on Travis (unsupported GHC on Travis)
 # lts-2.22 - Fails on Travis (too old)
@@ -66,12 +66,15 @@ script:
 - stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --haddock --no-haddock-deps
 # List components explicitly; ignoring failure
 - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec ghc-pkg list || true
+# Run some example CLI commands
+- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
+- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma run "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" -m "FOLGENDES IST SOFORT BEKANNTZUGEBEN" -f single -e -t
 
 notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/33a1859c14283f0dbab6
-    on_success: change
+    on_success: always
     on_failure: always
     on_start: never
 

@@ -17,7 +17,7 @@ This is adapted, as an exercise in learning Haskell, from an earlier learning pr
 first Haskell program. A [Python version] with substantially the same API, plus a command line interface, is also
 available.
 
-### Functionality
+### Functionality: package API
 
 Perform [message encoding]:
 
@@ -57,6 +57,50 @@ Simulate [machine operation]:
     E > SJWYN̲̅UZPQBVXRETHIMAOFKCLDG  LFAT  10 16 24 10
     G > EOKPAQW̲̅JLHCISTBDFVMNXRGUZY  LFAU  10 16 24 11
 
+## Functionality: command line
+
+A command line executable, `enigma` (accessible if installed on the path or through `stack exec -- enigma`) for local
+Haskell installations, provides almost all the functionality of the API.
+
+Encode messages:
+
+    $ enigma encode "B-I-III-I EMO UX.MO.AY 13.04.11" "TESTINGXTESTINGUD"
+    OZQKPFLPYZRPYTFVU
+
+    $ enigma encode "B-I-III-I EMO UX.MO.AY 13.04.11" "OZQKPFLPYZRPYTFVU"
+    TESTINGXTESTINGUD
+
+Show configuration details (explained in more detail in the command line help):
+
+    $ enigma show "B-I-III-I EMO UX.MO.AY 13.04.11" -l 'X' -H'()' -f internal
+    X > ABCDEFGHIJKLMNOPQRSTUVW(X)YZ
+      P YBCDEFGHIJKLONMPQRSTXVW(U)AZ         UX.MO.AY
+      1 HCZMRVJPKSUDTQOLWEXN(Y)FAGIB  O  05  I
+      2 KOMQEPVZNXRBDLJHFSUWYACT(G)I  M  10  III
+      3 AXIQJZ(K)RMSUNTOLYDHVBWEGPFC  E  19  I
+      R YRUHQSLDPX(N)GOKMIEBFZCWVJAT         B
+      3 ATZQVYWRCEGOI(L)NXDHJMKSUBPF         I
+      2 VLWMEQYPZOA(N)CIBFDKRXSGTJUH         III
+      1 WZBLRVXAYGIPD(T)OHNEJMKFQSUC         I
+      P YBCDEFGHIJKLONMPQRS(T)XVWUAZ         UX.MO.AY
+    T < CNAUJVQSLEMIKBZRGPHXDFY(T)WO
+
+Simulate machine operation (explained in more detail command line help):
+
+    $ enigma run "B-I-III-I EMO UX.MO.AY 13.04.11" -m "TESTING" -t -H'()'
+    0000       CNAUJVQSLEMIKBZRGPHXDFYTWO   EMO  19 10 05
+    0001  T > UNXKGVERLYDIQBTWMHZ(O)AFPCJS  EMP  19 10 06
+    0002  E > QTYJ(Z)XUPKDIMLSWHAVNBGROFCE  EMQ  19 10 07
+    0003  S > DMXAPTRWKYINBLUESG(Q)FOZHCJV  ENR  19 11 08
+    0004  T > IUSMHRPEAQTVDYWGJFC(K)BLOZNX  ENS  19 11 09
+    0005  I > WMVXQRLS(P)YOGBTKIEFHNZCADJU  ENT  19 11 10
+    0006  N > WKIQXNRSCVBOY(F)LUDGHZPJAEMT  ENU  19 11 11
+    0007  G > RVPTWS(L)KYXHGNMQCOAFDZBEJIU  ENV  19 11 12
+
+Watch the machine as it runs for 500 steps:
+
+    $ enigma run "c-β-VIII-VII-VI QMLI UX.MO.AY 01.13.04.11" -s 500 -t -f internal -o
+
 ### Limitations
 
 Note that the correct display of some characters used to represent components (thin Naval rotors) assumes support for
@@ -95,7 +139,7 @@ This package served as the basis for a [Python version], with essentially the sa
 I'm currently learning and experimenting with some Haskell language features and can't promise the [development version]
 will work. More detail about planned releases and activities can be found the list of scheduled [milestones] and in the
 list of [open issues]. I may also be working on new major features on branches seperate from the development branch
-(for example I've started work on [adding a command line interface](https://github.com/orome/crypto-enigma-hs/issues/13)
+(for example I've completed the [addition of a command line interface](https://github.com/orome/crypto-enigma-hs/issues/13)
 on its [own branch](https://github.com/orome/crypto-enigma-hs/compare/develop...new/cli).)
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
