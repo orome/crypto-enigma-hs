@@ -92,9 +92,7 @@ subcommandO =
 
         helpText desc cmd argsFoot examplesFoot = (progDesc desc <>
                 header (cliName_ ++ ": "++ cmd ++" command") <>
-                -- REV: Too many parens <<<
-                footerDoc (Just (string (unlines ["Argument notes:\n", argsFoot, "Examples:\n", examplesFoot])))    )
-                -- footer (unlines ["Shared footer. ", foot]))
+                footerDoc (Just $ string $ unlines ["Argument notes:\n", argsFoot, "Examples:\n", examplesFoot]))
 
 
 main :: IO ()

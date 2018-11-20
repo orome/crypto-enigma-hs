@@ -254,7 +254,7 @@ stages :: EnigmaConfig -> [Stage]
 stages ec = [0..(length $ components ec)-1]
 
 -- REV: Could take a ring and a position and dispense with st
--- TBD: Some properties showing only 'position' changes?
+-- REV: Some properties showing only 'position' changes?
 -- The letter at the window for a given stage.
 -- Used in 'windows', and in 'step' to identify when a rotor ring is in the turnover position
 windowLetter :: EnigmaConfig -> Stage -> Char
@@ -337,7 +337,6 @@ Invalid arguments return an 'EnigmaError':
 ExceptT (Identity (Left Bad plugboard : AM.EU.ZiL))
 -}
 -- REV: Add checks for historical combinations of machine elements?
--- REV: Change Except to Either and remove runExecept from calls? -- https://stackoverflow.com/q/53191510/656912
 configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
 configEnigmaExcept rots winds plug rngs = do
         unless (and $ (==(length components')) <$> [length winds', length rngs']) (throwError BadNumbers)

@@ -294,7 +294,6 @@ displayOpts = DisplayOpts {
         steps = allSteps_
 }
 
--- TBD: Confirm defaults here and above are same as command line / match docs <<<
 -- Internal function used by all display functions to coerce all display options to valid values.
 validOpts_ :: DisplayOpts -> DisplayOpts
 validOpts_ opts = DisplayOpts {
@@ -382,7 +381,7 @@ displayEnigmaConfig ec ch optsin =
                 then "  " ++ [ech] ++ " > " ++ [(encode (enigmaMapping ec) ech)]
                 else ""
 
-        -- TBD: Can't use below unless encode handles ch == ' '
+        -- REV: Can't use below unless encode handles ch == ' '
         -- Locate the index of the encoding with m of ch, in s
         --locCar :: Char -> String -> Mapping -> Maybe Int
         locCar ch s m = elemIndex (encode m ch) s
