@@ -106,6 +106,14 @@ markerFunc_ spec = MarkerFunc_ (case spec of
                     [l, r] -> \c -> [l, c, r]
                     _ -> \c -> [c])
 
+mark_ :: MarkerFunc_ -> Char -> String
+mark_ (MarkerFunc_ f) c = f c
+
+-- !!! - Assumes that MarkerFuncs that add visible length to marked character always add exactly two characters
+markerWidth_ :: MarkerFunc_ -> Int
+markerWidth_ mf | (length $ filter isAscii (mark_ mf 'X')) == 3 = 1     -- Property enforced by markerFunc_
+                | otherwise = 0
+
 {-|
 A (<https://wiki.haskell.org/Type_synonym synonym> for) 'Int', indicating that this option will be coerced to a valid
 valid 'steps' value when used by display functions.
@@ -380,12 +388,9 @@ displayEnigmaConfig ec ch optsin =
         locCar ch s m = elemIndex (encode m ch) s
 
         --markedMapping :: Maybe Int -> Mapping -> MarkerFunc_ -> String
-        markedMapping (Just loc) e (MarkerFunc_ mf) = take loc <> mf.(!!loc) <> drop (loc + 1) $ e
-        markedMapping Nothing e (MarkerFunc_ mf)
-                -- Pad to align unmarked encoding if visible length is changed by marking
-                -- !!! - Assumes that MarkerFuncs that change visible length always add exactly two characters
-                | (length $ filter isAscii (mf 'X')) == 3 = " " ++ e ++ " "
-                | otherwise = e
+        markedMapping (Just loc) e mf = take loc <> (mark_ mf).(!!loc) <> drop (loc + 1) $ e
+        markedMapping Nothing e mf = buff ++ e ++ buff where buff = replicate (markerWidth_ mf) ' '
+        -- Pad to align unmarked encoding if visible length is changed by marking
 
         -- If the character isn't in 'letters', treat it as blank (a special case for 'encode' and other functions)
         --enigmaChar :: Char -> Char
