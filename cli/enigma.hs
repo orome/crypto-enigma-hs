@@ -1,20 +1,24 @@
 {-# LANGUAGE Safe, CPP #-}
 module Main where
 
-import Options.Applicative      -- http://hackage.haskell.org/package/optparse-applicative
-import Options.Applicative.Help.Pretty (string)     -- Necessary to format help text -- https://github.com/pcapriotti/optparse-applicative/issues/90#issuecomment-49868254
---import Data.Maybe
-import Data.Monoid ((<>))       -- For GHC 8.0 through 8.2
---import Control.Exception (catch)
---import Data.List.Split (chunksOf)
-import Control.Concurrent (threadDelay)
-import Control.Monad.Except (runExcept)
-import Control.Monad (replicateM_)
+import Options.Applicative                              -- http://hackage.haskell.org/package/optparse-applicative
+import Options.Applicative.Help.Pretty  (string)        -- Necessary to format help text -- https://github.com/pcapriotti/optparse-applicative/issues/90#issuecomment-49868254
 import System.Console.ANSI
+
+import Data.Monoid                      ((<>))          -- REV: For GHC 8.0 through 8.2
+import Control.Concurrent               (threadDelay)
+import Control.Monad.Except             (runExcept)
+import Control.Monad                    (replicateM_)
 
 import Crypto.Enigma
 import Crypto.Enigma.Display
 
+
+
+-- Definitions  ==============================================================
+
+
+-- Functions and constants ---------------------------------------------------
 
 cliName_ = "Enigma Machine (Haskell crypto-enigma) CLI"
 
@@ -25,6 +29,9 @@ cliError e = errorWithoutStackTrace (e ++ " (see help)")
 #endif
 
 stepInterval_ = 125000
+
+
+-- Command and option definitions --------------------------------------------
 
 data Subcommand =
         Encode { config :: String, message :: String } |
@@ -39,8 +46,6 @@ data Subcommand =
 data Options = Options { subcommand :: Subcommand } deriving Show
 
 commandO = Options <$> subcommandO
---commandO = Options <$> generalOpts <*> subcommandO
--- generalOpts = strOption ( long "general" <> help "General option" )
 
 subcommandO :: Parser Subcommand
 subcommandO =
@@ -95,9 +100,12 @@ subcommandO =
                 footerDoc (Just $ string $ unlines ["Argument notes:\n", argsFoot, "Examples:\n", examplesFoot]))
 
 
+
+-- Command line script =======================================================
+
+
 main :: IO ()
 main = do
---  (opts :: Options) <- execParser optsParser
     opts <- execParser optsParser
     case subcommand opts of
         Encode config message ->
@@ -115,16 +123,13 @@ main = do
                         mapM_ (printConfig (max speed (if overwrite then 1 else 0)) overwrite)
                                    ((if noinitial then tail else id) $ listEnigmaOperation (configEnigmaFromString config)
                                    message
-                                   (displayOpts{format=format,showencoding=showenc,markerspec=highlight,showsteps=showstps,steps=stps}))
+                                   (displayOpts{format=format,showencoding=showenc,markerspec=highlight,
+                                                showsteps=showstps,steps=stps}))
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
-    optsParser =
-        info (helper <*> commandO)
-             (  fullDesc <>
-                progDesc "A simple Enigma machine simulator with rich display of machine configurations." <>
-                header cliName_ <>
-                footerDoc (Just (string ("Examples:\n" ++ topExamples ++ "\nThis command line interface is part of the Haskell crypto-enigma package."))))
+    optsParser = info (helper <*> commandO)
+                      (fullDesc <> progDesc topDesc <> header cliName_ <> footerDoc (Just $ string topFoot))
 
     -- Like 'configEnigma' but without stack trace and with check for 4 words in a single string
     configEnigmaFromString :: String -> EnigmaConfig
@@ -135,25 +140,30 @@ main = do
                                     Left err -> cliError (show err)
                                 where [c, w, s, r] = words i
 
-    -- BUG: Omitted final extra line from non-overwritten internal config <<<
---     printConfig s True c = printConfig s False c >>
---                                 replicateM_ (length $ lines c) (clearLine >> cursorUpLine 1)
---     printConfig s False c = (if (length $ lines c) > 1 then putStr else putStrLn) c >>
---                                 (threadDelay (s * stepInterval_))
     printConfig s True c = printConfig s False c >>
-                                replicateM_ ((length $ lines c) + (if (length $ lines c) > 1 then 1 else 0)) (clearLine >> cursorUpLine 1)
+                                replicateM_ ((length $ lines c) + (if (length $ lines c) > 1 then 1 else 0))
+                                            (clearLine >> cursorUpLine 1)
     printConfig s False c = putStrLn c >>
                                 (threadDelay (s * stepInterval_))
 
 
+
+-- Help text =================================================================
+
+topDesc = "A simple Enigma machine simulator with rich display of machine configurations."
+
 encodeCmdDesc = "Show the encoding of a message."
-showCmdDesc = "Show an Enigma machine configuration in the specified format, optionally indicating the encoding of a specified character."
-runCmdDesc = "Show the operation of the Enigma machine as a series of configurations, as it encodes a message and/or for a specified number of steps. "
+showCmdDesc = "Show an Enigma machine configuration in the specified format, " ++
+              "optionally indicating the encoding of a specified character."
+runCmdDesc = "Show the operation of the Enigma machine as a series of configurations, " ++
+             "as it encodes a message and/or for a specified number of steps. "
 
 configArgHelp cmd = case cmd of
                         "encode" -> unlines ["The machine configuration at the start of encoding (see below)"]
                         "show" -> unlines ["The machine configuration to show (see below)"]
                         "run" -> unlines ["The machine setup at the start of operation (see below)"]
+                        -- Should not happen: optparse-applicative should have caught this
+                        _ -> error "ERROR: Unrecognized command: '" ++ cmd ++ "''!"
 
 messageArgHelp = messageOptHelp
 
@@ -261,6 +271,8 @@ omitArgFoot cmd = unlines [
         "characters for " ++ omittedArg ++ " is the same as omitting it."]
                 where omittedArg | cmd == "show" = "LETTER"
                                  | otherwise = "MESSAGE"
+
+topFoot = "Examples:\n" ++ topExamples ++ "\nThis command line interface is part of the Haskell crypto-enigma package."
 
 topExamples = unlines [
         "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\"",
@@ -432,16 +444,3 @@ runCmdExamples = init $ unlines [
         "",
         "   Watch the machine run for 500 steps:",
         "    $ enigma run \"c-β-VIII-VII-VI QMLI UX.MO.AY 01.13.04.11\" -s 500 -t -f internal -o"]
-
-
--- stack exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
--- RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
-
--- stack exec -- enigma show "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" -l 'G'
--- G > XKINZGF̲̅SCQBMLDVTJYHPWOUARE  CDTJ  25 15 16 25
-
--- stack exec -- enigma show "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.00000 05.16.05.12"
--- enigma: Bad plugboard : AE.BF.CM.DQ.HU.JN.LX.PR.SZ.00000
--- CallStack (from HasCallStack):
---   error, called at ./Crypto/Enigma.hs:371:57 in main:Crypto.Enigma
-
