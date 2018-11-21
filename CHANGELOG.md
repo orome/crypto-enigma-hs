@@ -8,16 +8,9 @@ See also:
 * [closed milestones]; and
 * [issues].
 
-### (0.0.3.?)
+### [0.0.3.1]
 
-* ([First stable release].)
-* (Unicode checking for messages and letters.)
-* (Force characters into map range or catch indexing errors in encoding.)
-* (Further workflow changes: stack integration, Stackage, etc.)
-
-### (0.0.3.1)
-
-Current [development version] with new CLI with significant
+Latest [release version] adding [new CLI] with significant
 [refactoring and additional features](https://github.com/orome/crypto-enigma-hs/compare/0.0.2.14...0.0.3.1):
 
 * [Add](https://github.com/orome/crypto-enigma-hs/issues/13)
@@ -33,8 +26,6 @@ Current [development version] with new CLI with significant
   for `EnigmaConfig`.
 
 ### [0.0.2.14]
-
-Latest [release version]
 
 * Update for GHC 8.6.1.
 * Travis CI infrastructure and resolver updates.
@@ -143,8 +134,9 @@ Stable enough for use, but not reviewed.
 
 [release version]: https://github.com/orome/crypto-enigma-hs/tree/hackage
 [development version]: https://github.com/orome/crypto-enigma-hs/tree/develop
-[new CLI features]: https://github.com/orome/crypto-enigma-hs/tree/new/cli
+[new CLI]: https://github.com/orome/crypto-enigma-hs/tree/new/cli
 
+[0.0.3.1]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.3.1
 [0.0.2.14]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.14
 [0.0.2.13]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.13
 [0.0.2.12]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.12
