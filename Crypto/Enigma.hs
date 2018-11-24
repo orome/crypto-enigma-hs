@@ -54,17 +54,14 @@ module Crypto.Enigma (
         enigmaEncoding
 ) where
 
-import           Control.Arrow
---import           Control.Exception      (assert)
+import           Control.Arrow          ((&&&))
 import           Control.Monad          (unless)
 import           Control.Monad.Except
---import           Control.Monad.Zip
---import           Control.Applicative
 import           Data.Monoid            ((<>))          -- For GHC < 8.4.3 - https://stackoverflow.com/a/53024485/656912
-import           Data.List
+import           Data.List              (intercalate, nub)
 import           Data.List.Split        (splitOn)
-import qualified Data.Map               as M
-import           Data.Maybe
+import qualified Data.Map as M          (Map, fromList, union, keys, lookup, member)
+import           Data.Maybe             (fromMaybe)
 import           Text.Printf            (printf)
 import           Data.Char              (toUpper)
 import           Data.Text              (replace, pack, unpack)
