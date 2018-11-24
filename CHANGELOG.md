@@ -15,6 +15,10 @@ See also:
 * (Force characters into map range or catch indexing errors in encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
 
+### (0.1.1.2)
+
+Current [development version]
+
 ### [0.1.1.1]
 
 Latest [release version], including breaking API changes:
