@@ -51,7 +51,7 @@ prop_NoEncodeIsMessage :: String -> Bool
 prop_NoEncodeIsMessage str = enigmaEncoding (configEnigma "----" "AAAA" "" "01.01.01.01") str == message str
 
 prop_BadCharIsBlankInConfig :: EnigmaConfig -> BadChar -> Bool
-prop_BadCharIsBlankInConfig cfg bchr = showEnigmaConfig cfg (chr bchr) == showEnigmaConfig cfg ' '
+prop_BadCharIsBlankInConfig cfg bchr = displayEnigmaConfig cfg (chr bchr) displayOpts == displayEnigmaConfig cfg ' ' displayOpts
 
 -- TBD - Confirm that this actually tests ==
 prop_StepEqual :: EnigmaConfig -> Bool

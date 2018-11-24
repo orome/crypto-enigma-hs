@@ -7,7 +7,6 @@ import System.Console.ANSI
 
 import Data.Monoid                      ((<>))          -- REV: For GHC 8.0 through 8.2
 import Control.Concurrent               (threadDelay)
-import Control.Monad.Except             (runExcept)
 import Control.Monad                    (replicateM_)
 
 import Crypto.Enigma
@@ -135,7 +134,7 @@ main = do
     configEnigmaFromString :: String -> EnigmaConfig
     configEnigmaFromString i = if ((length $ words i) /= 4)
                           then cliError ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
-                          else case runExcept (configEnigmaExcept c w s r) of
+                          else case configEnigma' c w s r of
                                     Right cfg  -> cfg
                                     Left err -> cliError (show err)
                                 where [c, w, s, r] = words i

@@ -29,7 +29,7 @@ module Crypto.Enigma (
         reflectors,
          -- * Machine configurations and transitions
         EnigmaConfig,
-        configEnigmaExcept,
+        configEnigma',
         configEnigma,
         stages,
         components,
@@ -56,7 +56,6 @@ module Crypto.Enigma (
 
 import           Control.Arrow          ((&&&))
 import           Control.Monad          (unless)
-import           Control.Monad.Except
 import           Data.Monoid            ((<>))          -- For GHC < 8.4.3 - https://stackoverflow.com/a/53024485/656912
 import           Data.List              (intercalate, nub)
 import           Data.List.Split        (splitOn)
@@ -183,7 +182,7 @@ type Position = Int
 {-|
 The complete description of the state of an Enigma machine, consisting of 'components', 'positions', and 'rings'.
 
-Two functions ('configEnigmaExcept' and 'configEnigma') are provided for creating 'EnigmaConfig', which differ in
+Two functions ('configEnigma'' and 'configEnigma') are provided for creating 'EnigmaConfig', which differ in
 their handling of errors in the provided arguments specifying the configuration (the only potential source of errors,
 since all other arguments throught the package are coerced to valid values).
 -}
@@ -330,12 +329,12 @@ at the rotor stage, and trivial degenerate machines;
 e.g., @configEnigma "-" \"A\" "" "01"@), and any number of (non-contradictory) plugboard wirings (including none).
 Invalid arguments return an 'EnigmaError':
 
->>> configEnigmaExcept "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
-ExceptT (Identity (Left Bad plugboard : AM.EU.ZiL))
+>>> configEnigma' "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
+Left Bad plugboard: AM.EU.ZiL
 -}
 -- REV: Add checks for historical combinations of machine elements?
-configEnigmaExcept :: String -> String -> String -> String -> Except EnigmaError EnigmaConfig
-configEnigmaExcept rots winds plug rngs = do
+configEnigma' :: String -> String -> String -> String -> Either EnigmaError EnigmaConfig
+configEnigma' rots winds plug rngs = do
         unless (and $ (==(length components')) <$> [length winds', length rngs']) (throwError BadNumbers)
         unless (rngs == (filter (`elem` "0123456789.") rngs)) (throwError (BadRings rngs))
         unless (and $ [(>=1),(<=26)] <*> rngs') (throwError (BadRings rngs))
@@ -366,7 +365,11 @@ configEnigmaExcept rots winds plug rngs = do
         winds' = "A" ++ reverse winds ++ "A"
         components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
 
--- Errors for use in configEnigmaExcept
+        -- REV: Legacy placeholders from Except to Either change <<<
+        throwError = Left       --fail.show would lose error type
+        return = Right
+
+-- Errors for use in configEnigma'
 data EnigmaError = BadNumbers
                  | BadRings String
                  | BadWindows String
@@ -380,8 +383,8 @@ instance Show EnigmaError where
         show BadNumbers = "Numbers of windows, ring settings, and components don't match"
         show (BadRings s) = "Bad ring settings: " ++ s
         show (BadWindows s) = "Bad windows: " ++ s
-        show (BadPlugs s) = "Bad plugboard : " ++ s
-        show (BadComponents arg s) = "Bad components : " ++ s ++ " in " ++ arg
+        show (BadPlugs s) = "Bad plugboard: " ++ s
+        show (BadComponents arg s) = "Bad components: " ++ s ++ " in " ++ arg
         show (BadRotors arg s) = "Bad rotors: " ++ s ++ " in " ++ arg
         show (BadReflector arg s) = "Bad reflector: " ++ s ++ " in " ++ arg
         show (MiscError s) = s
@@ -389,7 +392,7 @@ instance Show EnigmaError where
 {-|
 Create an 'EnigmaConfig' from a conventional specification.
 
-A thin convenience wrapper on @configEnigmaExcept@ intended for most uses (e.g., interactive) that takes the same
+A thin convenience wrapper on @configEnigma'@ intended for most uses (e.g., interactive) that takes the same
 arguments but errors with an informative message and a stack trace:
 
 >>> configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
@@ -403,7 +406,7 @@ This should be used instead of @read@, which cannot report error details:
 *** Exception: Prelude.read: no parse
 -}
 configEnigma :: String -> String -> String -> String -> EnigmaConfig
-configEnigma rots winds plug rngs = case runExcept (configEnigmaExcept rots winds plug rngs) of
+configEnigma rots winds plug rngs = case configEnigma' rots winds plug rngs of
         Right cfg  -> cfg
         Left err -> error (show err)
 
@@ -417,13 +420,13 @@ True
 instance Read EnigmaConfig where
         readsPrec _ i = if ((length $ words i) /= 4)
                           then []
-                          else case runExcept (configEnigmaExcept c w s r) of
+                          else case configEnigma' c w s r of
                                             Right cfg  -> [(cfg, "")]
                                             Left _ -> []
                                    where [c, w, s, r] = words i
 
 {-|
-Show the elements of a conventional specification (see 'configEnigmaExcept') joined by spaces into a single string.
+Show the elements of a conventional specification (see 'configEnigma'') joined by spaces into a single string.
 
 >>> configEnigma "b-β-V-VIII-II" "XQVI" "UX.MO.KZ.AY.EF.PL" "03.17.24.11"
 "b-β-V-VIII-III XQVI UX.MO.KZ.AY.EF.PL 03.17.24.11"

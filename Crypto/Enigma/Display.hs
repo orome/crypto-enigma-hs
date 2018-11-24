@@ -26,25 +26,19 @@ module Crypto.Enigma.Display (
         DisplaySteps,
         -- * Configuration display
         displayEnigmaConfig,
-        showEnigmaConfig,
-        showEnigmaConfigInternal,
         -- * Operation display
         displayEnigmaOperation,
         listEnigmaOperation,
-        showEnigmaOperation,
-        showEnigmaOperationInternal,
         -- * Encoding display
-        displayEnigmaEncoding,
-        showEnigmaEncoding
+        displayEnigmaEncoding
 ) where
 
---import Control.Applicative
 import Data.Monoid              ((<>))          -- For GHC < 8.4.3 - https://stackoverflow.com/a/53024485/656912
---import Data.Char
-import Data.List
+import Data.List                (elemIndex, zipWith5)
 import Data.List.Split          (chunksOf)
 import Text.Printf              (printf)
 import Data.Char                (toLower, isAscii)
+
 import Crypto.Enigma.Utils
 import Crypto.Enigma
 
@@ -422,20 +416,6 @@ displayEnigmaConfig ec ch optsin =
                        where
                             p' = if p == 0 then "  " else printf "%02d" (p::Int)
 
-{-# DEPRECATED showEnigmaConfig "This has been replaced by 'displayEnigmaConfig'" #-}
-{-|
-Equivalent to 'displayEnigmaConfig' with @displayOpts{format="single"}@.
--}
-showEnigmaConfig :: EnigmaConfig -> Char -> String
-showEnigmaConfig ec ch = displayEnigmaConfig ec ch displayOpts
-
-{-# DEPRECATED showEnigmaConfigInternal "This has been replaced by 'displayEnigmaConfig'" #-}
-{-|
-Equivalent to 'displayEnigmaConfig' with @displayOpts{format="internal"}@.
--}
-showEnigmaConfigInternal :: EnigmaConfig -> Char -> String
-showEnigmaConfigInternal ec ch = displayEnigmaConfig ec ch displayOpts{format="internal"}
-
 
 -- Operation display ---------------------------------------------------------
 
@@ -592,21 +572,6 @@ listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps op
                                                     fmtN True n = (printf "%04d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
                                                     fmtN False _ = ""
 
-{-# DEPRECATED showEnigmaOperation "This has been replaced by 'displayEnigmaOperation'" #-}
-{-|
-Equivalent to 'displayEnigmaOperation' with @displayOpts{format="single"}@.
--}
-showEnigmaOperation :: EnigmaConfig -> Message -> String
-showEnigmaOperation ec str = displayEnigmaOperation ec str displayOpts{format="single"}
-
-
-{-# DEPRECATED showEnigmaOperationInternal "This has been replaced by 'displayEnigmaOperation'" #-}
-{-|
-Equivalent to 'displayEnigmaOperation' with @displayOpts{format="internal"}@.
--}
-showEnigmaOperationInternal :: EnigmaConfig -> Message -> String
-showEnigmaOperationInternal ec str = displayEnigmaOperation ec str displayOpts{format="internal"}
-
 
 -- Encoding display ==========================================================
 
@@ -624,12 +589,4 @@ displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
                 -- Standard formatting of encoded messages
                 --postproc :: String -> String
                 postproc = unlines . chunksOf 60 . unwords . chunksOf 4
-
-{-# DEPRECATED showEnigmaEncoding "This has been replaced by 'displayEnigmaEncoding'" #-}
-{-|
-Equivalent to 'displayEnigmaEncoding'.
--}
-showEnigmaEncoding :: EnigmaConfig -> Message -> String
-showEnigmaEncoding ec str = displayEnigmaEncoding ec str
-
 

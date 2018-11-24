@@ -15,9 +15,10 @@ See also:
 * (Force characters into map range or catch indexing errors in encoding.)
 * (Further workflow changes: stack integration, Stackage, etc.)
 
-### (0.0.3.2)
+### (0.1.1.1)
 
-Current [development version]
+Current [development version], including change to handling errors with `Either` (rather than `Except`) and removal of
+depricated display functions.
 
 ### [0.0.3.1]
 
