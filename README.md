@@ -142,10 +142,14 @@ will work. More detail about planned releases and activities can be found the li
 list of [open issues]. Some recent activity includes:
 
 * [changes since](https://github.com/orome/crypto-enigma-hs/compare/hackage...develop#files_bucket) the latest Hackage
-  release version; and
+  release version;
 * the [addition of a command line interface](https://github.com/orome/crypto-enigma-hs/issues/13)
   which incorporates [extensive changes](https://github.com/orome/crypto-enigma-hs/compare/1d303d3d...eb249974)
-  [including](https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0031) refactoring of display functions.
+  [including](https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0031) refactoring of display
+  functions; and
+* breaking API changes(https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0111)
+  [including](https://github.com/orome/crypto-enigma-hs/compare/ef97f8ac..62d0ff59) removal of deprecated display
+  functions and change to handling of errors with `Either`.
 
 [Python version]: https://pypi.python.org/pypi/crypto-enigma
 [documentation]: https://hackage.haskell.org/package/crypto-enigma

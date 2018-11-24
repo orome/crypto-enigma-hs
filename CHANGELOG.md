@@ -14,7 +14,7 @@ Current [development version]
 
 ### [0.1.1.1]
 
-Latest [release version], including breaking API changes:
+Latest [release version], including [breaking API changes](https://github.com/orome/crypto-enigma-hs/compare/ef97f8ac..62d0ff59):
 
 * Change to [handling errors with `Either`](http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:3)
   ([rather than](https://stackoverflow.com/a/53456278/656912) `Except`, eliminating the dependency on `mtl`).
