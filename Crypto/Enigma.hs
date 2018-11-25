@@ -406,9 +406,7 @@ This should be used instead of @read@, which cannot report error details:
 *** Exception: Prelude.read: no parse
 -}
 configEnigma :: String -> String -> String -> String -> EnigmaConfig
-configEnigma rots winds plug rngs = case configEnigma' rots winds plug rngs of
-        Right cfg  -> cfg
-        Left err -> error (show err)
+configEnigma rots winds plug rngs = either (error.show) id (configEnigma' rots winds plug rngs)
 
 {-|
 Read the elements of a conventional specification (see 'configEnigma') as a single string.

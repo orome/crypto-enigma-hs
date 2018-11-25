@@ -134,10 +134,7 @@ main = do
     configEnigmaFromString :: String -> EnigmaConfig
     configEnigmaFromString i = if ((length $ words i) /= 4)
                           then cliError ("Enigma machine configuration has the format 'rotors windows plugboard rings'")
-                          else case configEnigma' c w s r of
-                                    Right cfg  -> cfg
-                                    Left err -> cliError (show err)
-                                where [c, w, s, r] = words i
+                          else either (cliError.show) id (configEnigma' c w s r) where [c, w, s, r] = words i
 
     printConfig s True c = printConfig s False c >>
                                 replicateM_ ((length $ lines c) + (if (length $ lines c) > 1 then 1 else 0))
