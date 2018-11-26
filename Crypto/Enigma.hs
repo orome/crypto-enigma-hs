@@ -335,24 +335,28 @@ Left Bad plugboard: AM.EU.ZiL
 -- REV: Add checks for historical combinations of machine elements?
 configEnigma' :: String -> String -> String -> String -> Either EnigmaError EnigmaConfig
 configEnigma' rots winds plug rngs = do
-        unless (and $ (==(length components')) <$> [length winds', length rngs']) (Left BadNumbers)
-        unless (rngs == (filter (`elem` "0123456789.") rngs)) (Left (BadRings rngs))
-        unless (and $ [(>=1),(<=26)] <*> rngs') (Left (BadRings rngs))
-        unless (and $ (`elem` letters) <$> winds') (Left (BadWindows winds))
+        unless (and $ (==(length components')) <$> [length winds', length rngs'])
+                (Left $ BadNumbers)
+        unless (rngs == (filter (`elem` "0123456789.") rngs))
+                (Left $ BadRings rngs)
+        unless (and $ [(>=1),(<=26)] <*> rngs')
+                (Left $ BadRings rngs)
+        unless (and $ (`elem` letters) <$> winds')
+                (Left $ BadWindows winds)
         unless (plug `elem` ["~",""," "] ||
                        ((and $ (==2).length <$> splitOn "." plug) &&
                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
-                        ((\s -> s == nub s) $ filter (/='.') plug))
-               ) (Left (BadPlugs plug))
+                        ((\s -> s == nub s) $ filter (/='.') plug)))
+                (Left $ BadPlugs plug)
         unless (and $ (`M.member` comps_) <$> tail components')
-                (Left (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
+                (Left $ BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init $ tail components'))
         -- REV: Disallow no-op "keyboard" as component; disallow rotors as reflectors and vice versa <<<
 --         unless (and $ (`M.member` (rots_ `M.union` refs_)) <$> tail components')
---                 (Left (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
+--                 (Left $ BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init $ tail components'))
 --         unless (and $ (`M.member` rots_) <$> init (tail components'))
---                 (Left (BadRotors rots $ unwords $ filter (`notElem` rotors) (init (tail components'))))
+--                 (Left $ BadRotors rots $ unwords $ filter (`notElem` rotors) (init $ tail components'))
 --         unless ((last $ components') `M.member` refs_)
---                 (Left (BadReflector rots (last $ components')))
+--                 (Left $ BadReflector rots (last $ components'))
         Right EnigmaConfig {
                 components = components',
                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
@@ -392,7 +396,7 @@ A thin convenience wrapper on @configEnigma'@ intended for most uses (e.g., inte
 arguments but errors with an informative message and a stack trace:
 
 >>> configEnigma "c-β-V-III-II" "LQVI" "AM.EU.ZiL" "16.01.21.11"
-*** Exception: Bad plugboard : AM.EU.ZiL
+*** Exception: Bad plugboard: AM.EU.ZiL
 CallStack (from HasCallStack):
   error, called at crypto-enigma/Crypto/Enigma.hs:317:21 in main:Crypto.Enigma
 
