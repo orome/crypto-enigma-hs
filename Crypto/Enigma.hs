@@ -335,25 +335,25 @@ Left Bad plugboard: AM.EU.ZiL
 -- REV: Add checks for historical combinations of machine elements?
 configEnigma' :: String -> String -> String -> String -> Either EnigmaError EnigmaConfig
 configEnigma' rots winds plug rngs = do
-        unless (and $ (==(length components')) <$> [length winds', length rngs']) (throwError BadNumbers)
-        unless (rngs == (filter (`elem` "0123456789.") rngs)) (throwError (BadRings rngs))
-        unless (and $ [(>=1),(<=26)] <*> rngs') (throwError (BadRings rngs))
-        unless (and $ (`elem` letters) <$> winds') (throwError (BadWindows winds))
+        unless (and $ (==(length components')) <$> [length winds', length rngs']) (Left BadNumbers)
+        unless (rngs == (filter (`elem` "0123456789.") rngs)) (Left (BadRings rngs))
+        unless (and $ [(>=1),(<=26)] <*> rngs') (Left (BadRings rngs))
+        unless (and $ (`elem` letters) <$> winds') (Left (BadWindows winds))
         unless (plug `elem` ["~",""," "] ||
                        ((and $ (==2).length <$> splitOn "." plug) &&
                         (and $ (`elem` letters) <$> filter (/='.') plug) &&
                         ((\s -> s == nub s) $ filter (/='.') plug))
-               ) (throwError (BadPlugs plug))
+               ) (Left (BadPlugs plug))
         unless (and $ (`M.member` comps_) <$> tail components')
-                (throwError (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
+                (Left (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
         -- REV: Disallow no-op "keyboard" as component; disallow rotors as reflectors and vice versa <<<
 --         unless (and $ (`M.member` (rots_ `M.union` refs_)) <$> tail components')
---                 (throwError (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
+--                 (Left (BadComponents rots $ unwords $ filter (`notElem` (rotors ++ reflectors)) (init (tail components'))                                                 ))
 --         unless (and $ (`M.member` rots_) <$> init (tail components'))
---                 (throwError (BadRotors rots $ unwords $ filter (`notElem` rotors) (init (tail components'))))
+--                 (Left (BadRotors rots $ unwords $ filter (`notElem` rotors) (init (tail components'))))
 --         unless ((last $ components') `M.member` refs_)
---                 (throwError (BadReflector rots (last $ components')))
-        return EnigmaConfig {
+--                 (Left (BadReflector rots (last $ components')))
+        Right EnigmaConfig {
                 components = components',
                 positions = zipWith (\w r -> (mod (numA0 w - r + 1) 26) + 1) winds' rngs',
                 rings = rngs'
@@ -364,10 +364,6 @@ configEnigma' rots winds plug rngs = do
         rngs' = reverse $ (read <$> (splitOn "." $ "01." ++ rngs ++ ".01") :: [Int])
         winds' = "A" ++ reverse winds ++ "A"
         components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
-
-        -- REV: Legacy placeholders from Except to Either change <<<
-        throwError = Left       --fail.show would lose error type
-        return = Right
 
 -- Errors for use in configEnigma'
 data EnigmaError = BadNumbers
