@@ -5,7 +5,7 @@ Description : Display of Enigma machine state and encoding
 Copyright   : (c) 2014-2018 Roy Levien
 License     : BSD3
 Maintainer  : royl@aldaron.com
-Stability   : experimental
+Stability   : provisional
 Portability : POSIX
 
 A module for rich display of the state of and encoding performed by Enigma machines defined in "Crypto.Enigma".
@@ -41,8 +41,6 @@ import Data.Char                (toLower, isAscii)
 
 import Crypto.Enigma.Utils
 import Crypto.Enigma
-
--- REV: Final newline in show... functions is a bit inconsistent
 
 
 
@@ -189,7 +187,8 @@ data DisplayOpts = DisplayOpts {
                 Note that (as follows from 'Mapping') the position of the marked letter at each stage is the
                 alphabetic position of the marked letter at the previous stage.
 
-                This can be represented schematically (with input arriving and output exiting on the left) as #showEnigmaConfigInternalFIG#
+                This can be represented schematically (with input arriving and output exiting on the left)
+                as #showEnigmaConfigInternalFIG#
 
                 <<figs/configinternal.jpg>>
 
@@ -291,21 +290,21 @@ displayOpts = DisplayOpts {
 -- Internal function used by all display functions to coerce all display options to valid values.
 validOpts_ :: DisplayOpts -> DisplayOpts
 validOpts_ opts = DisplayOpts {
-                        format = case fmt of
-                                  f | elem f fmts_ -> f
-                                    | otherwise -> fmtsSingle_!!0,
-                        showencoding = se,
-                        markerspec = ms,
-                        markerfunction_ = markerFunc_ ms,
-                        showsteps = ss,
-                        steps = if ns > 0 then ns else allSteps_
-                        }
-                        where
-                                fmt = (format opts)
-                                se = (showencoding opts)
-                                ms = (markerspec opts)
-                                ss = (showsteps opts)
-                                ns = (steps opts)
+        format = case fmt of
+                  f | elem f fmts_ -> f
+                    | otherwise -> fmtsSingle_!!0,
+        showencoding = se,
+        markerspec = ms,
+        markerfunction_ = markerFunc_ ms,
+        showsteps = ss,
+        steps = if ns > 0 then ns else allSteps_
+        }
+        where
+                fmt = (format opts)
+                se = (showencoding opts)
+                ms = (markerspec opts)
+                ss = (showsteps opts)
+                ns = (steps opts)
 
 
 -- Configuration display -----------------------------------------------------
@@ -399,15 +398,22 @@ displayEnigmaConfig ec ch optsin =
                             ps' = unwords $ (printf "%02d") <$> ps
 
         showEnigmaConfigInternal_ =
-                unlines $ [fmt (if ech == ' ' then "" else ech:" >") (markedMapping (head charLocs) letters (markerfunction_ opts)) ' ' 0 ""] ++
+                unlines $ [fmt (if ech == ' ' then "" else ech:" >")
+                               (markedMapping (head charLocs) letters (markerfunction_ opts))
+                               ' ' 0 ""
+                          ] ++
                           (zipWith5 fmt (init <> reverse $ ["P"] ++ (show <$> (tail.init $ stages ec)) ++ ["R"])
-                                        (zipWith3 markedMapping (tail.init $ charLocs) (stageMappingList ec) (cycle [markerfunction_ opts]))
+                                        (zipWith3 markedMapping
+                                                        (tail.init $ charLocs)
+                                                        (stageMappingList ec)
+                                                        (cycle [markerfunction_ opts]))
                                         (" " ++ (reverse $ windows ec) ++ replicate (length $ positions ec) ' ')
                                         ([0] ++ ((tail.init $ positions ec)) ++ replicate (length $ positions ec) 0 )
                                         (components ec ++ (tail $ reverse $ components ec))
                           ) ++
                           [fmt (if ech == ' ' then "" else (encode (enigmaMapping ec) ech):" <")
-                               (markedMapping (last charLocs) (enigmaMapping ec) (markerfunction_ opts)) ' ' 0 ""]
+                               (markedMapping (last charLocs) (enigmaMapping ec) (markerfunction_ opts))
+                               ' ' 0 ""]
                 where
                     charLocs = zipWith (locCar ech)
                                    ([letters] ++ stageMappingList ec ++ [enigmaMapping ec])
@@ -559,18 +565,19 @@ A list representation of the operation of an enigma machine, equivalent to
 -- starting configuration and for each character of the message, using the provided configuration display function.
 -- Note that while 'displayEnigmaOperation' indicate a 'Message' argument, it is this function that applies 'message'.
 listEnigmaOperation :: EnigmaConfig -> Message -> DisplayOpts -> [String]
-listEnigmaOperation ec str optsin = zipWith3 (\n sec scr -> (fmtN  (showsteps opts) n) ++ (displayEnigmaConfig sec scr opts))
-                                                      [0..(if (steps opts) < 0 then max (length msg) 1 else (steps opts))]
-                                                      (iterate step ec)
-                                                      (' ':msg ++ [' ',' '..])
-                                                where
-                                                    -- Ensure valid arguments
-                                                    msg = message str
-                                                    opts = validOpts_ optsin
+listEnigmaOperation ec str optsin = zipWith3
+                (\n sec scr -> (fmtN  (showsteps opts) n) ++ (displayEnigmaConfig sec scr opts))
+                [0..(if (steps opts) < 0 then max (length msg) 1 else (steps opts))]
+                (iterate step ec)
+                (' ':msg ++ [' ',' '..])
+        where
+        -- Ensure valid arguments
+                msg = message str
+                opts = validOpts_ optsin
 
-                                                    --fmtN :: Bool -> Int -> String
-                                                    fmtN True n = (printf "%04d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
-                                                    fmtN False _ = ""
+                --fmtN :: Bool -> Int -> String
+                fmtN True n = (printf "%04d  " n) ++ (if elem (format opts) fmtsInternal_ then "\n" else "")
+                fmtN False _ = ""
 
 
 -- Encoding display ==========================================================

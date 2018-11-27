@@ -147,7 +147,7 @@ list of [open issues]. Some recent activity includes:
   which incorporates [extensive changes](https://github.com/orome/crypto-enigma-hs/compare/1d303d3d...eb249974)
   [including](https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0031) refactoring of display
   functions; and
-* breaking API changes(https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0111)
+* [breaking API changes](https://github.com/orome/crypto-enigma-hs/blob/develop/CHANGELOG.md#0111)
   [including](https://github.com/orome/crypto-enigma-hs/compare/ef97f8ac..62d0ff59) removal of deprecated display
   functions and change to handling of errors with `Either`.
 

@@ -1,12 +1,11 @@
 {-# OPTIONS_HADDOCK show-extensions #-}
---{-# OPTIONS_GHC -fno-ignore-asserts #-} --REV: Use to keep asserts for valid 'Message'? <<<
 {-|
 Module      : Crypto.Enigma
 Description : Enigma machine simulator
 Copyright   : (c) 2014-2018 Roy Levien
 License     : BSD3
 Maintainer  : royl@aldaron.com
-Stability   : experimental
+Stability   : provisional
 Portability : POSIX
 
 An Enigma machine simulator with rudimentary display, currently limited to the I, M3, and M4 models.
