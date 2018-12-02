@@ -2,7 +2,7 @@
 {-|
 Module      : Crypto.Enigma.Display
 Description : Display of Enigma machine state and encoding
-Copyright   : (c) 2014-2018 Roy Levien
+Copyright   : (c) 2014-2019 Roy Levien
 License     : BSD3
 Maintainer  : royl@aldaron.com
 Stability   : provisional
