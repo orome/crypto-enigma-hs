@@ -138,7 +138,7 @@ main = do
 
     printConfig s True c = printConfig s False c >>
                                 replicateM_ ((length $ lines c) + (if (length $ lines c) > 1 then 1 else 0))
-                                            (clearLine >> cursorUpLine 1)
+                                            (cursorUpLine 1 >> clearLine)
     printConfig s False c = putStrLn c >>
                                 (threadDelay (s * stepInterval_))
 
