@@ -8,13 +8,13 @@ See also:
 * [closed milestones]; and
 * [issues].
 
-### (0.1.1.2)
+### [0.1.1.2]
 
-Current [development version]
+Latest [release version], including fixes to documentation and CLI display bugs.
 
 ### [0.1.1.1]
 
-Latest [release version], including [breaking API changes](https://github.com/orome/crypto-enigma-hs/compare/ef97f8ac..62d0ff59):
+[Breaking API changes](https://github.com/orome/crypto-enigma-hs/compare/ef97f8ac..62d0ff59):
 
 * Change to [handling errors with `Either`](http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:3)
   ([rather than](https://stackoverflow.com/a/53456278/656912) `Except`, eliminating the dependency on `mtl`).
@@ -148,6 +148,7 @@ Stable enough for use, but not reviewed.
 [development version]: https://github.com/orome/crypto-enigma-hs/tree/develop
 [new CLI]: https://github.com/orome/crypto-enigma-hs/tree/new/cli
 
+[0.1.1.2]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.1.1.2
 [0.1.1.1]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.1.1.1
 [0.0.3.1]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.3.1
 [0.0.2.14]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.0.2.14
