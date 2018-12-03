@@ -8,6 +8,10 @@ See also:
 * [closed milestones]; and
 * [issues].
 
+### (0.1.1.3)
+
+Current [development version]
+
 ### [0.1.1.2]
 
 Latest [release version], including fixes to documentation and CLI display bugs.
