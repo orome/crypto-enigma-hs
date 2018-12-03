@@ -30,9 +30,9 @@ Perform [message encoding]:
 
 Show [configuration details]:
 
-    >>> let cfg = configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11"
-    >>> putStr $ showEnigmaConfigInternal cfg 'K'
-    K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ
+    >>> let cfg = configEnigma "b-γ-V-VIII-II" "LFAQ" "UX.MO.KZ.AY.EF.PL" "03.17.04.11"
+    >>> putStr $ displayEnigmaConfig cfg 'K' displayOpts{format="internal"}
+    K > ABCDEFGHIJK̲̅LMNOPQRSTUVWXYZ            
       P YBCDFEGHIJZ̲̅PONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
       1 LORVFBQNGWKATHJSZPIYUDXEMC̲̅  Q  07  II
       2 BJY̲̅INTKWOARFEMVSGCUDPHZQLX  A  24  VIII
@@ -45,11 +45,10 @@ Show [configuration details]:
       1 LFZVXEINSOKAYHBRG̲̅CPMUDJWTQ         II
       P YBCDFEG̲̅HIJZPONMLQRSTXVWUAK         UX.MO.KZ.AY.EF.PL
     G < CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS
-
 Simulate [machine operation]:
 
     >>> let cfg = configEnigma "b-γ-V-VIII-II" "LFAP" "UX.MO.KZ.AY.EF.PL" "03.17.04.11"
-    >>> putStr $ showEnigmaOperation cfg "KRIEG"
+    >>> putStr $ displayEnigmaOperation cfg "KRIEG" displayOpts
         OHNKJYSBTEDMLCARWPGIXZQUFV  LFAP  10 16 24 06
     K > CMAWFEKLNVG̲̅HBIUYTXZQOJDRPS  LFAQ  10 16 24 07
     R > HXETCUMASQNZGKRYJO̲̅IDFWVBPL  LFAR  10 16 24 08
