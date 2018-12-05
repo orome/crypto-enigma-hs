@@ -335,7 +335,7 @@ Left Bad plugboard: AM.EU.ZiL
 configEnigma' :: String -> String -> String -> String -> Either EnigmaError EnigmaConfig
 configEnigma' rots winds plug rngs = do
         unless (and $ (==(length components')) <$> [length winds', length rngs'])
-                (Left $ BadNumbers)
+                (Left $ BadNumbers (length components') (length winds') (length rngs'))
         unless (rngs == (filter (`elem` "0123456789.") rngs))
                 (Left $ BadRings rngs)
         unless (and $ [(>=1),(<=26)] <*> rngs')
@@ -369,7 +369,7 @@ configEnigma' rots winds plug rngs = do
         components' = reverse $ splitOn "-" $ rots ++ "-" ++ plug
 
 -- Errors for use in configEnigma'
-data EnigmaError = BadNumbers
+data EnigmaError = BadNumbers Int Int Int
                  | BadRings String
                  | BadWindows String
                  | BadPlugs String
@@ -379,7 +379,9 @@ data EnigmaError = BadNumbers
                  | MiscError String
 
 instance Show EnigmaError where
-        show BadNumbers = "Numbers of windows, ring settings, and components don't match"
+        show (BadNumbers nc nw nr) = "Bad configuration: numbers of rotors (" ++ (show nc) ++
+                                     "), windows letters (" ++ (show nw) ++
+                                     "), and rings (" ++ (show nr) ++ ") must match"
         show (BadRings s) = "Bad ring settings: " ++ s
         show (BadWindows s) = "Bad windows: " ++ s
         show (BadPlugs s) = "Bad plugboard: " ++ s
