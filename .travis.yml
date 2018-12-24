@@ -74,7 +74,7 @@ script:
 # Run some example CLI commands
 - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma run "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" -m "FOLGENDES IST SOFORT BEKANNTZUGEBEN" -f single -e -t
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma --version
+#- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma --version
 
 notifications:
   webhooks:
