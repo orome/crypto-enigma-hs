@@ -4,6 +4,7 @@ module Main where
 import Options.Applicative                              -- http://hackage.haskell.org/package/optparse-applicative
 import Options.Applicative.Help.Pretty  (string)        -- Necessary to format help text -- https://github.com/pcapriotti/optparse-applicative/issues/90#issuecomment-49868254
 import System.Console.ANSI
+import Data.Version (showVersion)
 
 import Data.Monoid                      ((<>))          -- REV: For GHC 8.0 through 8.2
 import Control.Concurrent               (threadDelay)
@@ -11,6 +12,7 @@ import Control.Monad                    (replicateM_)
 
 import Crypto.Enigma
 import Crypto.Enigma.Display
+import Paths_crypto_enigma (version)
 
 
 
@@ -98,6 +100,8 @@ subcommandO =
                 header (cliName_ ++ ": "++ cmd ++" command") <>
                 footerDoc (Just $ string $ unlines ["Argument notes:\n", argsFoot, "Examples:\n", examplesFoot]))
 
+versionOpt = infoOption (showVersion version) (long "version" <> short 'v' <> help "Show package version")
+
 
 
 -- Command line script =======================================================
@@ -127,7 +131,7 @@ main = do
         cmd -> putStrLn $ "Unmatched command: " ++ (show cmd)
   where
     optsParser :: ParserInfo Options
-    optsParser = info (helper <*> commandO)
+    optsParser = info (helper <*> versionOpt <*> commandO)
                       (fullDesc <> progDesc topDesc <> header cliName_ <> footerDoc (Just $ string topFoot))
 
     -- Like 'configEnigma' but without stack trace and with check for 4 words in a single string
