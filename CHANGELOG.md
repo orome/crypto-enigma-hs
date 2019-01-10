@@ -8,13 +8,17 @@ See also:
 * [closed milestones]; and
 * [issues].
 
-### (0.1.1.5)
+### (0.1.1.6)
 
 Current [development version]
 
+### [0.1.1.5]
+
+Latest [release version], including version CLI option and improved CLI error reporting.
+
 ### [0.1.1.4]
 
-Latest [release version], including fixes to documentation and CLI display bugs.
+Fixes to documentation and CLI display bugs.
 
 ### [0.1.1.3]
 
@@ -160,6 +164,7 @@ Stable enough for use, but not reviewed.
 [development version]: https://github.com/orome/crypto-enigma-hs/tree/develop
 [new CLI]: https://github.com/orome/crypto-enigma-hs/tree/new/cli
 
+[0.1.1.5]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.1.1.5
 [0.1.1.4]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.1.1.4
 [0.1.1.3]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.1.1.3
 [0.1.1.2]: https://github.com/orome/crypto-enigma-hs/releases/tag/0.1.1.2
