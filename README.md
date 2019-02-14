@@ -14,7 +14,7 @@ Currently support is only provided for those [machine models] in most widespread
 [I], [M3], and [M4].
 
 This is adapted, as an exercise in learning Haskell, from an earlier learning project written in Mathematica. It is my
-first Haskell program. A [Python version] with substantially the same API, plus a command line interface, is also
+first Haskell program. A [Python version] with substantially the same API and command line interface, is also
 available.
 
 ### Functionality: package API
