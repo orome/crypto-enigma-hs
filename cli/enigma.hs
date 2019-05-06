@@ -276,8 +276,7 @@ topFoot = "Examples:\n" ++ topExamples ++ "\nThis command line interface is part
 
 topExamples = unlines [
         "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\"",
-        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\" -f",
-        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTING! testing?\" -f",
+        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTING! testing?\"",
         "    $ enigma show \"B-I-III-I EMO UX.MO.AY 13.04.11\" -l 'X'",
         "    $ enigma show \"B-I-III-I EMO UX.MO.AY 13.04.11\" -l 'X' -H '()'",
         "    $ enigma show \"B-I-III-I EMO UX.MO.AY 13.04.11\" -l 'X' -H '()' -f internal",
@@ -295,17 +294,11 @@ topExamples = unlines [
 encodeCmdExamples = init $ unlines [
         "  Encode a message:",
         "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\"",
-        "    OZQKPFLPYZRPYTFVU",
-        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"OZQKPFLPYZRPYTFVU\"",
-        "    TESTINGXTESTINGUD",
-        "",
-        "  Encode a message and break the output into blocks of 4:",
-        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTINGXTESTINGUD\" -f",
         "    OZQK PFLP YZRP YTFV U",
         "",
         "  Standard Naval subistitutions for non-letter characters are performed",
         "  before encoding:",
-        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTING! testing?\" -f",
+        "    $ enigma encode \"B-I-III-I EMO UX.MO.AY 13.04.11\" \"TESTING! testing?\"",
         "    OZQK PFLP YZRP YTFV U"]
 
 showCmdExamples = init $ unlines [

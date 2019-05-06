@@ -64,10 +64,10 @@ Haskell installations, provides almost all the functionality of the API.
 Encode messages:
 
     $ enigma encode "B-I-III-I EMO UX.MO.AY 13.04.11" "TESTINGXTESTINGUD"
-    OZQKPFLPYZRPYTFVU
+    OZQK PFLP YZRP YTFV U
 
     $ enigma encode "B-I-III-I EMO UX.MO.AY 13.04.11" "OZQKPFLPYZRPYTFVU"
-    TESTINGXTESTINGUD
+    TEST INGX TEST INGU D
 
 Show configuration details (explained in more detail in the command line help):
 

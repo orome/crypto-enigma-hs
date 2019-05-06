@@ -589,7 +589,7 @@ Show the conventionally formatted encoding of a 'Message' by an (initial) Enigma
 >>> putStr $ displayEnigmaEncoding cfg "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
 RBBF PMHP HGCZ XTDY GAHG UFXG EWKB LKGJ
 -}
--- TBD: Add new arguments for formatting (and use in cli)
+-- TBD: Add new arguments for formatting, and use in cli (#33) <<<
 displayEnigmaEncoding :: EnigmaConfig -> Message -> String
 displayEnigmaEncoding ec str = postproc $ enigmaEncoding ec (message str)
         where
