@@ -38,6 +38,8 @@ jobs:
     env: RESOLVER=lts-13.11   STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 13.19 (8.6.4)"
     env: RESOLVER=lts-13.19   STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 13.20 (8.6.5)"
+    env: RESOLVER=lts-13.20   STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS Latest"
     env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "Stackage Nightly (excluded from Hackage branch tests)"
