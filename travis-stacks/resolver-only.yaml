@@ -1,6 +1,7 @@
 # Empty stack config, to be overridden by resolver
 
 resolver: USE-RESOLVER-CLI-OPTION   # Overridden by resolver cli option
+#allow-newer: true
 
 packages:
 - '..'
