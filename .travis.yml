@@ -38,8 +38,8 @@ jobs:
     env: RESOLVER=lts-13.11   STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 13.19 (8.6.4)"
     env: RESOLVER=lts-13.19   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 14.14 (8.6.5)"
-    env: RESOLVER=lts-14.14   STACK_YAML=travis-stacks/resolver-only.yaml
+  - name: "LTS 14.15 (8.6.5)"
+    env: RESOLVER=lts-14.15   STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS Latest"
     env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS Latest"
