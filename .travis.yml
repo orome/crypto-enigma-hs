@@ -1,5 +1,5 @@
-# See https://docs.travis-ci.com/user/reference/overview/#Virtualisation-Environment-vs-Operating-System
-sudo: required
+os: linux
+dist: xenial
 
 # Choose a lightweight base image; we provide our own build tools.
 language: generic
