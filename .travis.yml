@@ -1,5 +1,5 @@
 os: linux
-dist: xenial
+dist: bionic
 
 # Choose a lightweight base image; we provide our own build tools.
 language: generic
