@@ -62,6 +62,13 @@ jobs:
     if: branch != "hackage"
   - name: "Stackage Nightly (excluded from Hackage branch tests)"
     env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
+    dist: trusty
+    ghc-options:
+      "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
+      "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
+    if: branch != "hackage"
+  - name: "Stackage Nightly (excluded from Hackage branch tests)"
+    env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
     os: osx
     osx_image: xcode11.3
     ghc-options:
