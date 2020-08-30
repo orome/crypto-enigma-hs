@@ -1,5 +1,5 @@
 os: linux
-dist: bionic
+dist: focal
 
 # Choose a lightweight base image; we provide our own build tools.
 language: generic
@@ -19,16 +19,22 @@ addons:
 jobs:
   include:
   - name: "LTS 3.22 (7.10.2)" # crypto-enigma not in snapshot
+    dist: trusty
     env: RESOLVER=lts-3.22    STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 6.35 (7.10.3)" # crypto-enigma not in snapshot
+    dist: trusty
     env: RESOLVER=lts-6.35    STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 7.24 (8.0.1)"
+    dist: xenial
     env: RESOLVER=lts-7.24    STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 9.21 (8.0.2)"
+    dist: xenial
     env: RESOLVER=lts-9.21    STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 10.3 (8.2.2)"
+    dist: bionic
     env: RESOLVER=lts-10.3    STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 11.22 (8.2.2)"
+    dist: bionic
     env: RESOLVER=lts-11.22   STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS 12.14 (8.4.3)"
     env: RESOLVER=lts-12.14   STACK_YAML=travis-stacks/resolver-only.yaml
@@ -64,7 +70,7 @@ jobs:
     if: branch != "hackage"
   - name: "Stackage Nightly (excluded from Hackage branch tests)"
     env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
-    dist: trusty
+    dist: bionic
     ghc-options:
       "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
       "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
