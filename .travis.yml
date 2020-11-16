@@ -57,7 +57,7 @@ jobs:
 #  - name: "LTS Latest"
 #    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
 #    os: osx
-#    osx_image: xcode12
+#    osx_image: xcode12.2
 #  - name: "LTS Latest"
 #    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
 #    os: windows
@@ -78,7 +78,7 @@ jobs:
 #  - name: "Stackage Nightly (excluded from Hackage branch tests)"
 #    env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
 #    os: osx
-#    osx_image: xcode12
+#    osx_image: xcode12.2
 #    ghc-options:
 #      "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
 #      "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
@@ -87,7 +87,7 @@ jobs:
 #  - name: "Haskell for Mac (13.14/8.6.4; test LTS used by Haskell for Mac on macOS)"
 #    env: RESOLVER=lts-13.14   STACK_YAML=travis-stacks/resolver-only.yaml
 #    os: osx
-#    osx_image: xcode12
+#    osx_image: xcode12.2
 
 # lts-0.7 - Fails on Travis (unsupported GHC on Travis)
 # lts-2.22 - Fails on Travis (too old)
