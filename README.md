@@ -5,7 +5,7 @@
 [![Stackage](https://www.stackage.org/package/crypto-enigma/badge/lts?label=lts)](https://www.stackage.org/lts/package/crypto-enigma)
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma-hs/blob/hackage/LICENSE)
-[![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=hackage)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
+[![Build Status](https://travis-ci.com/orome/crypto-enigma-hs.svg?branch=hackage)](https://travis-ci.com/orome/crypto-enigma-hs/branches)
 [![Gitter](https://img.shields.io/gitter/room/badges/shields.svg)](https://gitter.im/orome/crypto-enigma-hs)
 
 An Enigma machine simulator with state and encoding display.
@@ -134,7 +134,7 @@ of this verson has resulted in some minor divergence.
 
 ### Development status
 
-[![Build Status](https://travis-ci.org/orome/crypto-enigma-hs.svg?branch=develop)](https://travis-ci.org/orome/crypto-enigma-hs/branches)
+[![Build Status](https://travis-ci.com/orome/crypto-enigma-hs.svg?branch=develop)](https://travis-ci.com/orome/crypto-enigma-hs/branches)
 
 I'm currently learning and experimenting with some Haskell language features and can't promise the [development version]
 will work. More detail about planned releases and activities can be found the list of scheduled [milestones] and in the
