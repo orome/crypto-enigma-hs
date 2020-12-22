@@ -54,10 +54,10 @@ jobs:
     env: RESOLVER=lts-16.26    STACK_YAML=travis-stacks/resolver-only.yaml
   - name: "LTS Latest"
     env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS Latest"
-    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
-    os: osx
-    osx_image: xcode12.2
+#  - name: "LTS Latest"
+#    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
+#    os: osx
+#    osx_image: xcode12.2
 #  - name: "LTS Latest"
 #    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
 #    os: windows
