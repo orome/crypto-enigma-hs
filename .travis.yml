@@ -87,11 +87,11 @@ jobs:
 #      "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
 #      "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
 #    if: branch != "hackage"
-    # TBD - Update when Haskell for Mac updates -- https://community.hfm.io/hc/en-us/requests/795
- - name: "Haskell for Mac (13.14/8.6.4; test LTS used by Haskell for Mac on macOS)"
-   env: RESOLVER=lts-13.14   STACK_YAML=travis-stacks/resolver-only.yaml
-   os: osx
-   osx_image: xcode12.5
+#   # TBD - Update when Haskell for Mac updates -- https://community.hfm.io/hc/en-us/requests/795
+#  - name: "Haskell for Mac (13.14/8.6.4; test LTS used by Haskell for Mac on macOS)"
+#    env: RESOLVER=lts-13.14   STACK_YAML=travis-stacks/resolver-only.yaml
+#    os: osx
+#    osx_image: xcode12.5
 
 # lts-0.7 - Fails on Travis (unsupported GHC on Travis)
 # lts-2.22 - Fails on Travis (too old)
