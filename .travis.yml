@@ -1,5 +1,5 @@
-# See https://docs.travis-ci.com/user/reference/overview/#Virtualisation-Environment-vs-Operating-System
-sudo: required
+os: linux
+dist: focal
 
 # Choose a lightweight base image; we provide our own build tools.
 language: generic
@@ -7,78 +7,118 @@ language: generic
 # Caching so the next build will be fast too.
 cache:
   directories:
-  - "$HOME/.stack"
+    - "$HOME/.stack"
 
 # GHC depends on GMP. You can add other dependencies here as well.
 addons:
   apt:
     packages:
-    - libgmp-dev
+      - libgmp-dev
 
 # Create jobs for all recent LTS resolvers, nightly, and some special configurations
 jobs:
   include:
-  - name: "LTS 3.22 (7.10.2)" # crypto-enigma not in snapshot
-    env: RESOLVER=lts-3.22    STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 6.35 (7.10.3)" # crypto-enigma not in snapshot
-    env: RESOLVER=lts-6.35    STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 7.24 (8.0.1)"
-    env: RESOLVER=lts-7.24    STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 9.21 (8.0.2)"
-    env: RESOLVER=lts-9.21    STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 10.3 (8.2.2)"
-    env: RESOLVER=lts-10.3    STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 11.22 (8.2.2)"
-    env: RESOLVER=lts-11.22   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 12.14 (8.4.3)"
-    env: RESOLVER=lts-12.14   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 12.26 (8.4.4)"
-    env: RESOLVER=lts-12.26   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 13.11 (8.6.3)"
-    env: RESOLVER=lts-13.11   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 13.19 (8.6.4)"
-    env: RESOLVER=lts-13.19   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS 14.7 (8.6.5)"
-    env: RESOLVER=lts-14.7   STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "LTS Latest"
-    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
-  - name: "Stackage Nightly (excluded from Hackage branch tests)"
-    env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
-    ghc-options:
-      "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
-      "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
-    if: branch != "hackage"
-    # TBD - Update when Haskell for Mac updates -- https://community.hfm.io/hc/en-us/requests/795
-  - name: "Haskell for Mac (9.6/8.0.2; test LTS used by Haskell for Mac on macOS)"
-    env: RESOLVER=lts-9.6     STACK_YAML=travis-stacks/resolver-only.yaml
-    os: osx
-    osx_image: xcode11
+    - name: "LTS 3.22 (7.10.2)" # crypto-enigma not in snapshot
+      dist: trusty
+      env: RESOLVER=lts-3.22    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 6.35 (7.10.3)" # crypto-enigma not in snapshot
+      dist: trusty
+      env: RESOLVER=lts-6.35    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 7.24 (8.0.1)"
+      dist: xenial
+      env: RESOLVER=lts-7.24    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 9.21 (8.0.2)"
+      dist: xenial
+      env: RESOLVER=lts-9.21    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 10.3 (8.2.2)"
+      dist: bionic
+      env: RESOLVER=lts-10.3    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 11.22 (8.2.2)"
+      dist: bionic
+      env: RESOLVER=lts-11.22   STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 12.14 (8.4.3)"
+      env: RESOLVER=lts-12.14   STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 12.26 (8.4.4)"
+      env: RESOLVER=lts-12.26   STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 13.11 (8.6.3)"
+      env: RESOLVER=lts-13.11   STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 13.19 (8.6.4)"
+      env: RESOLVER=lts-13.19   STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 14.27 (8.6.5)"
+      env: RESOLVER=lts-14.27   STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 15.3 (8.8.2)"
+      env: RESOLVER=lts-15.3    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 16.11 (8.8.3)"
+      env: RESOLVER=lts-16.11    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 16.31 (8.8.4)"
+      env: RESOLVER=lts-16.31    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 17.2 (8.10.3)"
+      env: RESOLVER=lts-17.2    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS 17.15 (8.10.4)"
+      env: RESOLVER=lts-17.15    STACK_YAML=travis-stacks/resolver-only.yaml
+    - name: "LTS Latest"
+      env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
+    #  - name: "LTS Latest"
+    #    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
+    #    os: osx
+    #    osx_image: xcode12.5
+    #  - name: "LTS Latest"
+    #    env: RESOLVER=lts         STACK_YAML=travis-stacks/resolver-only.yaml
+    #    os: windows
+    #    language: shell
+    - name: "Stackage Nightly (excluded from Hackage branch tests)"
+      env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
+      ghc-options:
+        "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
+        "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
+      if: branch != "hackage"
+    - name: "Stackage Nightly (excluded from Hackage branch tests)"
+      env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
+      dist: bionic
+      ghc-options:
+        "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
+        "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
+      if: branch != "hackage"
+#  - name: "Stackage Nightly (excluded from Hackage branch tests)"
+#    env: RESOLVER=nightly     STACK_YAML=travis-stacks/resolver-only.yaml
+#    os: osx
+#    osx_image: xcode12.2
+#    ghc-options:
+#      "$locals": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports
+#      "$targets": -Wunsafe -Wunused-imports -Wdodgy-imports -Wdodgy-foreign-imports -Wall
+#    if: branch != "hackage"
+#   # TBD - Update when Haskell for Mac updates -- https://community.hfm.io/hc/en-us/requests/795
+#  - name: "Haskell for Mac (13.14/8.6.4; test LTS used by Haskell for Mac on macOS)"
+#    env: RESOLVER=lts-13.14   STACK_YAML=travis-stacks/resolver-only.yaml
+#    os: osx
+#    osx_image: xcode12.5
 
 # lts-0.7 - Fails on Travis (unsupported GHC on Travis)
 # lts-2.22 - Fails on Travis (too old)
 # lts-8.0  - Removed from most recents on Stackage; Unreliable/slow build on Travis
 
 before_install:
-# Download and unpack the stack executable -- https://docs.haskellstack.org/en/stable/travis_ci/?highlight=travis
-- mkdir -p ~/.local/bin
-- export PATH=$HOME/.local/bin:$PATH
-# Aquire the stack aprioriate to the os used -- https://stackoverflow.com/a/52796679/656912
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  brew update ; brew install stack ; fi
-- if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then  travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack' ;  fi
+  # Download and unpack the stack executable -- https://docs.haskellstack.org/en/stable/travis_ci/?highlight=travis
+  - mkdir -p ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
+  # Aquire the stack aprioriate to the os used -- https://stackoverflow.com/a/52796679/656912
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  brew update ; brew install stack ; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then  travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack' ;  fi
+  - stack --version
 
 install:
-# Build dependencies
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --only-dependencies
+  # Build dependencies
+  - stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --only-dependencies
 
 script:
-# Build the package, its tests, and its docs and run the tests
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --haddock --no-haddock-deps
-# List components explicitly; ignoring failure
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec ghc-pkg list || true
-# Run some example CLI commands
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma run "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" -m "FOLGENDES IST SOFORT BEKANNTZUGEBEN" -f single -e -t
-- stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma --version
+  # Build the package, its tests, and its docs and run the tests
+  - stack --resolver $RESOLVER --stack-yaml $STACK_YAML --no-terminal --install-ghc test --haddock --no-haddock-deps
+  # List components explicitly; ignoring failure
+  - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec ghc-pkg list || true
+  # Run some example CLI commands
+  - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma encode "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" "FOLGENDES IST SOFORT BEKANNTZUGEBEN"
+  - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma run "c-β-V-VI-VIII CDTJ AE.BF.CM.DQ.HU.JN.LX.PR.SZ.VW 05.16.05.12" -m "FOLGENDES IST SOFORT BEKANNTZUGEBEN" -f single -e -t
+  - stack --resolver $RESOLVER --stack-yaml $STACK_YAML exec -- enigma --version
 
 notifications:
   webhooks:
