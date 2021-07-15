@@ -132,7 +132,7 @@ refs_ = M.fromList $ (name &&& id) <$> [
         Component "b"    "ENKQAUYWJICOPBLMDXZVFTHRGS" "",
         Component "c"    "RDOBJNTKVEHMLFCWZAXGYIPSUQ" ""]
         -- base case (e.g. for "unplugged" plugboard, or the keyboard)
-kbd_ = M.fromList [("",Component ""     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "")]
+kbd_ = M.fromList [("", Component "" letters "")]
 
 comps_ :: M.Map Name Component
 comps_ = rots_ `M.union` refs_ `M.union` kbd_
@@ -152,6 +152,8 @@ reflectors = M.keys refs_
 {-|
 The 'Component' with the specified 'Name'.
 -}
+-- REV: Enforce single use of each letter, or add note on generalization beyond physical plugboard <<<
+-- TBD: Change to cut invalid plugboard specifiers and rename component with only valid ones (2-length all caps), as in Julia version <<<
 component :: Name -> Component
 component n = fromMaybe (Component n (foldr plug letters (splitOn "." n)) "") (M.lookup n comps_)
         -- Either lookup the rotor or reflector by name, or use the plugboard spec to
