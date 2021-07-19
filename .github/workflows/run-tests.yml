@@ -20,7 +20,10 @@ jobs:
         resolver: [lts-3.22 , lts-6.35, lts-7.24, lts-9.21, lts-10.3, lts-11.22, lts-12.14, lts-12.26, lts-13.11, lts-13.19, lts-14.27, lts-15.3 , lts-16.11, lts-16.31, lts-17, lts-18, lts]
 #        include:
 #          - branch: develop
-#            resolver: ['nightly']
+#            resolver: 'nightly'
+#            cabal: '3.2.0.0'
+#            ghc: '8.10.5'
+#            os: ubuntu-latest
 
     steps:
 
@@ -37,7 +40,7 @@ jobs:
 
       - name: Cache ~/.stack
         uses: actions/cache@v2.1.6
-        if: ${{ matrix.resolver != 'lts' && matrix.resolver != 'lts-17' && matrix.resolver != 'lts-18' }}
+        if: ${{ matrix.resolver != 'lts' && matrix.resolver != 'lts-17' && matrix.resolver != 'lts-18' && matrix.resolver != 'nightly'}}
         with:
           path: ~/.stack
           key: ${{ matrix.ghc }}-${{ matrix.cabal }}-${{ matrix.resolver }}
