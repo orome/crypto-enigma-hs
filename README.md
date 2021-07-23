@@ -4,6 +4,7 @@
 [![Hackage](https://img.shields.io/hackage/v/crypto-enigma.svg)](https://hackage.haskell.org/package/crypto-enigma)
 [![Stackage](https://www.stackage.org/package/crypto-enigma/badge/lts?label=lts)](https://www.stackage.org/lts/package/crypto-enigma)
 ![Hackage Dependencies](https://img.shields.io/hackage-deps/v/crypto-enigma.svg)
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B26691%2Fgithub.com%2Forome%2Fcrypto-enigma-hs.svg?type=shield)](https://app.fossa.com/projects/custom%2B26691%2Fgithub.com%2Forome%2Fcrypto-enigma-hs?ref=badge_shield)
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://github.com/orome/crypto-enigma-hs/blob/hackage/LICENSE)
 [![Tests](https://github.com/orome/crypto-enigma-hs/actions/workflows/run-tests.yml/badge.svg?branch=hackage)](https://github.com/orome/crypto-enigma-hs/actions/workflows/run-tests.yml)
 [![Gitter](https://img.shields.io/gitter/room/badges/shields.svg)](https://gitter.im/orome/crypto-enigma-hs)
