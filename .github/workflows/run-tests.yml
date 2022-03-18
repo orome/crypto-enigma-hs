@@ -17,7 +17,7 @@ jobs:
         ghc: ['8.10.7']
         cabal: ['3.6.0.0']
         os: [ubuntu-latest]
-        resolver: [lts-3.22 , lts-6.35, lts-7.24, lts-9.21, lts-10.3, lts-11.22, lts-12.14, lts-12.26, lts-13.11, lts-13.19, lts-14.27, lts-15.3 , lts-16.11, lts-16.31, lts-17, lts-18.6, lts-18.8, lts-18, lts]
+        resolver: [lts-3.22 , lts-6.35, lts-7.24, lts-9.21, lts-10.3, lts-11.22, lts-12.14, lts-12.26, lts-13.11, lts-13.19, lts-14.27, lts-15.3 , lts-16.11, lts-16.31, lts-17, lts-18.6, lts-18.8, lts-18, lts-19, lts]
 #        include:
 #          - branch: develop
 #            resolver: 'nightly'
